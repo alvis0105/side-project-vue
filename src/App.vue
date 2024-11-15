@@ -1,19 +1,18 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
+  <!-- <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/sign">sign</RouterLink>
+        <RouterLink to="/tasks">tasks</RouterLink>
+        <RouterLink to="/tasks/:id">task-detail</RouterLink>
+        <RouterLink to="/tasks/add">task-add</RouterLink>
+        <RouterLink to="/dashboard">dashboard</RouterLink>
       </nav>
-      <!-- <div type="input" class="mt-6 input-shadow">測試輸入框</div> -->
+      <div type="input" class="mt-6 input-shadow">測試輸入框</div>
       <label for="text-onInputChange" class="flex items-center justify-center">
         <input
           id="text-onInputChange"
@@ -25,10 +24,14 @@ import HelloWorld from './components/HelloWorld.vue'
       </label>
       <el-button class="customStyle">SCSS測試按鈕</el-button>
     </div>
-  </header>
-
+  </header> -->
   <RouterView />
 </template>
+
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+import HelloWorld from './components/HelloWorld.vue'
+</script>
 
 <style scoped>
 header {

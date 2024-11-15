@@ -1,81 +1,114 @@
-import HomeView from '../views/HomeView.vue'
+import config from '@/config'
 
 // 系統路由
 const routes = [
-  {
-    name: 'home',
-    path: '/',
-    component: HomeView
-  },
-  {
-    name: 'about',
-    path: '/about',
-    component: () => import('../views/AboutView.vue')
-  },
+  // 靜態路徑
   // {
-  //   name: 'login',
-  //   path: '/login',
-  //   component: () => import('../views/login/index.vue'),
-  //   meta: {
-  //     title: '登入',
-  //   },
+  //   path: '/',
+  //   component: () => import('../layout/index.vue'),
+  //   redirect: '/home',
+  //   children: [
+  //     {
+  //       name: 'home',
+  //       path: 'home',
+  //       component: () => import('../views/HomeView.vue'),
+  //     },
+  //     {
+  //       name: 'dashboard',
+  //       path: 'dashboard',
+  //       component: () => import('../views/dashboard/index.vue'),
+  //       meta: {
+  //         title: '儀表板',
+  //       },
+  //     },
+  //   ],
   // },
   // {
-  //   name: 'sign',
-  //   path: '/sign',
-  //   component: () => import('../views/sign/index.vue'),
-  //   meta: {
-  //     title: '註冊',
-  //   },
-  // },
-  // {
-  //   name: 'tasks',
   //   path: '/tasks',
-  //   component: () => import('../views/tasks/index.vue'),
-  //   meta: {
-  //     title: '任務列表',
-  //   },
+  //   component: () => import('../layout/index.vue'),
+  //   redirect: '/tasks/list',
+  //   children: [
+  //     {
+  //       name: 'tasks',
+  //       path: '/tasks/list',
+  //       component: () => import('../views/tasks/index.vue'),
+  //       meta: {
+  //         title: '任務列表',
+  //       },
+  //     },
+  //     {
+  //       name: 'task-detail',
+  //       path: '/tasks/detail/:id',
+  //       component: () => import('../views/tasks/TaskDetail.vue'),
+  //       meta: {
+  //         title: '任務詳細',
+  //       },
+  //     },
+  //     {
+  //       name: 'task-add',
+  //       path: '/tasks/add',
+  //       component: () => import('../views/tasks/TaskAdd.vue'),
+  //       meta: {
+  //         title: '新增任務',
+  //       },
+  //     },
+  //     {
+  //       name: 'task-edit',
+  //       path: '/tasks/edit/:id',
+  //       component: () => import('../views/tasks/TaskEdit.vue'),
+  //       meta: {
+  //         title: '編輯任務',
+  //       },
+  //     },
+  //   ],
   // },
   // {
-  //   name: 'task-detail',
-  //   path: '/tasks/:id',
-  //   component: () => import('../views/tasks/TaskDetail.vue'),
-  //   meta: {
-  //     title: '任務詳細',
-  //   },
+  //   name: 'system',
+  //   path: '/system',
+  //   component: () => import('../layout/index.vue'),
+  //   redirect: 'user',
+  //   children: [
+  //     {
+  //       name: 'system-user',
+  //       path: '/system/user',
+  //       component: () => import('../views/user/index.vue'),
+  //       meta: {
+  //         title: '帳號設定',
+  //       },
+  //     },
+  //     {
+  //       name: 'system-tasks',
+  //       path: '/system/tasks',
+  //       component: () => import('../views/tasks/TaskManage.vue'),
+  //       meta: {
+  //         title: '任務設定',
+  //       },
+  //     },
+  //   ],
   // },
-  // {
-  //   name: 'task-add',
-  //   path: '/tasks/add',
-  //   component: () => import('../views/tasks/TaskAdd.vue'),
-  //   meta: {
-  //     title: '新增任務',
-  //   },
-  // },
-  // {
-  //   name: 'task-edit',
-  //   path: '/tasks/:id/edit',
-  //   component: () => import('../views/tasks/TaskEdit.vue'),
-  //   meta: {
-  //     title: '編輯任務',
-  //   },
-  // },
-  // {
-  //   name: 'task-manage',
-  //   path: '/tasks/manage',
-  //   component: () => import('../views/tasks/TaskManage.vue'),
-  //   meta: {
-  //     title: '任務管理',
-  //   },
-  // },
-  // {
-  //   name: 'dashboard',
-  //   path: '/dashboard',
-  //   component: () => import('../views/dashboard/index.vue'),
-  //   meta: {
-  //     title: '儀表板',
-  //   },
-  // },
+  //動態路徑
+  {
+    path: '/',
+    component: () => import('../layout/index.vue'),
+    redirect: config.HOME_URL || '/home',
+    children: [],
+  },
+  {
+    name: 'login',
+    path: '/login',
+    component: () => import('../views/login/index.vue'),
+    meta: {
+      title: '登入',
+    },
+  },
+  {
+    name: 'sign',
+    path: '/sign',
+    component: () => import('../views/sign/index.vue'),
+    meta: {
+      title: '註冊',
+    },
+  },
 ]
 
 export default routes
