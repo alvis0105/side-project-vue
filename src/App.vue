@@ -25,7 +25,9 @@
       <el-button class="customStyle">SCSS測試按鈕</el-button>
     </div>
   </header> -->
-  <RouterView />
+  <div class="app">
+    <RouterView />
+  </div>
 </template>
 
 <script setup>

@@ -7,7 +7,7 @@
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import { useUserStore } from '@/store/modules/user' // 引入 userStore 模組
+import { useUserStore } from '@/stores/modules/user' // 引入 userStore 模組
 
 const router = useRouter()
 const route = useRoute()

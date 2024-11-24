@@ -3,10 +3,10 @@ export const menuList = [
     id: '10000',
     parentId: null,
     name: 'home',
-    path: '/home',
+    path: '/HomeView',
     meta: {
       title: '首頁',
-      icon: 'ep-home-filled',
+      icon: 'homefilled',
       type: 'menu',
     },
     component: '',
@@ -18,7 +18,7 @@ export const menuList = [
     path: '/tasks',
     meta: {
       title: '任務管理',
-      icon: 'ep-collection',
+      icon: 'collection',
       type: 'menu',
     },
     component: '',
@@ -26,8 +26,8 @@ export const menuList = [
       {
         id: '20001',
         parentId: '20000',
-        name: 'tasks.list',
-        path: '/tasks/list',
+        name: 'taskList',
+        path: '/tasks/taskList',
         meta: {
           title: '任務列表',
           type: 'menu',
@@ -37,8 +37,8 @@ export const menuList = [
       {
         id: '20002',
         parentId: '20000',
-        name: 'tasks.detail',
-        path: '/tasks/detail/:id',
+        name: 'taskDetail',
+        path: '/tasks/taskDetail/:id',
         meta: {
           title: '任務詳細',
           type: 'menu',
@@ -48,8 +48,8 @@ export const menuList = [
       {
         id: '20003',
         parentId: '20000',
-        name: 'tasks.add',
-        path: '/tasks/add',
+        name: 'taskAdd',
+        path: '/tasks/taskAdd',
         meta: {
           title: '新增任務',
           type: 'button',
@@ -59,8 +59,8 @@ export const menuList = [
       {
         id: '20004',
         parentId: '20000',
-        name: 'tasks.edit',
-        path: '/tasks/edit/:id',
+        name: 'taskEdit',
+        path: '/tasks/taskEdit/:id',
         meta: {
           title: '編輯任務',
           type: 'button',
@@ -76,7 +76,7 @@ export const menuList = [
     path: '/dashboard',
     meta: {
       title: '儀表板',
-      icon: 'ep-data-analysis',
+      icon: 'dataanalysis',
       type: 'menu',
     },
     component: '',
@@ -84,7 +84,7 @@ export const menuList = [
       {
         id: '30001',
         parentId: '30000',
-        name: 'dashboard.timeline',
+        name: 'chart',
         path: '/dashboard',
         meta: {
           title: '時間軸和甘特圖',
@@ -101,18 +101,18 @@ export const menuList = [
     path: '/system',
     meta: {
       title: '系統',
-      icon: 'ep-setting',
+      icon: 'setting',
       type: 'menu',
     },
     children: [
       {
         id: '40001',
         parentId: '40000',
-        name: 'system.user',
-        path: '/system/user',
+        name: 'user',
+        path: '/user',
         meta: {
           title: '帳號設定',
-          icon: 'ep-user-filled',
+          icon: 'userfilled',
           type: 'menu',
         },
         component: '',
@@ -120,10 +120,11 @@ export const menuList = [
       {
         id: '40002',
         parentId: '40000',
-        name: 'system.tasks',
-        path: '/system/tasks',
+        name: 'TaskManage',
+        path: '/TaskManage',
         meta: {
           title: '任務設定',
+          icon: 'tools',
           type: 'menu',
         },
         component: '',

@@ -5,11 +5,10 @@
       <HelloWorld msg="You did it!" />
       <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/sign">sign</RouterLink>
-        <RouterLink to="/tasks">tasks</RouterLink>
-        <RouterLink to="/tasks/:id">task-detail</RouterLink>
-        <RouterLink to="/tasks/add">task-add</RouterLink>
+        <RouterLink to="/tasks/taskList">tasksList</RouterLink>
+        <RouterLink to="/tasks/taskDetail/:id">task-detail</RouterLink>
+        <RouterLink to="/tasks/taskAdd">task-add</RouterLink>
         <RouterLink to="/dashboard">dashboard</RouterLink>
       </nav>
       <!-- <div type="input" class="mt-6 input-shadow">測試輸入框</div> -->

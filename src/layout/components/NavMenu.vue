@@ -16,14 +16,20 @@
           target="_blank"
           @click.stop="()=>{}"
         />
-        <!-- <el-icon v-if="navMenu.meta&&navMenu.meta.icon"><component :is="useIconRender(navMenu.meta.icon) || useIconRender('ep-menu')" /></el-icon> -->
         <template #title>
+          <el-icon v-if="navMenu.meta && navMenu.meta.icon">
+            <component :is="icons[navMenu.meta.icon]" />
+          </el-icon>
           <span>{{ navMenu.meta.i18nTitle && $te(navMenu.meta.i18nTitle) ? $t(navMenu.meta.i18nTitle) : navMenu.meta.title }}</span>
         </template>
       </el-menu-item>
       <el-sub-menu v-else :index="navMenu.path">
         <template #title>
-          <!-- <el-icon v-if="navMenu.meta&&navMenu.meta.icon"><component :is="useIconRender(navMenu.meta.icon) || useIconRender('ep-menu')" /></el-icon> -->
+          <el-icon v-if="navMenu.meta && navMenu.meta.icon">
+            <!-- {{ navMenu.meta.icon }}
+            {{ icons[navMenu.meta.icon] ? 'true' : 'false' }} -->
+            <component class="text-white bg-black" :is="icons[navMenu.meta.icon]" />
+          </el-icon>
           <span>{{ navMenu.meta.i18nTitle && $te(navMenu.meta.i18nTitle) ? $t(navMenu.meta.i18nTitle) : navMenu.meta.title }}</span>
         </template>
         <NavMenu :nav-menus="navMenu.children" />
@@ -33,7 +39,14 @@
 </template>
 
 <script setup>
-// import { useIconRender } from '@/hooks'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
+// 將所有圖示元件存入字典供動態渲染
+const icons = Object.keys(ElementPlusIconsVue).reduce((iconMap, key) => {
+  iconMap[key.toLowerCase()] = ElementPlusIconsVue[key]
+  return iconMap
+}, {})
+console.log('icons', icons)
 
 const props = defineProps({
   navMenus: {

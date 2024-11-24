@@ -1,23 +1,23 @@
 <template>
- <div class="flex items-center justify-center">
+  <div>
     <!-- <TheWelcome /> -->
-    <header class="w-[200px] h-[200px]">
+    <header class="flex justify-center items-center w-full h-[100px]">
       <div>
         <h1>{{ config.TITLE }}</h1>
       </div>
     </header>
-    <section>
-      <div>
+    <section class="flex items-center justify-center h-[600px]">
+      <div class="h-full">
         <el-menu
           router
         >
           <NavMenu :nav-menus="menuList" />
         </el-menu>
       </div>
+      <div class="wrapper ms-5 h-[600px] w-[400px]">
+        <router-view class="w-full h-full" />
+      </div>
     </section>
-    <div class="wrapper ms-5">
-      <router-view />
-    </div>
   </div>
 </template>
 
@@ -31,6 +31,7 @@ import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 const layout = ref()
+const showSlide = ref(false)
 watch(() => route.name, () => {
   // 當路由名稱改變的時候，取 meta 裡的layout來判斷要套用哪個版型
   layout.value = route.meta.layout

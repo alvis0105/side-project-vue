@@ -1,7 +1,6 @@
 <template>
   <div class="about">
-    <h1>sign的index</h1>
-    <RouterLink class="text- bg-white ms-3" to="/">Home</RouterLink>
+    <h1>找不到頁面</h1>
   </div>
 </template>
 

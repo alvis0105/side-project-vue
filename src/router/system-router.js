@@ -89,9 +89,10 @@ const routes = [
   //動態路徑
   {
     path: '/',
-    component: () => import('../layout/index.vue'),
-    redirect: config.HOME_URL || '/home',
-    children: [],
+    name: 'layout', // 定義父路由名稱
+    component: () => import('../layout/index.vue'), // layout 對應的組件
+    redirect: '/HomeView', // 預設重定向
+    children: [], // 動態路由會被添加到這裡
   },
   {
     name: 'login',

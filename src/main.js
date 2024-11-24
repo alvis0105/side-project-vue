@@ -10,7 +10,7 @@ import App from './App.vue'
 const app = createApp(App)
 
 setupStore(app)
-await setupRouter(app)
+setupRouter(app)
 app.use(ElementPlus)
 
 app.mount('#app')
