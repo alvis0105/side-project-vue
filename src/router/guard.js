@@ -1,3 +1,4 @@
+// guard.js
 import { useUserStore } from '@/stores/modules/user'
 import { menuList } from '@/../mock/model/menu'
 
