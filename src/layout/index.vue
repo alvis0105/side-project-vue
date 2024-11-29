@@ -1,52 +1,57 @@
 <template>
-  <div>
-    <!-- <TheWelcome /> -->
-    <header class="flex justify-center items-center w-full h-[100px]">
-      <div>
+  <section class="h-full">
+    <div class="flex flex-col h-full">
+      <header class="flex items-center justify-start w-full p-5 text-font24">
         <h1>{{ config.TITLE }}</h1>
+      </header>
+      <div class="flex h-full border">
+        <div class="flex flex-col h-full">
+          <el-menu
+            router
+            class="h-full"
+          >
+            <NavMenu :nav-menus="menuList" />
+          </el-menu>
+          <div class="flex justify-center mt-auto border el-menu-item" @click="logout">
+            <el-icon><SwitchButton /></el-icon>
+            <button>
+              登出
+            </button>
+          </div>
+        </div>
+        <div class="w-full p-5">
+          <router-view class="w-full h-full" />
+        </div>
       </div>
-    </header>
-    <section class="flex items-center justify-center h-[600px]">
-      <div class="h-full">
-        <el-menu
-          router
-        >
-          <NavMenu :nav-menus="menuList" />
-        </el-menu>
-      </div>
-      <div class="wrapper ms-5 h-[600px] w-[400px]">
-        <router-view class="w-full h-full" />
-      </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </template>
 
 <script setup>
-import config from '@/config'
-import NavMenu from './components/NavMenu.vue'
+import { SwitchButton } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
 import { menuList } from '/mock/model/menu'
 import { useRouter, useRoute } from 'vue-router'
+import { useUserStore } from '@/stores/modules/user'
+import NavMenu from './components/NavMenu.vue'
+import config from '@/config'
 
+const userStore = useUserStore() // 獲取 userStore 實例
 const router = useRouter()
 const route = useRoute()
 const layout = ref()
-const showSlide = ref(false)
-watch(() => route.name, () => {
-  // 當路由名稱改變的時候，取 meta 裡的layout來判斷要套用哪個版型
-  layout.value = route.meta.layout
-  console.log('layout.value', layout.value)
-  if (route.meta.transition === 'slide-in-right') {
-    showSlide.value = true
-  }
-})
+
+const logout = () => {
+  userStore.logout()
+  router.push('/login')
+}
 
 </script>
 
 <style scoped>
 header {
   line-height: 1.5;
-  max-height: 100vh;
+  /* max-height: 100vh; */
 }
 
 .logo {

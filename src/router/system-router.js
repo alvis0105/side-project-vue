@@ -91,7 +91,7 @@ const routes = [
     path: '/',
     name: 'layout', // 定義父路由名稱
     component: () => import('../layout/index.vue'), // layout 對應的組件
-    redirect: '/HomeView', // 預設重定向
+    redirect: '/home', // 預設重定向
     children: [], // 動態路由會被添加到這裡
   },
   {

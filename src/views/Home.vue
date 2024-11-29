@@ -1,8 +1,6 @@
 <template>
   <main>
-    <!-- <TheWelcome /> -->
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div>
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/sign">sign</RouterLink>
@@ -27,7 +25,6 @@
 </template>
 
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
 import { RouterLink, RouterView } from 'vue-router'
 </script>
 

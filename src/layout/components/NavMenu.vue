@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-col h-full bg-neutral-97">
     <div v-if="props.navMenus.length<=0" style="padding:20px;">
       <el-alert
         title="無子集選單"
@@ -26,9 +26,7 @@
       <el-sub-menu v-else :index="navMenu.path">
         <template #title>
           <el-icon v-if="navMenu.meta && navMenu.meta.icon">
-            <!-- {{ navMenu.meta.icon }}
-            {{ icons[navMenu.meta.icon] ? 'true' : 'false' }} -->
-            <component class="text-white bg-black" :is="icons[navMenu.meta.icon]" />
+            <component :is="icons[navMenu.meta.icon]" />
           </el-icon>
           <span>{{ navMenu.meta.i18nTitle && $te(navMenu.meta.i18nTitle) ? $t(navMenu.meta.i18nTitle) : navMenu.meta.title }}</span>
         </template>
@@ -40,7 +38,9 @@
 
 <script setup>
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 // 將所有圖示元件存入字典供動態渲染
 const icons = Object.keys(ElementPlusIconsVue).reduce((iconMap, key) => {
   iconMap[key.toLowerCase()] = ElementPlusIconsVue[key]
@@ -55,7 +55,7 @@ const props = defineProps({
   },
 })
 
-function hasChildren(item) {
+const hasChildren = (item) => {
   return item.children && !item.children.every(item => item.meta.hidden)
 }
 </script>

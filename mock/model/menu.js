@@ -3,10 +3,10 @@ export const menuList = [
     id: '10000',
     parentId: null,
     name: 'home',
-    path: '/HomeView',
+    path: '/home',
     meta: {
       title: '首頁',
-      icon: 'homefilled',
+      icon: 'house',
       type: 'menu',
     },
     component: '',
@@ -30,6 +30,7 @@ export const menuList = [
         path: '/tasks/taskList',
         meta: {
           title: '任務列表',
+          icon: 'menu',
           type: 'menu',
         },
         component: '',
@@ -41,6 +42,7 @@ export const menuList = [
         path: '/tasks/taskDetail/:id',
         meta: {
           title: '任務詳細',
+          icon: 'document',
           type: 'menu',
         },
         component: '',
@@ -52,6 +54,7 @@ export const menuList = [
         path: '/tasks/taskAdd',
         meta: {
           title: '新增任務',
+          icon: 'plus',
           type: 'button',
         },
         component: '',
@@ -63,6 +66,7 @@ export const menuList = [
         path: '/tasks/taskEdit/:id',
         meta: {
           title: '編輯任務',
+          icon: 'edit',
           type: 'button',
         },
         component: '',
@@ -87,7 +91,8 @@ export const menuList = [
         name: 'chart',
         path: '/dashboard',
         meta: {
-          title: '時間軸和甘特圖',
+          title: '圖表資料',
+          icon: 'piechart',
           type: 'menu',
         },
         component: '',
@@ -100,7 +105,7 @@ export const menuList = [
     name: 'system',
     path: '/system',
     meta: {
-      title: '系統',
+      title: '系統設定',
       icon: 'setting',
       type: 'menu',
     },
