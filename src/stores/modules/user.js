@@ -2,17 +2,15 @@ import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    isAuthenticated: false,  // 是否登入
-    userInfo: null,          // 用戶資訊
-    isMenuLoaded: false,       // 菜單是否已加載
+    isAuthenticated: false, // 是否登入
+    userInfo: null, // 用戶資訊
+    isMenuLoaded: false, // 菜單是否已加載
   }),
   actions: {
     // 用戶登入
     login(userInfo) {
       this.isAuthenticated = true
       this.userInfo = userInfo
-
-      // 將登入狀態和用戶 token 儲存至 localStorage，保持登入狀態
       localStorage.setItem('isAuthenticated', 'true')
       if (userInfo.token) {
         localStorage.setItem('token', userInfo.token)

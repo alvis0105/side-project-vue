@@ -6,7 +6,7 @@ export const menuList = [
     path: '/home',
     meta: {
       title: '首頁',
-      icon: 'house',
+      icon: 'House',
       type: 'menu',
     },
     component: '',
@@ -18,7 +18,7 @@ export const menuList = [
     path: '/tasks',
     meta: {
       title: '任務管理',
-      icon: 'collection',
+      icon: 'Collection',
       type: 'menu',
     },
     component: '',
@@ -30,7 +30,7 @@ export const menuList = [
         path: '/tasks/taskList',
         meta: {
           title: '任務列表',
-          icon: 'menu',
+          icon: 'Menu',
           type: 'menu',
         },
         component: '',
@@ -42,7 +42,7 @@ export const menuList = [
         path: '/tasks/taskDetail/:id',
         meta: {
           title: '任務詳細',
-          icon: 'document',
+          icon: 'Document',
           type: 'menu',
         },
         component: '',
@@ -54,7 +54,7 @@ export const menuList = [
         path: '/tasks/taskAdd',
         meta: {
           title: '新增任務',
-          icon: 'plus',
+          icon: 'Plus',
           type: 'button',
         },
         component: '',
@@ -66,7 +66,7 @@ export const menuList = [
         path: '/tasks/taskEdit/:id',
         meta: {
           title: '編輯任務',
-          icon: 'edit',
+          icon: 'Edit',
           type: 'button',
         },
         component: '',
@@ -80,7 +80,7 @@ export const menuList = [
     path: '/dashboard',
     meta: {
       title: '儀表板',
-      icon: 'dataanalysis',
+      icon: 'DataAnalysis',
       type: 'menu',
     },
     component: '',
@@ -92,7 +92,67 @@ export const menuList = [
         path: '/dashboard',
         meta: {
           title: '圖表資料',
-          icon: 'piechart',
+          icon: 'Piechart',
+          type: 'menu',
+        },
+        component: '',
+      },
+      {
+        id: '30001',
+        parentId: '30000',
+        name: 'chart',
+        path: '/dashboard',
+        meta: {
+          title: '圖表資料2',
+          icon: 'Piechart',
+          type: 'menu',
+        },
+        component: '',
+      },
+      {
+        id: '30001',
+        parentId: '30000',
+        name: 'chart',
+        path: '/dashboard',
+        meta: {
+          title: '圖表資料3',
+          icon: 'Piechart',
+          type: 'menu',
+        },
+        component: '',
+      },
+      {
+        id: '30001',
+        parentId: '30000',
+        name: 'chart',
+        path: '/dashboard',
+        meta: {
+          title: '圖表資料4',
+          icon: 'Piechart',
+          type: 'menu',
+        },
+        component: '',
+      },
+      {
+        id: '30001',
+        parentId: '30000',
+        name: 'chart',
+        path: '/dashboard',
+        meta: {
+          title: '圖表資料5',
+          icon: 'Piechart',
+          type: 'menu',
+        },
+        component: '',
+      },
+      {
+        id: '30001',
+        parentId: '30000',
+        name: 'chart',
+        path: '/dashboard',
+        meta: {
+          title: '圖表資料6',
+          icon: 'Piechart',
           type: 'menu',
         },
         component: '',
@@ -106,7 +166,7 @@ export const menuList = [
     path: '/system',
     meta: {
       title: '系統設定',
-      icon: 'setting',
+      icon: 'Setting',
       type: 'menu',
     },
     children: [
@@ -117,7 +177,7 @@ export const menuList = [
         path: '/user',
         meta: {
           title: '帳號設定',
-          icon: 'userfilled',
+          icon: 'UserFilled',
           type: 'menu',
         },
         component: '',
@@ -129,7 +189,7 @@ export const menuList = [
         path: '/TaskManage',
         meta: {
           title: '任務設定',
-          icon: 'tools',
+          icon: 'Tools',
           type: 'menu',
         },
         component: '',

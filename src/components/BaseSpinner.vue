@@ -1,26 +1,8 @@
 <template>
   <div class="flex items-center justify-center">
     <div class="spinner" />
-    <div :class="typeFilter">登入中 請稍候...</div>
   </div>
 </template>
-
-<script setup>
-import { computed } from 'vue'
-const props = defineProps({
-  type: {
-    type: String,
-    required: true,
-  },
-})
-
-const typeFilter = computed(() => {
-  if (props.type === 'vertical') {
-    return 'vertical-text'
-  }
-  return 'horizontal-text'
-})
-</script>
 
 <style>
 .overlay-translucent {
@@ -67,15 +49,4 @@ const typeFilter = computed(() => {
   }
 }
 
-.vertical-text {
-  color: #000000;
-  font-size: 18px;
-  margin-top: 10px;
-}
-
-.horizontal-text {
-  color: #000000;
-  font-size: 18px;
-  margin-left: 10px;
-}
 </style>

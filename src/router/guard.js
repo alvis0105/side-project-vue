@@ -1,6 +1,6 @@
 // guard.js
 import { useUserStore } from '@/stores/modules/user'
-import { menuList } from '@/../mock/model/menu'
+import { menuList } from '../../mock/model/menu'
 
 // 使用 import.meta.glob 批量導入所有視圖組件
 export const addDynamicRoutes = (router, list) => {

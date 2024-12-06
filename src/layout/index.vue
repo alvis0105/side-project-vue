@@ -1,27 +1,29 @@
 <template>
-  <section class="h-full">
-    <div class="flex flex-col h-full">
-      <header class="flex items-center justify-start w-full p-5 text-font24">
-        <h1>{{ config.TITLE }}</h1>
-      </header>
-      <div class="flex h-full border">
-        <div class="flex flex-col h-full">
-          <el-menu
-            router
-            class="h-full"
-          >
-            <NavMenu :nav-menus="menuList" />
-          </el-menu>
-          <div class="flex justify-center mt-auto border el-menu-item" @click="logout">
-            <el-icon><SwitchButton /></el-icon>
-            <button>
-              登出
-            </button>
-          </div>
+  <section class="flex flex-col h-screen">
+    <!-- Header 部分 -->
+    <header class="flex items-center justify-start w-full p-5 text-font24">
+      <h1>{{ config.TITLE }}</h1>
+    </header>
+    <div class="flex flex-grow w-full overflow-hidden border">
+      <!-- 側邊欄部分 -->
+      <div class="flex flex-col w-[200px] overflow-hidden border-r">
+        <el-menu
+          router
+          class="flex-grow overflow-y-auto scrollbar"
+        >
+          <NavMenu :nav-menus="menuList" />
+        </el-menu>
+        <!-- 登出按鈕 -->
+        <div class="flex justify-center mt-auto border el-menu-item" @click="logout">
+          <el-icon><SwitchButton /></el-icon>
+          <button>
+            登出
+          </button>
         </div>
-        <div class="w-full p-5">
-          <router-view class="w-full h-full" />
-        </div>
+      </div>
+      <!-- 主內容區域 -->
+      <div class="flex-grow p-5 overflow-auto">
+        <router-view class="w-full h-full" />
       </div>
     </div>
   </section>

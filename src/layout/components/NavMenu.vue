@@ -18,7 +18,7 @@
         />
         <template #title>
           <el-icon v-if="navMenu.meta && navMenu.meta.icon">
-            <component :is="icons[navMenu.meta.icon]" />
+            <component :is="navMenu.meta.icon" />
           </el-icon>
           <span>{{ navMenu.meta.i18nTitle && $te(navMenu.meta.i18nTitle) ? $t(navMenu.meta.i18nTitle) : navMenu.meta.title }}</span>
         </template>
@@ -26,7 +26,7 @@
       <el-sub-menu v-else :index="navMenu.path">
         <template #title>
           <el-icon v-if="navMenu.meta && navMenu.meta.icon">
-            <component :is="icons[navMenu.meta.icon]" />
+            <component :is="navMenu.meta.icon" />
           </el-icon>
           <span>{{ navMenu.meta.i18nTitle && $te(navMenu.meta.i18nTitle) ? $t(navMenu.meta.i18nTitle) : navMenu.meta.title }}</span>
         </template>

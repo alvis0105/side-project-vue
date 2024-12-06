@@ -1,5 +1,8 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+import plugin from 'tailwindcss/plugin'
+import tailwindScrollbar from 'tailwind-scrollbar'
+
+export default {
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}'
@@ -71,7 +74,7 @@ module.exports = {
           dark: '#4727A0',
         },
         temperature: '#FFE15E',
-        video: '5EFFDC',
+        video: '#5EFFDC',
       },
       fontSize: {
         font36: [
@@ -123,6 +126,40 @@ module.exports = {
       },
     },
   },
-  plugins: [],
-}
+  plugins: [
+    tailwindScrollbar,
+    // 添加自定義插件來支持滾動條樣式
+    plugin(function ({ addUtilities }) {
+      const newUtilities = {
+        /* 全局滾動條樣式 */
+        '.scrollbar': {
+          '&::-webkit-scrollbar': {
+            width: '5px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: 'hsl(0, 0%, 97%)',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'hsl(0, 0%, 90%)',
+            borderRadius: '10px',
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            background: 'hsl(0, 0%, 80%)',
+          },
+        },
+        '.scrollbar-thin': {
+          '&::-webkit-scrollbar': {
+            width: '4px',
+          },
+        },
+        '.scrollbar-thumb-rounded': {
+          '&::-webkit-scrollbar-thumb': {
+            borderRadius: '9999px',
+          },
+        },
+      }
 
+      addUtilities(newUtilities, ['responsive', 'hover'])
+    }),
+  ],
+}

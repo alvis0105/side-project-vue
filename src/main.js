@@ -5,11 +5,14 @@ import { setupStore } from './stores'
 import { setupRouter } from './router'
 import ElementPlus from 'element-plus'
 import App from './App.vue'
+import Plugins from './plugins'
+import httpReq from './utils/request'
 
 const app = createApp(App)
 
 setupStore(app)
 setupRouter(app)
 app.use(ElementPlus)
+app.use(Plugins)
 
 app.mount('#app')

@@ -5,6 +5,9 @@ const DEFAULT_CONFIG = {
   // 首頁位址
   HOME_URL: '/home',
 
+  TIMEOUT: 20000,
+
+  HEADERS: {},
 }
 
 export default DEFAULT_CONFIG
