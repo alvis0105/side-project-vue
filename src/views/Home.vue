@@ -1,7 +1,8 @@
 <template>
   <main>
     <div>
-      <nav>
+      歡迎來到任務管理平台!
+      <!-- <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/sign">sign</RouterLink>
         <RouterLink to="/tasks/taskList">tasksList</RouterLink>
@@ -9,7 +10,6 @@
         <RouterLink to="/tasks/taskAdd">task-add</RouterLink>
         <RouterLink to="/dashboard">dashboard</RouterLink>
       </nav>
-      <!-- <div type="input" class="mt-6 input-shadow">測試輸入框</div> -->
       <label for="text-onInputChange" class="flex items-center justify-center">
         <input
           id="text-onInputChange"
@@ -19,7 +19,7 @@
           @change="onInputChange"
         >
       </label>
-      <el-button class="customStyle">SCSS測試按鈕</el-button>
+      <el-button class="customStyle">SCSS測試按鈕</el-button> -->
     </div>
   </main>
 </template>

@@ -59,7 +59,7 @@ let httpReq = {
         data: data,
         ...config,
       }).then((response) => {
-        console.table('response:', response)
+        console.table('request中post的response:', response)
         resolve(response.data)
       }).catch((error) => {
         console.log('error:', error)

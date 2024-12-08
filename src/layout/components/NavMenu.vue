@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full bg-neutral-97">
+  <div class="flex flex-col h-full">
     <div v-if="props.navMenus.length<=0" style="padding:20px;">
       <el-alert
         title="無子集選單"

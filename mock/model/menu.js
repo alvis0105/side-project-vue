@@ -35,42 +35,42 @@ export const menuList = [
         },
         component: '',
       },
-      {
-        id: '20002',
-        parentId: '20000',
-        name: 'taskDetail',
-        path: '/tasks/taskDetail/:id',
-        meta: {
-          title: '任務詳細',
-          icon: 'Document',
-          type: 'menu',
-        },
-        component: '',
-      },
-      {
-        id: '20003',
-        parentId: '20000',
-        name: 'taskAdd',
-        path: '/tasks/taskAdd',
-        meta: {
-          title: '新增任務',
-          icon: 'Plus',
-          type: 'button',
-        },
-        component: '',
-      },
-      {
-        id: '20004',
-        parentId: '20000',
-        name: 'taskEdit',
-        path: '/tasks/taskEdit/:id',
-        meta: {
-          title: '編輯任務',
-          icon: 'Edit',
-          type: 'button',
-        },
-        component: '',
-      },
+      // {
+      //   id: '20002',
+      //   parentId: '20000',
+      //   name: 'taskDetail',
+      //   path: '/tasks/taskDetail/:id',
+      //   meta: {
+      //     title: '任務詳細',
+      //     icon: 'Document',
+      //     type: 'menu',
+      //   },
+      //   component: '',
+      // },
+      // {
+      //   id: '20003',
+      //   parentId: '20000',
+      //   name: 'taskAdd',
+      //   path: '/tasks/taskAdd',
+      //   meta: {
+      //     title: '新增任務',
+      //     icon: 'Plus',
+      //     type: 'button',
+      //   },
+      //   component: '',
+      // },
+      // {
+      //   id: '20004',
+      //   parentId: '20000',
+      //   name: 'taskEdit',
+      //   path: '/tasks/taskEdit/:id',
+      //   meta: {
+      //     title: '編輯任務',
+      //     icon: 'Edit',
+      //     type: 'button',
+      //   },
+      //   component: '',
+      // },
     ]
   },
   {
@@ -98,7 +98,7 @@ export const menuList = [
         component: '',
       },
       {
-        id: '30001',
+        id: '30002',
         parentId: '30000',
         name: 'chart',
         path: '/dashboard',
@@ -110,7 +110,7 @@ export const menuList = [
         component: '',
       },
       {
-        id: '30001',
+        id: '30003',
         parentId: '30000',
         name: 'chart',
         path: '/dashboard',
@@ -122,7 +122,7 @@ export const menuList = [
         component: '',
       },
       {
-        id: '30001',
+        id: '30004',
         parentId: '30000',
         name: 'chart',
         path: '/dashboard',
@@ -134,7 +134,7 @@ export const menuList = [
         component: '',
       },
       {
-        id: '30001',
+        id: '30005',
         parentId: '30000',
         name: 'chart',
         path: '/dashboard',
@@ -146,7 +146,7 @@ export const menuList = [
         component: '',
       },
       {
-        id: '30001',
+        id: '30006',
         parentId: '30000',
         name: 'chart',
         path: '/dashboard',

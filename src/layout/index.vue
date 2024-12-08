@@ -22,7 +22,7 @@
         </div>
       </div>
       <!-- 主內容區域 -->
-      <div class="flex-grow p-5 overflow-auto">
+      <div class="flex-grow p-5 mb-5 overflow-auto bg-active bg-opacity-5">
         <router-view class="w-full h-full" />
       </div>
     </div>
