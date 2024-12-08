@@ -197,7 +197,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="taskType" label="任務類型" min-width="200">
+      <el-table-column prop="taskType" label="任務類型" min-width="270">
         <template #default="scope">
           <div class="me-5">
             <el-select
@@ -237,7 +237,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="endDate" label="預計完成時間" min-width="100">
+      <el-table-column prop="endDate" label="預計完成時間" min-width="60">
         <template #default="scope">
           <div v-if="isEditing(scope.row, null, 'endDate')">
             <el-input
@@ -257,7 +257,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column width="250">
+      <el-table-column width="150">
         <template #default="scope">
           <div class="flex justify-end">
             <el-button
