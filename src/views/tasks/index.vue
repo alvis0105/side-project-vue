@@ -197,7 +197,26 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="taskType" label="任務類型" min-width="200" />
+      <el-table-column prop="taskType" label="任務類型" min-width="200">
+        <template #default="scope">
+          <div class="me-5">
+            <el-select
+              v-model="scope.row.taskType"
+              class="w-full"
+              size="small"
+              placeholder="選擇任務類型"
+              @change="onTaskTypeChange(scope.row)"
+            >
+              <el-option
+                v-for="option in taskTypeOptions"
+                :key="option.value"
+                :label="option.label"
+                :value="option.value"
+              />
+            </el-select>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="createdAt" label="開始時間" min-width="100">
         <template #default="scope">
           <div v-if="isEditing(scope.row, null, 'createdAt')">
@@ -318,6 +337,17 @@ const list = ref([
 
 const toggleExpand = (row) => {
   row.expanded = !row.expanded
+}
+
+const taskTypeOptions = ref([
+  { label: '主要任務', value: '主要任務' },
+  { label: '支線任務', value: '支線任務' },
+  { label: '功能型工具', value: '功能型工具' },
+])
+
+const onTaskTypeChange = (row) => {
+  // 在這裡處理當下拉選單值改變時的邏輯
+  console.log(`任務類型更新為：${row.taskType}`)
 }
 
 // 編輯狀態管理
