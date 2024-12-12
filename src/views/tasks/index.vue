@@ -1,12 +1,12 @@
 <template>
-  <div class="p-2">
+  <div>
     <el-row class="mb-4">
-      <el-button type="primary" icon="Plus" @click="addTask">
+      <el-button type="primary" icon="Plus" @click="addTask(list)">
         新增
       </el-button>
       <el-button
-        :type="selectedRows.length > 0 ? 'danger' : ''"
-        :class="selectedRows.length > 0 ? '' : 'opacity-50 cursor-not-allowed'"
+        :type="selectedRows.length ? 'danger' : ''"
+        :class="selectedRows.length ? '' : 'opacity-50 cursor-not-allowed'"
         :disabled="selectedRows.length === 0"
         icon="Delete"
         @click="handleDelete"
@@ -23,10 +23,28 @@
       @selection-change="onSelectionChange"
     >
       <el-table-column type="selection" width="35" />
-      <el-table-column prop="id" label="No." width="50">
+      <el-table-column prop="id" label="No." width="100">
         <template #header>
-          <div class="text-center">
-            No.
+          <div class="flex items-center justify-center">
+            <div class="text-center">
+              No.
+            </div>
+            <div class="flex flex-col ps-1">
+              <el-icon
+                class="pt-2 cursor-pointer hover:text-blue-500"
+                :class="sortOrder === 'asc' ? 'text-blue-500' : 'text-gray-400'"
+                @click="activateSort('asc', 'number')"
+              >
+                <CaretTop />
+              </el-icon>
+              <el-icon
+                class="pb-1 cursor-pointer hover:text-blue-500"
+                :class="sortOrder === 'desc' ? 'text-blue-500' : 'text-gray-400'"
+                @click="activateSort('desc', 'number')"
+              >
+                <CaretBottom />
+              </el-icon>
+            </div>
           </div>
         </template>
         <template #default="scope">
@@ -36,6 +54,29 @@
         </template>
       </el-table-column>
       <el-table-column prop="taskName" label="任務名稱" min-width="80">
+        <template #header>
+          <div class="flex items-center">
+            <div class="text-center">
+              任務名稱
+            </div>
+            <div class="flex flex-col ps-1">
+              <el-icon
+                class="pt-2 cursor-pointer hover:text-blue-500"
+                :class="sortOrder === 'asc' ? 'text-blue-500' : 'text-gray-400'"
+                @click="activateSort('asc', 'taskName')"
+              >
+                <CaretTop />
+              </el-icon>
+              <el-icon
+                class="pb-1 cursor-pointer hover:text-blue-500"
+                :class="sortOrder === 'desc' ? 'text-blue-500' : 'text-gray-400'"
+                @click="activateSort('desc', 'taskName')"
+              >
+                <CaretBottom />
+              </el-icon>
+            </div>
+          </div>
+        </template>
         <template #default="scope">
           <div v-if="isEditing(scope.row, null, 'taskName')">
             <el-input
@@ -51,35 +92,28 @@
             class="cursor-pointer"
             @dblclick="startEditing(scope.row, null, 'taskName')"
           >
-            {{ scope.row.taskName }}
+            <el-icon v-if="!scope.row.taskName" class="!icon-pen">
+              <EditPen />
+            </el-icon>
+            <span :class="!scope.row.taskName ? 'ps-1 text-black text-opacity-30' : ''">
+              {{ scope.row.taskName || '點擊輸入' }}
+            </span>
           </div>
         </template>
       </el-table-column>
       <el-table-column type="expand" min-width="50">
-        <template #expand-icon="{ expanded }">
-          <el-icon :size="20">
-            <ArrowUp v-if="expanded" />
-            <ArrowDown v-else />
-          </el-icon>
-        </template>
         <template #default="scope">
           <!-- 摺疊內容 -->
-          <div class="flex flex-col gap-2 p-4 border bg-surface-5">
-            <!-- 內部表格內容保持不變 -->
+          <div class="flex flex-col gap-2 p-4 border bg-opacity-70 bg-surface-5">
             <div class="flex items-center gap-2">
               <el-button
                 type="primary"
                 icon="Plus"
                 size="small"
-                @click="addSubTask(scope.row)"
+                @click="addTask(scope.row, 'sub')"
               >
                 新增細項
               </el-button>
-              <el-input
-                v-model="newSubTask[scope.row.id]"
-                placeholder="輸入新細項名稱"
-                size="small"
-              />
             </div>
             <el-table
               :data="scope.row.subTasks"
@@ -99,12 +133,12 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="name" label="細項名稱" min-width="50">
+              <el-table-column prop="subTaskName" label="細項名稱" min-width="50">
                 <template #default="subScope">
-                  <div v-if="isEditing(scope.row, subScope.row, 'name')">
+                  <div v-if="isEditing(scope.row, subScope.row, 'subTaskName')">
                     <el-input
                       ref="editableInput"
-                      v-model="subScope.row.name"
+                      v-model="subScope.row.subTaskName"
                       size="small"
                       @blur="stopEditing"
                       @keyup.enter="confirmEditing"
@@ -113,9 +147,14 @@
                   <div
                     v-else
                     class="cursor-pointer"
-                    @dblclick="startEditing(scope.row, subScope.row, 'name')"
+                    @dblclick="startEditing(scope.row, subScope.row, 'subTaskName')"
                   >
-                    {{ subScope.row.name }}
+                    <el-icon v-if="!subScope.row.subTaskName" class="!icon-pen">
+                      <EditPen />
+                    </el-icon>
+                    <span :class="!subScope.row.subTaskName ? 'ps-1 text-black text-opacity-30' : ''">
+                      {{ subScope.row.subTaskName || '點擊輸入' }}
+                    </span>
                   </div>
                 </template>
               </el-table-column>
@@ -126,6 +165,7 @@
                       ref="editableInput"
                       v-model="subScope.row.detail"
                       size="small"
+                      placeholder="新增細項內容"
                       @blur="stopEditing"
                       @keyup.enter="confirmEditing"
                     />
@@ -135,7 +175,12 @@
                     class="cursor-pointer"
                     @dblclick="startEditing(scope.row, subScope.row, 'detail')"
                   >
-                    {{ subScope.row.detail }}
+                    <el-icon v-if="!subScope.row.detail" class="!icon-pen">
+                      <EditPen />
+                    </el-icon>
+                    <span :class="!subScope.row.detail ? 'ps-1 text-black text-opacity-30' : ''">
+                      {{ subScope.row.detail || '點擊輸入' }}
+                    </span>
                   </div>
                 </template>
               </el-table-column>
@@ -155,11 +200,16 @@
                     class="cursor-pointer"
                     @dblclick="startEditing(scope.row, subScope.row, 'startDate')"
                   >
-                    {{ subScope.row.startDate }}
+                    <el-icon v-if="!subScope.row.startDate" class="!icon-pen">
+                      <EditPen />
+                    </el-icon>
+                    <span :class="!subScope.row.startDate ? 'ps-1 text-black text-opacity-30' : ''">
+                      {{ subScope.row.startDate || '點擊輸入' }}
+                    </span>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="endDate" label="預計完成時間" min-width="50">
+              <el-table-column prop="endDate" label="截止時間" min-width="50">
                 <template #default="subScope">
                   <div v-if="isEditing(scope.row, subScope.row, 'endDate')">
                     <el-input
@@ -175,7 +225,12 @@
                     class="cursor-pointer"
                     @dblclick="startEditing(scope.row, subScope.row, 'endDate')"
                   >
-                    {{ subScope.row.endDate }}
+                    <el-icon v-if="!subScope.row.endDate" class="!icon-pen">
+                      <EditPen />
+                    </el-icon>
+                    <span :class="!subScope.row.endDate ? 'ps-1 text-black text-opacity-30' : ''">
+                      {{ subScope.row.endDate || '點擊輸入' }}
+                    </span>
                   </div>
                 </template>
               </el-table-column>
@@ -198,6 +253,29 @@
         </template>
       </el-table-column>
       <el-table-column prop="taskType" label="任務類型" min-width="270">
+        <template #header>
+          <div class="flex items-center">
+            <div class="text-center">
+              任務類型
+            </div>
+            <div class="flex flex-col ps-1">
+              <el-icon
+                class="pt-2 cursor-pointer hover:text-blue-500"
+                :class="sortOrder === 'asc' ? 'text-blue-500' : 'text-gray-400'"
+                @click="activateSort('asc', 'taskType')"
+              >
+                <CaretTop />
+              </el-icon>
+              <el-icon
+                class="pb-1 cursor-pointer hover:text-blue-500"
+                :class="sortOrder === 'desc' ? 'text-blue-500' : 'text-gray-400'"
+                @click="activateSort('desc', 'taskType')"
+              >
+                <CaretBottom />
+              </el-icon>
+            </div>
+          </div>
+        </template>
         <template #default="scope">
           <div class="me-5">
             <el-select
@@ -217,11 +295,32 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="createdAt" label="開始時間" min-width="100">
+      <el-table-column prop="startDate" label="開始時間" min-width="100">
+        <template #header>
+          <div class="flex items-center gap-1">
+            <span>開始時間</span>
+            <div class="flex flex-col">
+              <el-icon
+                class="pt-2 cursor-pointer hover:text-blue-500"
+                :class="sortOrder === 'asc' ? 'text-blue-500' : 'text-gray-400'"
+                @click="activateSort('asc', 'startDate')"
+              >
+                <CaretTop />
+              </el-icon>
+              <el-icon
+                class="pb-1 cursor-pointer hover:text-blue-500"
+                :class="sortOrder === 'desc' ? 'text-blue-500' : 'text-gray-400'"
+                @click="activateSort('desc', 'startDate')"
+              >
+                <CaretBottom />
+              </el-icon>
+            </div>
+          </div>
+        </template>
         <template #default="scope">
-          <div v-if="isEditing(scope.row, null, 'createdAt')">
+          <div v-if="isEditing(scope.row, null, 'startDate')">
             <el-input
-              v-model="scope.row.createdAt"
+              v-model="scope.row.startDate"
               size="small"
               ref="editableInput"
               @blur="stopEditing"
@@ -231,13 +330,39 @@
           <div
             v-else
             class="cursor-pointer"
-            @dblclick="startEditing(scope.row, null, 'createdAt')"
+            @dblclick="startEditing(scope.row, null, 'startDate')"
           >
-            {{ scope.row.createdAt }}
+            <el-icon v-if="!scope.row.startDate" class="!icon-pen">
+              <EditPen />
+            </el-icon>
+            <span :class="!scope.row.startDate ? 'ps-1 text-black text-opacity-30' : ''">
+              {{ scope.row.startDate || '點擊輸入' }}
+            </span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="endDate" label="預計完成時間" min-width="60">
+      <el-table-column prop="endDate" label="截止時間" min-width="70">
+        <template #header>
+          <div class="flex items-center gap-1">
+            <span>截止時間</span>
+            <div class="flex flex-col">
+              <el-icon
+                class="pt-2 cursor-pointer hover:text-blue-500"
+                :class="sortOrder === 'asc' ? 'text-blue-500' : 'text-gray-400'"
+                @click="activateSort('asc', 'endDate')"
+              >
+                <CaretTop />
+              </el-icon>
+              <el-icon
+                class="pb-1 cursor-pointer hover:text-blue-500"
+                :class="sortOrder === 'desc' ? 'text-blue-500' : 'text-gray-400'"
+                @click="activateSort('desc', 'endDate')"
+              >
+                <CaretBottom />
+              </el-icon>
+            </div>
+          </div>
+        </template>
         <template #default="scope">
           <div v-if="isEditing(scope.row, null, 'endDate')">
             <el-input
@@ -253,7 +378,12 @@
             class="cursor-pointer"
             @dblclick="startEditing(scope.row, null, 'endDate')"
           >
-            {{ scope.row.endDate }}
+            <el-icon v-if="!scope.row.endDate" class="!icon-pen">
+              <EditPen />
+            </el-icon>
+            <span :class="!scope.row.endDate ? 'ps-1 text-black text-opacity-30' : ''">
+              {{ scope.row.endDate || '點擊輸入' }}
+            </span>
           </div>
         </template>
       </el-table-column>
@@ -283,6 +413,7 @@
       title="提示"
       width="30%"
       :show-close="false"
+      @closed="handleBeforeClose"
     >
       <div>{{ dialogMessage }}</div>
       <template #footer>
@@ -301,13 +432,13 @@ const list = ref([
     id: 1,
     taskName: 'A專案開發',
     taskType: '主要任務',
-    createdAt: '2023-01-12',
-    endDate: '2023-12-25',
+    startDate: '2023-01-12',
+    endDate: '2023-08-25',
     subTasks: [
-      { id: 1, name: 'API 規劃', detail: '針對API進行優化並且.....', startDate: '2023-02-12', endDate: '2023-03-13' },
-      { id: 2, name: 'UI 設計', detail: '', startDate: '2023-07-01', endDate: '2023-09-23' },
-      { id: 3, name: '功能開發', detail: '', startDate: '2023-08-26', endDate: '2023-10-03' },
-      { id: 4, name: '套件研究', detail: '', startDate: '2023-03-25', endDate: '2023-07-11' },
+      { id: 1, subTaskName: 'API 規劃', detail: '針對API進行優化並且.....', startDate: '2023-02-12', endDate: '2023-03-13' },
+      { id: 2, subTaskName: 'UI 設計', detail: '', startDate: '2023-07-01', endDate: '2023-09-23' },
+      { id: 3, subTaskName: '功能開發', detail: '', startDate: '2023-08-26', endDate: '2023-10-03' },
+      { id: 4, subTaskName: '套件研究', detail: '', startDate: '2023-03-25', endDate: '2023-07-11' },
     ],
     expanded: false,
   },
@@ -315,10 +446,10 @@ const list = ref([
     id: 2,
     taskName: 'vue3練習題',
     taskType: '支線任務',
-    createdAt: '2023-12-16',
-    endDate: '2023-12-20',
+    startDate: '2023-12-16',
+    endDate: '2023-11-20',
     subTasks: [
-      { id: 1, name: '題目撰寫', detail: '', startDate: '2023-12-16', endDate: '2023-12-18' },
+      { id: 1, subTaskName: '題目撰寫', detail: '', startDate: '2023-12-16', endDate: '2023-12-18' },
     ],
     expanded: false,
   },
@@ -326,18 +457,26 @@ const list = ref([
     id: 3,
     taskName: '數值計算器',
     taskType: '功能型工具',
-    createdAt: '2023-11-12',
-    endDate: '2023-11-14',
+    startDate: '2023-11-12',
+    endDate: '2023-12-14',
     subTasks: [
-      { id: 1, name: 'UI 設計', detail: '', startDate: '2023-11-12', endDate: '2023-11-13' },
+      { id: 1, subTaskName: 'UI 設計', detail: '', startDate: '2023-11-12', endDate: '2023-11-13' },
+    ],
+    expanded: false,
+  },
+  {
+    id: 4,
+    taskName: '套件升級',
+    taskType: '支線任務',
+    startDate: '2023-09-01',
+    endDate: '2023-11-12',
+    subTasks: [
+      { id: 1, subTaskName: 'eslint升級', detail: '', startDate: '2023-10-02', endDate: '2023-12-13' },
+      { id: 2, subTaskName: 'nodejs', detail: '', startDate: '2023-10-05', endDate: '2023-11-16' },
     ],
     expanded: false,
   },
 ])
-
-const toggleExpand = (row) => {
-  row.expanded = !row.expanded
-}
 
 const taskTypeOptions = ref([
   { label: '主要任務', value: '主要任務' },
@@ -345,29 +484,60 @@ const taskTypeOptions = ref([
   { label: '功能型工具', value: '功能型工具' },
 ])
 
-const onTaskTypeChange = (row) => {
-  // 在這裡處理當下拉選單值改變時的邏輯
-  console.log(`任務類型更新為：${row.taskType}`)
-}
-
 // 編輯狀態管理
 const editingCell = ref({ parentRow: null, row: null, field: '' })
 const editableInput = ref(null)
 
-const isEditing = (parentRow, row, field) => {
-  return (
+// 其他功能保持不變
+const selectedRows = ref([])
+const sortOrder = ref('account')
+const sortType = ref()
+const isDialogVisible = ref(false)
+const dialogMessage = ref('')
+const isDeleteConfirmed = ref(false)
+
+// 計算屬性
+const isEditing = computed(() => {
+  return (parentRow, row, field) =>
     editingCell.value.parentRow === parentRow &&
     editingCell.value.row === row &&
     editingCell.value.field === field
-  )
-}
+})
 
+// 排序
+const sortedList = computed(() => {
+  return [...list.value].sort((a, b) => {
+    let compareResult = 0
+    switch (sortType.value) {
+      case 'startDate':
+        compareResult = new Date(a.startDate) - new Date(b.startDate)
+        break
+      case 'endDate':
+        compareResult = new Date(a.endDate) - new Date(b.endDate)
+        break
+      case 'number':
+        compareResult = a.id - b.id
+        break
+      case 'taskName':
+        compareResult = a.taskName.localeCompare(b.taskName)
+        break
+      case 'taskType':
+        compareResult = a.taskType.localeCompare(b.taskType)
+        break
+      default:
+        compareResult = 0
+    }
+
+    // 統一的升序/降序控制
+    return sortOrder.value === 'asc' ? compareResult : -compareResult
+  })
+})
+
+// 方法
 const startEditing = async (parentRow, row, field) => {
   editingCell.value = { parentRow, row, field }
   await nextTick()
-  if (editableInput.value) {
-    editableInput.value.focus()
-  }
+  editableInput.value?.focus()
 }
 
 const stopEditing = () => {
@@ -378,22 +548,22 @@ const confirmEditing = () => {
   stopEditing()
 }
 
-// 其他功能保持不變
-const selectedRows = ref([])
-const newSubTask = ref({})
-const sortOrder = ref('asc')
-const isDialogVisible = ref(false)
-const dialogMessage = ref('')
+const toggleExpand = (row) => {
+  row.expanded = !row.expanded
+}
 
-const sortedList = computed(() => {
-  return [...list.value].sort((a, b) => {
-    if (sortOrder.value === 'asc') {
-      return new Date(a.createdAt) - new Date(b.createdAt)
-    } else if (sortOrder.value === 'desc') {
-      return new Date(b.createdAt) - new Date(a.createdAt)
-    }
-  })
-})
+const onTaskTypeChange = (row) => {
+  // 在這裡處理當下拉選單值改變時的邏輯
+  console.log(`任務類型更新為：${row.taskType}`)
+}
+
+// 排序
+const activateSort = (order, type) => {
+  sortType.value = type
+  if (sortOrder.value !== order) {
+    sortOrder.value = order
+  }
+}
 
 const showDialog = (message) => {
   dialogMessage.value = message
@@ -402,51 +572,51 @@ const showDialog = (message) => {
 
 const closeDialog = () => {
   isDialogVisible.value = false
+  if (isDeleteConfirmed.value && selectedRows.value.length) {
+    const selectedIds = selectedRows.value.map((row) => row.id)
+    list.value = list.value.filter((item) => !selectedIds.includes(item.id))
+  } else {
+    list.value = list.value.filter((item) => item.id !== selectedRows.value.id)
+  }
 }
 
-const addSubTask = (row) => {
-  const subTaskName = newSubTask.value[row.id]
-  if (!subTaskName) {
-    showDialog('請輸入細項名稱')
-    return
+// 在對話框關閉時，重置刪除狀態
+const handleBeforeClose = () => {
+  isDeleteConfirmed.value = false
+  isDialogVisible.value = false
+}
+
+const addTask = (row, formType) => {
+  if (formType === 'sub') {
+    const newId = row.subTasks.length + 1
+    row.subTasks.push({ id: newId, subTaskName: '', startDate: '', endDate: '' })
+  } else {
+    const newId = row.length + 1
+    list.value.push({ id: newId, taskName: '', taskType: '', startDate: '', endDate: '', subTasks: [{ id: 1, subTaskName: '', startDate: '', endDate: '' }] })
   }
-  const newId = row.subTasks.length + 1
-  row.subTasks.push({ id: newId, name: subTaskName, startDate: '', endDate: '' })
-  newSubTask.value[row.id] = ''
 }
 
 // const onEditSubTask = (parentTask, subTask) => {
 //   showDialog(`編輯細項：${subTask.name}`)
 // }
 
-const onDeleteSubTask = (parentTask, subTask) => {
-  parentTask.subTasks = parentTask.subTasks.filter((task) => task.id !== subTask.id)
-}
-
 const onEdit = (row) => {
   showDialog('功能待定')
 }
 
+const onDeleteSubTask = (parentTask, subTask) => {
+  parentTask.subTasks = parentTask.subTasks.filter((task) => task.id !== subTask.id)
+}
+
 const onDelete = (row) => {
-  const confirmed = confirm(`確定刪除選中的 ${selectedRows.value.length} 筆資料嗎？`)
-  if (confirmed) {
-    list.value = list.value.filter((item) => item.id !== row.id)
-    showDialog('刪除成功')
-  }
+  isDeleteConfirmed.value = true
+  selectedRows.value = row
+  showDialog('確認刪除?')
 }
 
 const handleDelete = () => {
-  if (selectedRows.value.length === 0) {
-    showDialog('未選擇任何資料')
-    return
-  }
-  const confirmed = confirm(`確定刪除選中的 ${selectedRows.value.length} 筆資料嗎？`)
-  if (confirmed) {
-    const selectedIds = selectedRows.value.map((row) => row.id)
-    list.value = list.value.filter((item) => !selectedIds.includes(item.id))
-    selectedRows.value = []
-    showDialog('刪除成功')
-  }
+  isDeleteConfirmed.value = true
+  showDialog('確認刪除?')
 }
 
 const onSelectionChange = (rows) => {

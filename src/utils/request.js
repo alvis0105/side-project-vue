@@ -1,6 +1,5 @@
 import axios from 'axios'
 
-// 如果是開發模式，可以使用 vite-plugin-fake-server 來模擬 API
 axios.defaults.baseURL = ''
 axios.defaults.timeout = 5000  // 設定超時時間
 
@@ -51,7 +50,6 @@ let httpReq = {
      * @param  {參數} config
      */
   post: function(url, data = {}, config = {}) {
-    console.table('data:', data)
     return new Promise((resolve, reject) => {
       axios({
         method: 'post',
@@ -59,10 +57,8 @@ let httpReq = {
         data: data,
         ...config,
       }).then((response) => {
-        console.table('request中post的response:', response)
         resolve(response.data)
       }).catch((error) => {
-        console.log('error:', error)
         reject(error)
       })
     })

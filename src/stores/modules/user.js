@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { login, verifyToken } from "@/api" // 引入 API login 方法和模擬 Token 驗證方法
+import { login, verifyToken } from "@/api"
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -9,9 +9,9 @@ export const useUserStore = defineStore("user", {
   }),
   actions: {
     // 用戶登入
-    login(loginForm) {
+    login(form) {
       return new Promise((resolve, reject) => {
-        login(loginForm)
+        login(form)
           .then((res) => {
             if (res?.data) {
               try {

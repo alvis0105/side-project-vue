@@ -30,7 +30,7 @@
             <span>建立時間</span>
             <div class="flex flex-col">
               <el-icon
-                class="pt-1 cursor-pointer hover:text-blue-500"
+                class="pt-2 cursor-pointer hover:text-blue-500"
                 :class="sortOrder === 'asc' ? 'text-blue-500' : 'text-gray-400'"
                 @click="activateSort('asc')"
               >
@@ -112,7 +112,7 @@ const sortedList = computed(() => {
 // 排序狀態（asc: 升序, desc: 降序）
 const sortOrder = ref('account')
 
-// 激活排序圖標
+// 排序
 const activateSort = (order) => {
   if (sortOrder.value !== order) {
     sortOrder.value = order

@@ -82,6 +82,10 @@ export default {
           '36px',
           { fontWeight: '500', lineHeight: '36px', letterSpacing: '0.04em' },
         ],
+        font34: [
+          '34px',
+          { fontWeight: '500', lineHeight: '34px', letterSpacing: '0.04em' },
+        ],
         font32: [
           '32px',
           { fontWeight: '500', lineHeight: '32px', letterSpacing: '0.04em' },
@@ -157,6 +161,9 @@ export default {
           '&::-webkit-scrollbar-thumb': {
             borderRadius: '9999px',
           },
+        },
+        '.icon-pen': {
+          color: 'rgba(0, 0, 0, 0.3)',
         },
       }
 

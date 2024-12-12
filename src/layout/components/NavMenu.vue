@@ -46,7 +46,7 @@ const icons = Object.keys(ElementPlusIconsVue).reduce((iconMap, key) => {
   iconMap[key.toLowerCase()] = ElementPlusIconsVue[key]
   return iconMap
 }, {})
-console.log('icons', icons)
+// console.log('icons', icons)
 
 const props = defineProps({
   navMenus: {

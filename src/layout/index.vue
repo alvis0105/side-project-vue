@@ -1,11 +1,11 @@
 <template>
-  <section class="flex flex-col h-screen">
-    <!-- Header 部分 -->
+  <div class="flex flex-col h-screen">
+    <!-- Header -->
     <header class="flex items-center justify-start w-full p-5 text-font24">
       <h1>{{ config.TITLE }}</h1>
     </header>
-    <div class="flex flex-grow w-full overflow-hidden border">
-      <!-- 側邊欄部分 -->
+    <section class="flex flex-grow w-full overflow-hidden border">
+      <!-- 側邊欄 -->
       <div class="flex flex-col w-[200px] overflow-hidden border-r">
         <el-menu
           router
@@ -21,12 +21,15 @@
           </button>
         </div>
       </div>
-      <!-- 主內容區域 -->
-      <div class="flex-grow p-5 mb-5 overflow-auto bg-active bg-opacity-5">
-        <router-view class="w-full h-full" />
+      <!-- 頁面 -->
+      <div class="flex-grow h-full p-5 mb-5 overflow-auto">
+        <!-- 頁面標題 -->
+        <Header class="p-2"/>
+        <!-- 頁面內容 -->
+        <router-view class="w-full p-2 pt-4" />
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>
 
 <script setup>
@@ -36,6 +39,7 @@ import { menuList } from '/mock/model/menu'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/modules/user'
 import NavMenu from './components/NavMenu.vue'
+import Header from './components/Header.vue'
 import config from '@/config'
 
 const userStore = useUserStore() // 獲取 userStore 實例
@@ -50,66 +54,3 @@ const logout = () => {
 
 </script>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  /* max-height: 100vh; */
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>

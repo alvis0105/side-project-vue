@@ -8,6 +8,7 @@ export const menuList = [
       title: '首頁',
       icon: 'House',
       type: 'menu',
+      description: '',
     },
     component: '',
   },
@@ -32,6 +33,7 @@ export const menuList = [
           title: '任務列表',
           icon: 'Menu',
           type: 'menu',
+          description: '使用 vue-directive(含v-if, v-bind, v-on) 實作任務管理新刪修查功能並串接 vite-plugin-fake-server 模擬 mock API',
         },
         component: '',
       },
@@ -91,76 +93,71 @@ export const menuList = [
         name: 'chart',
         path: '/dashboard',
         meta: {
-          title: '圖表資料',
-          icon: 'Piechart',
+          title: '圖表功能',
+          icon: 'PieChart',
           type: 'menu',
+          description: '圖表功能描述待補',
         },
         component: '',
       },
-      {
-        id: '30002',
-        parentId: '30000',
-        name: 'chart',
-        path: '/dashboard',
-        meta: {
-          title: '圖表資料2',
-          icon: 'Piechart',
-          type: 'menu',
-        },
-        component: '',
-      },
-      {
-        id: '30003',
-        parentId: '30000',
-        name: 'chart',
-        path: '/dashboard',
-        meta: {
-          title: '圖表資料3',
-          icon: 'Piechart',
-          type: 'menu',
-        },
-        component: '',
-      },
-      {
-        id: '30004',
-        parentId: '30000',
-        name: 'chart',
-        path: '/dashboard',
-        meta: {
-          title: '圖表資料4',
-          icon: 'Piechart',
-          type: 'menu',
-        },
-        component: '',
-      },
-      {
-        id: '30005',
-        parentId: '30000',
-        name: 'chart',
-        path: '/dashboard',
-        meta: {
-          title: '圖表資料5',
-          icon: 'Piechart',
-          type: 'menu',
-        },
-        component: '',
-      },
-      {
-        id: '30006',
-        parentId: '30000',
-        name: 'chart',
-        path: '/dashboard',
-        meta: {
-          title: '圖表資料6',
-          icon: 'Piechart',
-          type: 'menu',
-        },
-        component: '',
-      }
     ]
   },
   {
     id: '40000',
+    parentId: null,
+    name: 'vue',
+    path: '/vue',
+    meta: {
+      title: 'vue練習',
+      icon: 'Reading',
+      type: 'menu',
+    },
+    component: '',
+    children: [
+      {
+        id: '40001',
+        parentId: '40000',
+        name: 'vuePractice',
+        path: '/vuePractice',
+        meta: {
+          title: 'vue練習1',
+          icon: 'Guide',
+          type: 'menu',
+          description: 'vue練習1的功能描述待補',
+        },
+        component: '',
+      },
+    ]
+  },
+  {
+    id: '50000',
+    parentId: null,
+    name: 'javascript',
+    path: '/javascript',
+    meta: {
+      title: 'javascript練習',
+      icon: 'Reading',
+      type: 'menu',
+    },
+    component: '',
+    children: [
+      {
+        id: '50001',
+        parentId: '50000',
+        name: 'javascriptPractice',
+        path: '/javascriptPractice',
+        meta: {
+          title: 'javascript練習1',
+          icon: 'Guide',
+          type: 'menu',
+          description: 'javascript練習1的功能描述待補',
+        },
+        component: '',
+      },
+    ]
+  },
+  {
+    id: '60000',
     parentId: null,
     name: 'system',
     path: '/system',
@@ -171,8 +168,8 @@ export const menuList = [
     },
     children: [
       {
-        id: '40001',
-        parentId: '40000',
+        id: '60001',
+        parentId: '60000',
         name: 'user',
         path: '/user',
         meta: {
@@ -183,8 +180,8 @@ export const menuList = [
         component: '',
       },
       {
-        id: '40002',
-        parentId: '40000',
+        id: '60002',
+        parentId: '60000',
         name: 'TaskManage',
         path: '/TaskManage',
         meta: {
