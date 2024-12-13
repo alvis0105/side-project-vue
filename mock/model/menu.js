@@ -33,7 +33,7 @@ export const menuList = [
           title: '任務列表',
           icon: 'Menu',
           type: 'menu',
-          description: '使用 vue-directive(含v-if, v-bind, v-on) 實作任務管理新刪修查功能並串接 vite-plugin-fake-server 模擬 mock API',
+          description: '搭配 element-plus 使用 vue-directive(含v-if, v-bind, v-on) 實作任務管理新刪修查功能並串接 vite-plugin-fake-server 模擬 mock API',
         },
         component: '',
       },
@@ -105,8 +105,8 @@ export const menuList = [
   {
     id: '40000',
     parentId: null,
-    name: 'vue',
-    path: '/vue',
+    name: 'vue-practice',
+    path: '/vue-practice',
     meta: {
       title: 'vue練習',
       icon: 'Reading',
@@ -117,13 +117,13 @@ export const menuList = [
       {
         id: '40001',
         parentId: '40000',
-        name: 'vuePractice',
-        path: '/vuePractice',
+        name: 'stepForm',
+        path: '/stepForm',
         meta: {
-          title: 'vue練習1',
+          title: '分步驟表單',
           icon: 'Guide',
           type: 'menu',
-          description: 'vue練習1的功能描述待補',
+          description: '分步驟表單',
         },
         component: '',
       },
@@ -132,8 +132,8 @@ export const menuList = [
   {
     id: '50000',
     parentId: null,
-    name: 'javascript',
-    path: '/javascript',
+    name: 'js-practice',
+    path: '/js-practice',
     meta: {
       title: 'javascript練習',
       icon: 'Reading',
