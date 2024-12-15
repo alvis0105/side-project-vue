@@ -485,7 +485,12 @@ const taskTypeOptions = ref([
 ])
 
 // 編輯狀態管理
-const editingCell = ref({ parentRow: null, row: null, field: '' })
+const editingCell = ref({
+  parentRow: null,
+  row: null,
+  field: ''
+})
+
 const editableInput = ref(null)
 
 // 其他功能保持不變

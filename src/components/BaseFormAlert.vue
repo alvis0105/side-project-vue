@@ -1,16 +1,25 @@
 <template>
-  <div class="text-danger">
-    <!-- *{{ props.typeName }}欄位不可為空 -->
-    *欄位不可為空
+  <div class="form-alert">
+    <slot>
+      <!-- 預設插槽內容 -->
+      <span>{{ props.message }}</span>
+    </slot>
   </div>
 </template>
 
 <script setup>
-// const props = defineProps({
-//   typeName: {
-//     type: String,
-//     required: true,
-//   },
-// })
+const props = defineProps({
+  message: {
+    type: String,
+    required: false,
+    default: ''
+  },
+})
 </script>
 
+<style scoped>
+.form-alert {
+  font-size: 14px;
+  color: red;
+}
+</style>
