@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[500px] mx-auto h-[300px] mt-5 border p-5 flex flex-col rounded-xl">
+  <div class="w-[400px] mx-auto h-[300px] mt-5 border p-5 flex flex-col rounded-xl">
     <span class="mb-5 text-font32">{{ currentConfig.title }}</span>
     <form
       class="flex flex-col flex-1 w-full mt-5"

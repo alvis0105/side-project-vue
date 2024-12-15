@@ -40,7 +40,7 @@ export const stepForm = [
   },
   {
     step: 3,
-    title: "確認提交",
+    title: "同意條款",
     fields: [
       {
         name: "terms",
