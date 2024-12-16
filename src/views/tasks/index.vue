@@ -9,7 +9,7 @@
         :class="selectedRows.length ? '' : 'opacity-50 cursor-not-allowed'"
         :disabled="selectedRows.length === 0"
         icon="Delete"
-        @click="handleDelete"
+        @click="deleteSelectedRows"
       >
         刪除
       </el-button>
@@ -23,7 +23,7 @@
       @selection-change="onSelectionChange"
     >
       <el-table-column type="selection" width="35" />
-      <el-table-column prop="id" label="No." width="100">
+      <el-table-column prop="id" label="No." width="80">
         <template #header>
           <div class="flex items-center justify-center">
             <div class="text-center">
@@ -33,14 +33,14 @@
               <el-icon
                 class="pt-2 cursor-pointer hover:text-blue-500"
                 :class="sortOrder === 'asc' ? 'text-blue-500' : 'text-gray-400'"
-                @click="activateSort('asc', 'number')"
+                @click="activateSort('asc', 'id')"
               >
                 <CaretTop />
               </el-icon>
               <el-icon
                 class="pb-1 cursor-pointer hover:text-blue-500"
                 :class="sortOrder === 'desc' ? 'text-blue-500' : 'text-gray-400'"
-                @click="activateSort('desc', 'number')"
+                @click="activateSort('desc', 'id')"
               >
                 <CaretBottom />
               </el-icon>
@@ -241,7 +241,7 @@
                       class="cursor-pointer hover:!bg-danger hover:!text-white me-2"
                       color="red"
                       :size="20"
-                      @click="onDeleteSubTask(scope.row, subScope.row)"
+                      @click="deleteSubRow(scope.row, subScope.row)"
                     >
                       <CloseBold />
                     </el-icon>
@@ -394,13 +394,13 @@
               type="success"
               icon="View"
               size="small"
-              @click="onEdit(scope.row)"
+              @click="viewDetail(scope.row)"
             />
             <el-button
               type="danger"
               icon="CloseBold"
               size="small"
-              @click="onDelete(scope.row)"
+              @click="deleteRow(scope.row)"
             />
           </div>
         </template>
@@ -424,7 +424,8 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, onMounted } from 'vue'
+import { getTaskList } from '@/api'
 
 // 資料清單
 const list = ref([
@@ -477,6 +478,7 @@ const list = ref([
     expanded: false,
   },
 ])
+const taskList = ref([])
 
 const taskTypeOptions = ref([
   { label: '主要任務', value: '主要任務' },
@@ -485,15 +487,13 @@ const taskTypeOptions = ref([
 ])
 
 // 編輯狀態管理
-const editingCell = ref({
+const editingStatus = ref({
   parentRow: null,
   row: null,
   field: ''
 })
 
 const editableInput = ref(null)
-
-// 其他功能保持不變
 const selectedRows = ref([])
 const sortOrder = ref('account')
 const sortType = ref()
@@ -504,14 +504,14 @@ const isDeleteConfirmed = ref(false)
 // 計算屬性
 const isEditing = computed(() => {
   return (parentRow, row, field) =>
-    editingCell.value.parentRow === parentRow &&
-    editingCell.value.row === row &&
-    editingCell.value.field === field
+    editingStatus.value.parentRow === parentRow &&
+    editingStatus.value.row === row &&
+    editingStatus.value.field === field
 })
 
 // 排序
 const sortedList = computed(() => {
-  return [...list.value].sort((a, b) => {
+  return [...taskList.value].sort((a, b) => {
     let compareResult = 0
     switch (sortType.value) {
       case 'startDate':
@@ -520,7 +520,7 @@ const sortedList = computed(() => {
       case 'endDate':
         compareResult = new Date(a.endDate) - new Date(b.endDate)
         break
-      case 'number':
+      case 'id':
         compareResult = a.id - b.id
         break
       case 'taskName':
@@ -540,13 +540,13 @@ const sortedList = computed(() => {
 
 // 方法
 const startEditing = async (parentRow, row, field) => {
-  editingCell.value = { parentRow, row, field }
+  editingStatus.value = { parentRow, row, field }
   await nextTick()
   editableInput.value?.focus()
 }
 
 const stopEditing = () => {
-  editingCell.value = { parentRow: null, row: null, field: '' }
+  editingStatus.value = { parentRow: null, row: null, field: '' }
 }
 
 const confirmEditing = () => {
@@ -577,11 +577,24 @@ const showDialog = (message) => {
 
 const closeDialog = () => {
   isDialogVisible.value = false
+  // 列表上方刪除單筆或多筆的方法
   if (isDeleteConfirmed.value && selectedRows.value.length) {
     const selectedIds = selectedRows.value.map((row) => row.id)
-    list.value = list.value.filter((item) => !selectedIds.includes(item.id))
+    // 同時過濾與重新分配 id
+    taskList.value = taskList.value
+      .filter((item) => !selectedIds.includes(item.id))
+      .map((item, index) => ({
+        ...item,
+        id: index + 1, // 重新分配 id 從 1 開始
+      }))
   } else {
-    list.value = list.value.filter((item) => item.id !== selectedRows.value.id)
+    // 列表最右側刪除單筆的方法
+    taskList.value = taskList.value
+      .filter((item) => item.id !== selectedRows.value.id)
+      .map((item, index) => ({
+        ...item,
+        id: index + 1, // 重新分配 id 從 1 開始
+      }))
   }
 }
 
@@ -597,29 +610,30 @@ const addTask = (row, formType) => {
     row.subTasks.push({ id: newId, subTaskName: '', startDate: '', endDate: '' })
   } else {
     const newId = row.length + 1
-    list.value.push({ id: newId, taskName: '', taskType: '', startDate: '', endDate: '', subTasks: [{ id: 1, subTaskName: '', startDate: '', endDate: '' }] })
+    taskList.value.push({ id: newId, taskName: '', taskType: '', startDate: '', endDate: '', subTasks: [{ id: 1, subTaskName: '', startDate: '', endDate: '' }] })
   }
 }
 
-// const onEditSubTask = (parentTask, subTask) => {
-//   showDialog(`編輯細項：${subTask.name}`)
-// }
-
-const onEdit = (row) => {
+const viewDetail = (row) => {
   showDialog('功能待定')
 }
 
-const onDeleteSubTask = (parentTask, subTask) => {
-  parentTask.subTasks = parentTask.subTasks.filter((task) => task.id !== subTask.id)
+const deleteSubRow = (parentTask, subTask) => {
+  parentTask.subTasks = parentTask.subTasks
+    .filter((task) => task.id !== subTask.id)
+    .map((item, index) => ({
+      ...item,
+      id: index + 1, // 重新分配 id 從 1 開始
+    }))
 }
 
-const onDelete = (row) => {
+const deleteRow = (row) => {
   isDeleteConfirmed.value = true
   selectedRows.value = row
   showDialog('確認刪除?')
 }
 
-const handleDelete = () => {
+const deleteSelectedRows = () => {
   isDeleteConfirmed.value = true
   showDialog('確認刪除?')
 }
@@ -627,4 +641,28 @@ const handleDelete = () => {
 const onSelectionChange = (rows) => {
   selectedRows.value = rows
 }
+
+const getTaskDetail = async () => {
+  try {
+    const res = await getTaskList()
+    if (res.status === 'success' && res.code === 200) {
+      // 使用 map 來重新處理資料並一次賦值
+      taskList.value = res.data.map((item) => ({
+        id: item.id,
+        taskName: item.taskName, // 確認 taskName 對應正確的 key
+        taskType: item.taskType,
+        startDate: item.startDate,
+        endDate: item.endDate,
+        subTasks: item.subTasks || [], // 額外屬性: 是否有子任務
+        expanded: false,
+      }))
+    }
+  } catch (error) {
+    console.error('獲取任務清單失敗:', error)
+  }
+}
+
+onMounted(() => {
+  getTaskDetail()
+})
 </script>

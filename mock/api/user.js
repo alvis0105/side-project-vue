@@ -3,7 +3,7 @@ import { users as mockUsers } from '../model/user' // 引用 mockUsers
 
 export default [
   {
-    // 隨機取得帳號資訊
+    // 隨機取得10筆帳號資訊
     url: '/api/users',
     method: 'get',
     response: () => {

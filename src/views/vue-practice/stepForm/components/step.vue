@@ -3,7 +3,7 @@
     <div
       v-for="field in props.fields"
       :key="field.name"
-      class="form-field"
+      class="mb-4"
     >
       <div :class="field.type !== 'checkbox' ? '' : 'flex'">
         <span
@@ -17,7 +17,7 @@
           :id="field.name"
           :value="localForm[field.name]"
           :type="field.type"
-          class="w-full mt-2 border rounded-lg"
+          class="w-full px-2 py-1 mt-2 border rounded-lg"
           @input="updateField(field.name, $event.target.value)"
           @blur="validateField(field.name)"
         >
@@ -93,9 +93,3 @@ const validateField = (fieldName) => {
   }
 }
 </script>
-
-<style scoped>
-.form-field {
-  margin-bottom: 16px;
-}
-</style>

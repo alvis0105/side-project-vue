@@ -167,7 +167,8 @@ const blurHandler = () => {
   firstEntry.value = false
 }
 
-// const loadUsers = async () => {
+// 隨機產生10筆帳戶資料
+// const loadUsers = async() => {
 //   try {
 //     const res = await getUsers()
 //     if (res.status === 'success' && res.code === 200) {

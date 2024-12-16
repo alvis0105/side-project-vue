@@ -2,24 +2,6 @@
   <main>
     <div>
       歡迎來到任務管理平台!
-      <!-- <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/sign">sign</RouterLink>
-        <RouterLink to="/tasks/taskList">tasksList</RouterLink>
-        <RouterLink to="/tasks/taskDetail/:id">task-detail</RouterLink>
-        <RouterLink to="/tasks/taskAdd">task-add</RouterLink>
-        <RouterLink to="/dashboard">dashboard</RouterLink>
-      </nav>
-      <label for="text-onInputChange" class="flex items-center justify-center">
-        <input
-          id="text-onInputChange"
-          type="text"
-          class="form-input input-shadow"
-          placeholder="請輸入文字"
-          @change="onInputChange"
-        >
-      </label>
-      <el-button class="customStyle">SCSS測試按鈕</el-button> -->
     </div>
   </main>
 </template>
