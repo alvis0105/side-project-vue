@@ -1,35 +1,43 @@
 import httpReq from '@/utils/request'
 
-// 獲取用戶信息
+// 撈取使用者資訊
 export const getUsers = async () => {
-  try {
-    const res = await httpReq.get('/api/users')
-    return res
-  } catch (error) {
-    console.error('獲取用戶信息失敗:', error)
-    throw error
-  }
+  const url = '/api/users'
+  return await httpReq.get(url)
 }
 
-// 用戶登入
+// 新增使用者資訊
+export const addUser = async (newTask) => {
+  const url = '/api/addUser'
+  return await httpReq.post(url, newTask)
+}
+
+// 修改使用者資訊
+export const updateUser = async (id, data) => {
+  const url = `/api/updateUser/${id}`
+  return await httpReq.put(url, data)
+}
+
+// 刪除使用者資訊
+export const deleteUser = async (id) => {
+  const url = `/api/deleteUser/${id}`
+  return await httpReq.delete(url, { id })
+}
+
+// 對應 faker.js 隨機產生 10 筆使用者資訊
+export const getRandomUsers = async () => {
+  const url = '/api/randomUsers'
+  return await httpReq.get(url)
+}
+
+// 使用者登入
 export const login = async (data) => {
-  try {
-    const res = await httpReq.post('/api/login', data)
-    return res
-  } catch (error) {
-    console.error('用戶登入失敗:', error)
-    throw error
-  }
+  const url = '/api/login'
+  return await httpReq.post(url, data)
 }
 
 // 驗證 Token
 export const verifyToken = async (token) => {
-  try {
-    // 模擬發送請求至 /api/verify-token
-    const res = await httpReq.post('/api/verifyToken', { token })
-    return res
-  } catch (error) {
-    console.error('驗證 Token 失敗:', error)
-    throw error
-  }
+  const url = '/api/verifyToken'
+  return await httpReq.post(url, { token })
 }

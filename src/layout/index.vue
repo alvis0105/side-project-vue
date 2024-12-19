@@ -6,7 +6,7 @@
     </header>
     <section class="flex flex-grow w-full overflow-hidden border">
       <!-- 側邊欄 -->
-      <div class="flex flex-col w-[200px] overflow-hidden border-r">
+      <div class="flex flex-col w-[300px] overflow-hidden border-r">
         <el-menu
           router
           class="flex-grow overflow-y-auto scrollbar"

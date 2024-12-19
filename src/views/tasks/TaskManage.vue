@@ -1,7 +1,7 @@
 <template>
   <div class="p-2">
     <el-row class="mb-4">
-      <el-button type="primary" icon="Plus" @click="addTaskType">
+      <el-button type="primary" icon="Plus" @click="newTaskType">
         新增
       </el-button>
       <el-button
@@ -9,7 +9,7 @@
         :class="selectedRows.length > 0 ? '' : 'opacity-50 cursor-not-allowed'"
         :disabled="selectedRows.length === 0"
         icon="Delete"
-        @click="deleteSelectedRows"
+        @click="openModal('deleteSelectedRows', selectedRows)"
       >
         刪除
       </el-button>
@@ -77,19 +77,19 @@
           </div>
         </template>
         <template #default="scope">
-          <div v-if="isEditing(scope.row, null, 'name')">
+          <div v-if="isEditing(scope.row,  'name')">
             <el-input
               v-model="scope.row.name"
               size="small"
               ref="editableInput"
-              @blur="stopEditing"
+              @blur="confirmEditing"
               @keyup.enter="confirmEditing"
             />
           </div>
           <div
             v-else
             class="cursor-pointer"
-            @dblclick="startEditing(scope.row, null, 'name')"
+            @dblclick="startEditing(scope.row,  'name')"
           >
             <el-icon v-if="!scope.row.name" class="!icon-pen">
               <EditPen />
@@ -123,19 +123,19 @@
           </div>
         </template>
         <template #default="scope">
-          <div v-if="isEditing(scope.row, null, 'createdAt')">
+          <div v-if="isEditing(scope.row, 'createdAt')">
             <el-input
               v-model="scope.row.createdAt"
               size="small"
               ref="editableInput"
-              @blur="stopEditing"
+              @blur="confirmEditing"
               @keyup.enter="confirmEditing"
             />
           </div>
           <div
             v-else
             class="cursor-pointer"
-            @dblclick="startEditing(scope.row, null, 'createdAt')"
+            @dblclick="startEditing(scope.row, 'createdAt')"
           >
             <el-icon v-if="!scope.row.createdAt" class="!icon-pen">
               <EditPen />
@@ -159,7 +159,7 @@
               type="danger"
               icon="CloseBold"
               size="small"
-              @click="deleteRow(scope.row)"
+              @click="openModal('deleteRow', scope.row)"
             />
           </div>
         </template>
@@ -167,28 +167,42 @@
     </el-table>
 
     <!-- 顯示通知模態框 -->
-    <el-dialog
-      v-model="isDialogVisible"
-      title="提示"
-      width="30%"
-      :show-close="false"
+    <BaseModal
+      v-model="isModalOpen"
+      :title="modalTitle"
+      :detail="modalDetail"
+      :cancel-text="cancelText"
+      :confirm-text="confirmText"
+      :have-cancel-btn="true"
+      @close-modal="closeModal"
+      @confirm="handleConfirm"
     >
-      <div>{{ dialogMessage }}</div>
-      <template #footer>
-        <el-button type="primary" @click="closeDialog">確認</el-button>
+      <!-- 動態自定義標題 -->
+      <!-- <template #title>
+        <span class="text-red-500">test</span>
+      </template> -->
+      <!-- 動態自定義內容 -->
+      <!-- <template #detail>
+        <span>test</span>
+      </template> -->
+      <!-- 自定義確認按鈕 -->
+      <template #confirmButton>
+        <button
+          class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
+          @click="handleConfirm"
+        >
+          確認
+        </button>
       </template>
-    </el-dialog>
+    </BaseModal>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
-import { getTaskType } from '@/api'
+import { getTaskType, addTaskType, updateTaskType, deleteTaskType } from '@/api'
+import BaseModal from '@/components/BaseModal.vue'
 
-// 控制模態框的顯示
-const isDialogVisible = ref(false)
-// 彈窗訊息
-const dialogMessage = ref('')
 // 已選中的資料
 const selectedRows = ref([])
 // 排序狀態（asc: 升序, desc: 降序）
@@ -197,17 +211,30 @@ const sortOrder = ref('account')
 const taskTypeList = ref([])
 const editableInput = ref(null)
 const sortType = ref()
-const isDeleteConfirmed = ref(false)
+const originalValues = ref([])
+
+// 當前操作的目標項目和類型
+const currentAction = ref()
+const currentItem = ref()
+
+// 彈窗相關
+const isModalOpen = ref(false)
+const modalTitle = ref('')
+const modalDetail = ref('')
+const cancelText = ref('取消')
+const confirmText = ref('確認')
+
+// 是否為初次新增
+const isFirstAdd = ref(false)
+
 // 編輯狀態管理
 const editingStatus = ref({
-  parentRow: null,
   row: null,
   field: ''
 })
 
 const isEditing = computed(() => {
-  return (parentRow, row, field) =>
-    editingStatus.value.parentRow === parentRow &&
+  return (row, field) =>
     editingStatus.value.row === row &&
     editingStatus.value.field === field
 })
@@ -243,85 +270,163 @@ const activateSort = (order, type) => {
   }
 }
 
-// 方法
-const startEditing = async (parentRow, row, field) => {
-  editingStatus.value = { parentRow, row, field }
+const startEditing = async (row, field) => {
+  editingStatus.value = { 
+    row: row,
+    field: field
+  }
+  originalValues.value = JSON.parse(JSON.stringify(row))
   await nextTick()
   editableInput.value?.focus()
 }
 
-const stopEditing = () => {
-  editingStatus.value = { parentRow: null, row: null, field: '' }
+const confirmEditing = async () => {
+  const row = editingStatus.value.row
+
+  // 檢查原始值是否有變更
+  const hasChanged = JSON.stringify(originalValues.value) !== JSON.stringify(row)
+
+  if (isFirstAdd.value && hasChanged) {
+    handleAdd(row)
+  } else if (hasChanged) {
+    handleUpdate(row)
+  }
+  editingStatus.value = { row: null, field: '' }
 }
 
-const confirmEditing = () => {
-  stopEditing()
+const newTaskType = () => {
+  isFirstAdd.value = true
+  const newId = taskTypeList.value.length
+  taskTypeList.value.push({
+    id: newId,
+    name: '',
+    createdAt: ''
+  })
 }
 
 const toggleExpand = (row) => {
   row.expanded = !row.expanded
 }
 
-const showDialog = (message) => {
-  dialogMessage.value = message
-  isDialogVisible.value = true
-}
-
-const closeDialog = () => {
-  isDialogVisible.value = false
-}
-
 // 新增按鈕事件
-const addTaskType = () => {
-  const newId = taskTypeList.value.length + 1
-  taskTypeList.value.push({ id: newId, name: '', createdAt: '' })
+const handleAdd = async(row) => {
+  try {
+    const newId = taskTypeList.value.length
+    const params = {
+      id: newId,
+      name: row.name,
+      createdAt: row.createdAt,
+    }
+    const res = await addTaskType(params)
+    if (res.status === 'success' && res.code === 200) {
+      isFirstAdd.value = false
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const handleUpdate = async(row) => {
+  try {
+    const id = row.id
+    const params = {
+      name: row.name,
+      createdAt: row.createdAt,
+    }
+    const res = await updateTaskType(id, params)
+    if (res.status === 'success' && res.code === 200) {
+      console.log('任務類型-修改成功')
+    }
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 // 編輯按鈕事件
 const onEdit = (row) => {
-  showDialog(`編輯 ${row.name}`)
+  isModalOpen.value = true
 }
 
 // 刪除選中資料按鈕事件
-const deleteSelectedRows = () => {
-  if (selectedRows.value.length === 0) {
-    showDialog('未選擇任何資料')
-    return
-  }
-  const confirmed = confirm(`確定刪除選中的 ${selectedRows.value.length} 筆資料嗎？`)
-  if (confirmed) {
+const deleteSelectedRows = async() => {
+  try {
     const selectedIds = selectedRows.value.map((row) => row.id)
-  
-    // 同時過濾與重新分配 id
-    taskTypeList.value = taskTypeList.value
-      .filter((item) => !selectedIds.includes(item.id))
-      .map((item, index) => ({
-        ...item,
-        id: index + 1, // 重新分配 id 從 1 開始
-      }))
-
-    selectedRows.value = [] // 清空選中的資料
-    showDialog('刪除成功')
+    const res = await deleteTaskType(selectedIds)
+    if (res.status === 'success' && res.code === 200) {
+      // 同時過濾與重新分配 id
+      taskTypeList.value = taskTypeList.value
+        .filter((item) => !selectedIds.includes(item.id))
+        .map((item, index) => ({
+          ...item,
+          id: index + 1, // 重新分配 id 從 1 開始
+        }))
+      selectedRows.value = [] // 清空選中的資料
+    }
+  } catch (error) {
+    console.error(error)
   }
 }
 
 // 單行刪除按鈕事件
-const deleteRow = (row) => {
-  const confirmed = confirm(`確定刪除 ${row.name} 的資料嗎？`)
-  if (confirmed) {
-    taskTypeList.value = taskTypeList.value
-      .filter((item) => item.id !== row.id)
-      .map((item, index) => ({
-        ...item,
-        id: index + 1, // 重新分配 id 從 1 開始
-      }))
-    showDialog('刪除成功')
+const deleteRow = async (row) => {
+  try {
+    const res = await deleteTaskType(row.id)
+    if (res.status === 'success' && res.code === 200) {
+      taskTypeList.value = taskTypeList.value
+        .filter((item) => item.id !== row.id)
+        .map((item, index) => ({
+            ...item,
+            id: index + 1, // 重新分配 id 從 1 開始
+          }))
+        }
+  } catch (error) {
+    console.error(error)
   }
 }
 
 // 多選框改變事件
 const onSelectionChange = (rows) => {
   selectedRows.value = rows
+}
+
+const openModal = (action, item) => {
+  isModalOpen.value = true
+  currentAction.value = action
+  currentItem.value = item
+
+  switch (action) {
+    case 'deleteSelectedRows':
+      modalTitle.value = '刪除檔案'
+      modalDetail.value = `請確認是否刪除選中的 "${item.length}筆" 資料?`
+      break
+    case 'deleteRow':
+      modalTitle.value = '刪除檔案'
+      modalDetail.value = `請確認是否刪除 "${item.name}" ?`
+      break
+    default:
+      modalTitle.value = '提示'
+      modalDetail.value = '請確認是否執行?'
+      break
+  }
+}
+
+// 確認按鈕依照判斷式執行相應動作
+const handleConfirm = async() => {
+  if (currentAction.value === 'deleteSelectedRows') {
+    await deleteSelectedRows()
+  } else if (currentAction.value === 'deleteRow') {
+    await deleteRow(currentItem.value)
+  }
+  closeModal()
+}
+
+// 關閉並重置狀態
+const closeModal = () => {
+  isModalOpen.value = false
+  modalTitle.value = ''
+  modalDetail.value = ''
+  currentAction.value = ''
+  currentItem.value = ''
 }
 
 const getTaskTypeList = async() => {
@@ -332,7 +437,7 @@ const getTaskTypeList = async() => {
       data.forEach(item => {
         taskTypeList.value.push({
           id: item.id,
-          name: item.type,
+          name: item.name,
           createdAt: item.createdAt
         })
       })

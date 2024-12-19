@@ -4,12 +4,14 @@ export const stepForm = [
     title: "基本資訊",
     fields: [
       {
+        id: '1',
         name: "username",
         type: "text",
         label: "用戶名",
         rules: [{ required: true, message: "用戶名不可為空" }],
       },
       {
+        id: '2',
         name: "email",
         type: "email",
         label: "電子郵件",
@@ -25,12 +27,14 @@ export const stepForm = [
     title: "地址資訊",
     fields: [
       {
+        id: '1',
         name: "address",
         type: "text",
         label: "地址",
         rules: [{ required: true, message: "地址不可為空" }],
       },
       {
+        id: '2',
         name: "city",
         type: "text",
         label: "城市",
@@ -43,6 +47,7 @@ export const stepForm = [
     title: "同意條款",
     fields: [
       {
+        id: '1',
         name: "terms",
         type: "checkbox",
         label: "我同意條款",

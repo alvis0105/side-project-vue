@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     BaseFormAlert: typeof import('./src/components/BaseFormAlert.vue')['default']
+    BaseModal: typeof import('./src/components/BaseModal.vue')['default']
     BaseSpinner: typeof import('./src/components/BaseSpinner.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElButton: typeof import('element-plus/es')['ElButton']

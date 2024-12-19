@@ -33,7 +33,7 @@ export const menuList = [
           title: '任務列表',
           icon: 'Menu',
           type: 'menu',
-          description: '搭配 element-plus 相關功能, 使用 vue-directive(含v-if, v-bind, v-on) 並串接 vite-plugin-fake-server 模擬 mock API, 可透過點擊兩下進入編輯模式',
+          description: '搭配 element-plus, 使用 vue-directive(含v-if, v-bind, v-on),使用 localStorage 模擬資料庫，搭配 vite-plugin-fake-server 處理模擬 API, 支援資料持久化與即時更新, 可透過點擊兩下進入編輯模式, 並使用Enter或是失焦退出並保存變更',
         },
         component: '',
       },

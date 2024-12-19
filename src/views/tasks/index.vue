@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row class="mb-4">
-      <el-button type="primary" icon="Plus" @click="addTask(list)">
+      <el-button type="primary" icon="Plus" @click="newTask(taskList, 'task')">
         新增
       </el-button>
       <el-button
@@ -9,7 +9,7 @@
         :class="selectedRows.length ? '' : 'opacity-50 cursor-not-allowed'"
         :disabled="selectedRows.length === 0"
         icon="Delete"
-        @click="deleteSelectedRows"
+        @click="openModal('deleteSelectedRows', selectedRows)"
       >
         刪除
       </el-button>
@@ -83,7 +83,7 @@
               v-model="scope.row.taskName"
               size="small"
               ref="editableInput"
-              @blur="stopEditing"
+              @blur="confirmEditing"
               @keyup.enter="confirmEditing"
             />
           </div>
@@ -110,7 +110,7 @@
                 type="primary"
                 icon="Plus"
                 size="small"
-                @click="addTask(scope.row, 'sub')"
+                @click="newTask(scope.row, 'subTask')"
               >
                 新增細項
               </el-button>
@@ -140,7 +140,7 @@
                       ref="editableInput"
                       v-model="subScope.row.subTaskName"
                       size="small"
-                      @blur="stopEditing"
+                      @blur="confirmEditing"
                       @keyup.enter="confirmEditing"
                     />
                   </div>
@@ -166,7 +166,7 @@
                       v-model="subScope.row.detail"
                       size="small"
                       placeholder="新增細項內容"
-                      @blur="stopEditing"
+                      @blur="confirmEditing"
                       @keyup.enter="confirmEditing"
                     />
                   </div>
@@ -191,7 +191,7 @@
                       ref="editableInput"
                       v-model="subScope.row.startDate"
                       size="small"
-                      @blur="stopEditing"
+                      @blur="confirmEditing"
                       @keyup.enter="confirmEditing"
                     />
                   </div>
@@ -216,7 +216,7 @@
                       v-model="subScope.row.endDate"
                       size="small"
                       ref="editableInput"
-                      @blur="stopEditing"
+                      @blur="confirmEditing"
                       @keyup.enter="confirmEditing"
                     />
                   </div>
@@ -283,7 +283,8 @@
               class="w-full"
               size="small"
               placeholder="選擇任務類型"
-              @change="onTaskTypeChange(scope.row)"
+              @focus="startEditing(scope.row, null, 'taskType')"
+              @change="confirmEditing"
             >
               <el-option
                 v-for="option in taskTypeOptions"
@@ -323,7 +324,7 @@
               v-model="scope.row.startDate"
               size="small"
               ref="editableInput"
-              @blur="stopEditing"
+              @blur="confirmEditing"
               @keyup.enter="confirmEditing"
             />
           </div>
@@ -369,7 +370,7 @@
               v-model="scope.row.endDate"
               size="small"
               ref="editableInput"
-              @blur="stopEditing"
+              @blur="confirmEditing"
               @keyup.enter="confirmEditing"
             />
           </div>
@@ -394,13 +395,13 @@
               type="success"
               icon="View"
               size="small"
-              @click="viewDetail(scope.row)"
+              @click="openModal('default', scope.row)"
             />
             <el-button
               type="danger"
               icon="CloseBold"
               size="small"
-              @click="deleteRow(scope.row)"
+              @click="openModal('deleteRow', scope.row)"
             />
           </div>
         </template>
@@ -417,7 +418,7 @@
     >
       <div>{{ dialogMessage }}</div>
       <template #footer>
-        <el-button type="primary" @click="closeDialog">確認</el-button>
+        <el-button type="primary" @click="closeModal">確認</el-button>
       </template>
     </el-dialog>
   </div>
@@ -425,59 +426,9 @@
 
 <script setup>
 import { ref, computed, nextTick, onMounted } from 'vue'
-import { getTaskList } from '@/api'
+import { getTaskList, addTask, updateTask, deleteTask, deleteSubTask, deleteSelectedTasks } from '@/api'
 
-// 資料清單
-const list = ref([
-  {
-    id: 1,
-    taskName: 'A專案開發',
-    taskType: '主要任務',
-    startDate: '2023-01-12',
-    endDate: '2023-08-25',
-    subTasks: [
-      { id: 1, subTaskName: 'API 規劃', detail: '針對API進行優化並且.....', startDate: '2023-02-12', endDate: '2023-03-13' },
-      { id: 2, subTaskName: 'UI 設計', detail: '', startDate: '2023-07-01', endDate: '2023-09-23' },
-      { id: 3, subTaskName: '功能開發', detail: '', startDate: '2023-08-26', endDate: '2023-10-03' },
-      { id: 4, subTaskName: '套件研究', detail: '', startDate: '2023-03-25', endDate: '2023-07-11' },
-    ],
-    expanded: false,
-  },
-  {
-    id: 2,
-    taskName: 'vue3練習題',
-    taskType: '支線任務',
-    startDate: '2023-12-16',
-    endDate: '2023-11-20',
-    subTasks: [
-      { id: 1, subTaskName: '題目撰寫', detail: '', startDate: '2023-12-16', endDate: '2023-12-18' },
-    ],
-    expanded: false,
-  },
-  {
-    id: 3,
-    taskName: '數值計算器',
-    taskType: '功能型工具',
-    startDate: '2023-11-12',
-    endDate: '2023-12-14',
-    subTasks: [
-      { id: 1, subTaskName: 'UI 設計', detail: '', startDate: '2023-11-12', endDate: '2023-11-13' },
-    ],
-    expanded: false,
-  },
-  {
-    id: 4,
-    taskName: '套件升級',
-    taskType: '支線任務',
-    startDate: '2023-09-01',
-    endDate: '2023-11-12',
-    subTasks: [
-      { id: 1, subTaskName: 'eslint升級', detail: '', startDate: '2023-10-02', endDate: '2023-12-13' },
-      { id: 2, subTaskName: 'nodejs', detail: '', startDate: '2023-10-05', endDate: '2023-11-16' },
-    ],
-    expanded: false,
-  },
-])
+// 任務清單
 const taskList = ref([])
 
 const taskTypeOptions = ref([
@@ -488,7 +439,6 @@ const taskTypeOptions = ref([
 
 // 編輯狀態管理
 const editingStatus = ref({
-  parentRow: null,
   row: null,
   field: ''
 })
@@ -499,7 +449,21 @@ const sortOrder = ref('account')
 const sortType = ref()
 const isDialogVisible = ref(false)
 const dialogMessage = ref('')
-const isDeleteConfirmed = ref(false)
+const originalRow = ref([])
+const originalParentRow = ref([])
+// 當前操作的目標項目和類型
+const currentAction = ref()
+const currentItem = ref()
+
+// 彈窗相關
+const isModalOpen = ref(false)
+const modalTitle = ref('')
+const modalDetail = ref('')
+const cancelText = ref('取消')
+const confirmText = ref('確認')
+
+// 是否為初次新增
+const isFirstAdd = ref(false)
 
 // 計算屬性
 const isEditing = computed(() => {
@@ -540,26 +504,103 @@ const sortedList = computed(() => {
 
 // 方法
 const startEditing = async (parentRow, row, field) => {
-  editingStatus.value = { parentRow, row, field }
+  editingStatus.value = {
+    parentRow: parentRow,
+    row: row,
+    field: field
+  }
+  originalRow.value = JSON.parse(JSON.stringify(row))
+  originalParentRow.value = JSON.parse(JSON.stringify(parentRow))
   await nextTick()
   editableInput.value?.focus()
 }
 
-const stopEditing = () => {
-  editingStatus.value = { parentRow: null, row: null, field: '' }
+const confirmEditing = async () => {
+  const parentRow = editingStatus.value.parentRow
+  const row = editingStatus.value.row
+
+  // 檢查原始值是否有變更
+  const rowChanged = JSON.stringify(originalRow.value) !== JSON.stringify(row)
+  const parentRowChanged = JSON.stringify(originalParentRow.value) !== JSON.stringify(parentRow)
+  if (rowChanged || parentRowChanged) {
+    if (!parentRow.isEdit) {
+      await handleAdd(parentRow, row)
+    } else {
+      await handleUpdate(parentRow, row)
+    }
+  }
+  editingStatus.value = { row: null, field: '' }
 }
 
-const confirmEditing = () => {
-  stopEditing()
+// 新增
+const handleAdd = async(parentRow, row) => {
+  try {
+    const newId = taskList.value.length
+    const params = {
+      id: newId,
+      isEdit: true,
+      taskName: parentRow.taskName || '', // 任務名稱僅在 task 中有效
+      taskType: parentRow.taskType || '', // 任務類型僅在 task 中有效
+      startDate: parentRow.startDate || '', // 開始日期
+      endDate: parentRow.endDate || '', // 結束日期
+      subTasks: parentRow.subTasks || [ // 子任務結構
+        {
+          id: row.id,
+          subTaskName: row.subTaskName || '',
+          detail: row.detail || '',
+          startDate: row.startDate || '',
+          endDate: row.endDate || '',
+        },
+      ],
+    }
+    
+    const res = await addTask({ newTask: params })
+    if (res.status === 'success' && res.code === 200) {
+      console.log('任務新增成功')
+      await getTaskDetail()
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+// 修改
+const handleUpdate = async(parentRow, row) => {
+  try {
+    const params = {
+      id: parentRow.id,
+      taskName: parentRow.taskName || '', // 任務名稱僅在 task 中有效
+      taskType: parentRow.taskType || '', // 任務類型僅在 task 中有效
+      startDate: parentRow.startDate || '', // 開始日期
+      endDate: parentRow.endDate || '', // 結束日期
+      subTasks: parentRow.subTasks || [ // 子任務結構
+        {
+          id: row.id,
+          subTaskName: row.subTaskName || '',
+          detail: row.detail || '',
+          startDate: row.startDate || '',
+          endDate: row.endDate || '',
+        },
+      ],
+    }
+    const res = await updateTask(parentRow.id, params)
+    if (res.status === 'success' && res.code === 200) {
+      console.log('任務修改成功')
+      await getTaskDetail()
+    }
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const toggleExpand = (row) => {
   row.expanded = !row.expanded
 }
 
-const onTaskTypeChange = (row) => {
+const onTaskTypeChange = async(parentRow, row, field) => {
   // 在這裡處理當下拉選單值改變時的邏輯
-  console.log(`任務類型更新為：${row.taskType}`)
+  await startEditing(parentRow, row, field)
+  await confirmEditing()
 }
 
 // 排序
@@ -570,72 +611,110 @@ const activateSort = (order, type) => {
   }
 }
 
-const showDialog = (message) => {
-  dialogMessage.value = message
+const openModal = (action, item) => {
   isDialogVisible.value = true
+  currentAction.value = action
+  currentItem.value = item
+
+  switch (action) {
+    case 'deleteSelectedRows':
+      dialogMessage.value = `請確認是否刪除選中的 "${item.length}筆" 資料?`
+      break
+    case 'deleteRow':
+      dialogMessage.value = `請確認是否刪除 "${item.name}" ?`
+      break
+    default:
+      dialogMessage.value = '請確認是否執行?'
+      break
+  }
 }
 
-const closeDialog = () => {
-  isDialogVisible.value = false
+const closeModal = async() => {
   // 列表上方刪除單筆或多筆的方法
-  if (isDeleteConfirmed.value && selectedRows.value.length) {
-    const selectedIds = selectedRows.value.map((row) => row.id)
-    // 同時過濾與重新分配 id
-    taskList.value = taskList.value
-      .filter((item) => !selectedIds.includes(item.id))
-      .map((item, index) => ({
-        ...item,
-        id: index + 1, // 重新分配 id 從 1 開始
-      }))
-  } else {
-    // 列表最右側刪除單筆的方法
-    taskList.value = taskList.value
-      .filter((item) => item.id !== selectedRows.value.id)
-      .map((item, index) => ({
-        ...item,
-        id: index + 1, // 重新分配 id 從 1 開始
-      }))
+  if (currentAction.value === 'deleteSelectedRows') {
+    await deleteSelectedRows()
+  } else if (currentAction.value === 'deleteRow') {
+    await deleteRow(currentItem.value)
   }
+  isDialogVisible.value = false
+  modalTitle.value = ''
+  modalDetail.value = ''
+  currentAction.value = ''
+  currentItem.value = ''
 }
 
 // 在對話框關閉時，重置刪除狀態
 const handleBeforeClose = () => {
-  isDeleteConfirmed.value = false
   isDialogVisible.value = false
 }
 
-const addTask = (row, formType) => {
-  if (formType === 'sub') {
+const newTask = (row, formType) => {
+  if (formType === 'subTask') {
     const newId = row.subTasks.length + 1
-    row.subTasks.push({ id: newId, subTaskName: '', startDate: '', endDate: '' })
+    row.subTasks.push({
+      id: newId,
+      subTaskName: '',
+      startDate: '',
+      endDate: ''
+    })
   } else {
     const newId = row.length + 1
-    taskList.value.push({ id: newId, taskName: '', taskType: '', startDate: '', endDate: '', subTasks: [{ id: 1, subTaskName: '', startDate: '', endDate: '' }] })
+    taskList.value.push({
+      id: newId,
+      isEdit: false,
+      taskName: '',
+      taskType: '',
+      startDate: '',
+      endDate: '',
+      subTasks: [{ 
+        id: 1,
+        subTaskName: '',
+        startDate: '',
+        endDate: ''
+      }]
+    })
   }
 }
 
-const viewDetail = (row) => {
-  showDialog('功能待定')
+// 刪除細項
+const deleteSubRow = async (parentRow, selectedRow) => {
+  try {
+    const res = await deleteSubTask(parentRow.id, selectedRow.id) // 傳入任務 ID 和細項 ID
+    if (res.status === 'success' && res.code === 200) {
+      console.log('刪除任務細項成功')
+      await getTaskDetail()
+    }
+  } catch (error) {
+    console.error('刪除細項失敗:', error)
+  }
 }
 
-const deleteSubRow = (parentTask, subTask) => {
-  parentTask.subTasks = parentTask.subTasks
-    .filter((task) => task.id !== subTask.id)
-    .map((item, index) => ({
-      ...item,
-      id: index + 1, // 重新分配 id 從 1 開始
-    }))
+// 單行刪除事件
+const deleteRow = async(row) => {
+  try {
+    const res = await deleteTask(row.id)
+    if (res.status === 'success' && res.code === 200) {
+      console.log('任務刪除成功')
+      await getTaskDetail()
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 
-const deleteRow = (row) => {
-  isDeleteConfirmed.value = true
-  selectedRows.value = row
-  showDialog('確認刪除?')
-}
-
-const deleteSelectedRows = () => {
-  isDeleteConfirmed.value = true
-  showDialog('確認刪除?')
+// 刪除選中資料
+const deleteSelectedRows = async() => {
+  try {
+    const selectedIds = selectedRows.value.map((row) => row.id)
+    const res = await deleteSelectedTasks(selectedIds)
+    if (res.status === 'success' && res.code === 200) {
+      selectedRows.value = [] // 清空選中的資料
+      console.log('選定任務刪除成功')
+      await getTaskDetail()
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 const onSelectionChange = (rows) => {
@@ -649,6 +728,7 @@ const getTaskDetail = async () => {
       // 使用 map 來重新處理資料並一次賦值
       taskList.value = res.data.map((item) => ({
         id: item.id,
+        isEdit: item.isEdit,
         taskName: item.taskName, // 確認 taskName 對應正確的 key
         taskType: item.taskType,
         startDate: item.startDate,
@@ -656,9 +736,10 @@ const getTaskDetail = async () => {
         subTasks: item.subTasks || [], // 額外屬性: 是否有子任務
         expanded: false,
       }))
+      console.log('撈取任務資料成功', taskList.value)
     }
   } catch (error) {
-    console.error('獲取任務清單失敗:', error)
+    console.error('撈取任務清單失敗:', error)
   }
 }
 

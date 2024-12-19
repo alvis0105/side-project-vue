@@ -22,107 +22,26 @@ axios.interceptors.response.use(
   }
 )
 
-let httpReq = {
-
-  /** get 請求
-     * @param  {接口地址} url
-     * @param  {請求參數} params
-     * @param  {參數} config
-     */
-  get: function(url, params = {}, config = {}) {
-    return new Promise((resolve, reject) => {
-      axios({
-        method: 'get',
-        url: url,
-        params: params,
-        ...config,
-      }).then((response) => {
-        resolve(response.data)
-      }).catch((error) => {
-        reject(error)
-      })
-    })
+const httpReq = {
+  /** 自定義 GET 請求 */
+  async get(url, params = {}, config = {}) {
+    return axios.get(url, { params, ...config }).then((res) => res.data)
   },
 
-  /** post 請求
-     * @param  {接口地址} url
-     * @param  {請求參數} data
-     * @param  {參數} config
-     */
-  post: function(url, data = {}, config = {}) {
-    return new Promise((resolve, reject) => {
-      axios({
-        method: 'post',
-        url: url,
-        data: data,
-        ...config,
-      }).then((response) => {
-        resolve(response.data)
-      }).catch((error) => {
-        reject(error)
-      })
-    })
+  /** 自定義 POST 請求 */
+  async post(url, data = {}, config = {}) {
+    return axios.post(url, data, config).then((res) => res.data)
   },
 
-  /** put 請求
-     * @param  {接口地址} url
-     * @param  {請求參數} data
-     * @param  {參數} config
-     */
-  put: function(url, data = {}, config = {}) {
-    return new Promise((resolve, reject) => {
-      axios({
-        method: 'put',
-        url: url,
-        data: data,
-        ...config,
-      }).then((response) => {
-        resolve(response.data)
-      }).catch((error) => {
-        reject(error)
-      })
-    })
+  /** 自定義 PUT 請求 */
+  async put(url, data = {}, config = {}) {
+    return axios.put(url, data, config).then((res) => res.data)
   },
 
-  /** patch 請求
-     * @param  {接口地址} url
-     * @param  {請求參數} data
-     * @param  {參數} config
-     */
-  patch: function(url, data = {}, config = {}) {
-    return new Promise((resolve, reject) => {
-      axios({
-        method: 'patch',
-        url: url,
-        data: data,
-        ...config,
-      }).then((response) => {
-        resolve(response.data)
-      }).catch((error) => {
-        reject(error)
-      })
-    })
-  },
-
-  /** delete 請求
-     * @param  {接口地址} url
-     * @param  {請求參數} data
-     * @param  {參數} config
-     */
-  delete: function(url, data = {}, config = {}) {
-    return new Promise((resolve, reject) => {
-      axios({
-        method: 'delete',
-        url: url,
-        data: data,
-        ...config,
-      }).then((response) => {
-        resolve(response.data)
-      }).catch((error) => {
-        reject(error)
-      })
-    })
-  },
+  /** 自定義 DELETE 請求 */
+  async delete(url, data = {}, config = {}) {
+    return axios.delete(url, { data, ...config }).then((res) => res.data)
+  }
 }
 
 export default httpReq

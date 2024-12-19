@@ -2,19 +2,19 @@
   <div>
     <div
       v-for="field in props.fields"
-      :key="field.name"
+      :key="field.id"
       class="mb-4"
     >
       <div :class="field.type !== 'checkbox' ? '' : 'flex'">
         <span
           class="w-full"
-          :for="field.name"
+          :for="field.id"
         >
           {{ field.label }}
         </span>
         <input
           v-if="field.type !== 'checkbox'"
-          :id="field.name"
+          :id="field.id"
           :value="localForm[field.name]"
           :type="field.type"
           class="w-full px-2 py-1 mt-2 border rounded-lg"
@@ -23,16 +23,16 @@
         >
         <input
           v-else
-          :id="field.name"
+          :id="field.id"
           :checked="localForm[field.name]"
           type="checkbox"
           @change="updateCheckbox(field.name, $event.target.checked)"
           @blur="validateField(field.name)"
         >
       </div>
-      <!-- 動態顯示錯誤訊息 -->
       <FormAlert
         v-if="errors[field.name]"
+        :key="`error-${field.id}`"
         class="mt-2 ms-2"
       >
         <template #default>
@@ -85,8 +85,8 @@ const updateCheckbox = (fieldName, isChecked) => {
 }
 
 const validateField = (fieldName) => {
-  const value = localForm[fieldName]
-  if (value === null || value === undefined || value === '' || value === false) {
+  const form = localForm[fieldName]
+  if (!form) {
     errors[fieldName] = "此欄位為必填項" // 設定錯誤訊息
   } else {
     errors[fieldName] = "" // 清除錯誤訊息

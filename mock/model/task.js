@@ -19,6 +19,7 @@ export const taskType = [
 export const taskList = [
   {
     id: 1,
+    isEdit: true,
     taskName: 'A專案開發',
     taskType: '主要任務',
     startDate: '2023-01-12',
@@ -33,6 +34,7 @@ export const taskList = [
   },
   {
     id: 2,
+    isEdit: true,
     taskName: 'vue3練習題',
     taskType: '支線任務',
     startDate: '2023-12-16',
@@ -44,6 +46,7 @@ export const taskList = [
   },
   {
     id: 3,
+    isEdit: true,
     taskName: '數值計算器',
     taskType: '功能型工具',
     startDate: '2023-11-12',
@@ -55,6 +58,7 @@ export const taskList = [
   },
   {
     id: 4,
+    isEdit: true,
     taskName: '套件升級',
     taskType: '支線任務',
     startDate: '2023-09-01',

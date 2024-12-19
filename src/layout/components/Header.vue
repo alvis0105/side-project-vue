@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-auto">
+  <div class="h-auto">
     <header>
       <span class="text-font34">{{ route.meta.title }}</span>
     </header>
