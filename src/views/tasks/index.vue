@@ -634,17 +634,6 @@ const closeModal = async () => {
   const current = Array.isArray(currentItem.value) ? currentItem.value : [currentItem.value]
   const { emptyItems, nonEmptyItems } = deleteFilter(current, 'row')
 
-  // 處理無值的項目 (前端刪除)
-  // if (emptyItems.length) {
-  //   const emptyIds = emptyItems.map(item => item.id)
-  //   taskList.value = taskList.value
-  //     .filter(item => !emptyIds.includes(item.id))
-  //     .map((item, index) => ({
-  //       ...item,
-  //       id: index + 1,
-  //     }))
-  // }
-
   if (nonEmptyItems.length) {
     // 處理有值的項目 (呼叫 API)
     if (currentAction.value === 'deleteSelectedRows') {
@@ -679,7 +668,7 @@ const deleteFilter = (items, type) => {
   if (type === 'subRow') {
     // 檢查是否除了 id 外其他欄位都有值
     const hasValues = Object.entries(items).some(([key, value]) => {
-      // 忽略 `id` 欄位
+      // 忽略 id 欄位
       if (key === 'id') return false
       // 若值為陣列，需檢查是否非空陣列
       if (Array.isArray(value)) {
@@ -690,27 +679,31 @@ const deleteFilter = (items, type) => {
     })
     return hasValues
   } else {
-    items.forEach(item => {
+    for (const item of items) {
+      // 判斷是否有非空欄位
       const hasNonEmptyFields = Object.entries(item).some(([key, value]) => {
-        if (key === 'id' || key === 'isEdit') return false
+        if (key === 'id' || key === 'isEdit') return false;
+
         if (Array.isArray(value)) {
           // 檢查 subTasks 中是否有有效值
           return value.some(subTask =>
             Object.entries(subTask).some(([subKey, subValue]) => {
-              if (subKey === 'id') return false // 忽略 id
-              return subValue !== '' && subValue !== null && subValue !== undefined
+              if (subKey === 'id') return false; // 忽略 id
+              return subValue !== '' && subValue !== null && subValue !== undefined;
             })
-          )
+          );
         }
-        return value !== '' && value !== null && value !== undefined
-      })
 
+        return value !== '' && value !== null && value !== undefined;
+      });
+
+      // 分類為有值或無值
       if (hasNonEmptyFields) {
-        nonEmptyItems.push(item)
+        nonEmptyItems.push(item);
       } else {
-        emptyItems.push(item)
+        emptyItems.push(item);
       }
-    })
+    }
     return { emptyItems, nonEmptyItems }
   }
 }
