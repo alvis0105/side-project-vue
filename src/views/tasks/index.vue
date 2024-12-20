@@ -425,7 +425,7 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted } from 'vue'
+import { ref, computed, nextTick, onMounted, watch } from 'vue'
 import { getTaskList, addTask, updateTask, deleteTask, deleteSubTask, deleteSelectedTasks } from '@/api'
 
 // 任務清單
@@ -569,11 +569,11 @@ const handleUpdate = async(parentRow, row) => {
   try {
     const params = {
       id: parentRow.id,
-      taskName: parentRow.taskName || '', // 任務名稱僅在 task 中有效
-      taskType: parentRow.taskType || '', // 任務類型僅在 task 中有效
-      startDate: parentRow.startDate || '', // 開始日期
-      endDate: parentRow.endDate || '', // 結束日期
-      subTasks: parentRow.subTasks || [ // 子任務結構
+      taskName: parentRow.taskName || '',
+      taskType: parentRow.taskType || '',
+      startDate: parentRow.startDate || '',
+      endDate: parentRow.endDate || '',
+      subTasks: parentRow.subTasks || [
         {
           id: row.id,
           subTaskName: row.subTaskName || '',
@@ -615,13 +615,14 @@ const openModal = (action, item) => {
   isDialogVisible.value = true
   currentAction.value = action
   currentItem.value = item
+  console.log('item', item)
 
   switch (action) {
     case 'deleteSelectedRows':
       dialogMessage.value = `請確認是否刪除選中的 "${item.length}筆" 資料?`
       break
     case 'deleteRow':
-      dialogMessage.value = `請確認是否刪除 "${item.name}" ?`
+      dialogMessage.value = `請確認是否刪除任務名稱: "${item.taskName}" ?`
       break
     default:
       dialogMessage.value = '請確認是否執行?'
@@ -629,18 +630,89 @@ const openModal = (action, item) => {
   }
 }
 
-const closeModal = async() => {
-  // 列表上方刪除單筆或多筆的方法
-  if (currentAction.value === 'deleteSelectedRows') {
-    await deleteSelectedRows()
-  } else if (currentAction.value === 'deleteRow') {
-    await deleteRow(currentItem.value)
+const closeModal = async () => {
+  const current = Array.isArray(currentItem.value) ? currentItem.value : [currentItem.value]
+  const { emptyItems, nonEmptyItems } = deleteFilter(current, 'row')
+
+  // 處理無值的項目 (前端刪除)
+  // if (emptyItems.length) {
+  //   const emptyIds = emptyItems.map(item => item.id)
+  //   taskList.value = taskList.value
+  //     .filter(item => !emptyIds.includes(item.id))
+  //     .map((item, index) => ({
+  //       ...item,
+  //       id: index + 1,
+  //     }))
+  // }
+
+  if (nonEmptyItems.length) {
+    // 處理有值的項目 (呼叫 API)
+    if (currentAction.value === 'deleteSelectedRows') {
+      const ids = nonEmptyItems.map(item => item.id)
+      await deleteSelectedRows(ids)
+    } else if (currentAction.value === 'deleteRow') {
+      await deleteRow(nonEmptyItems[0])
+    }
+  } else {
+    // 處理無值的項目 (前端刪除)
+    const emptyIds = emptyItems.map(item => item.id)
+    taskList.value = taskList.value
+      .filter(item => !emptyIds.includes(item.id))
+      .map((item, index) => ({
+        ...item,
+        id: index + 1,
+      }))
   }
-  isDialogVisible.value = false
+
+  // 重置狀態
   modalTitle.value = ''
   modalDetail.value = ''
+  isDialogVisible.value = false
   currentAction.value = ''
   currentItem.value = ''
+}
+
+const deleteFilter = (items, type) => {
+  const emptyItems = []
+  const nonEmptyItems = []
+
+  if (type === 'subRow') {
+    // 檢查是否除了 id 外其他欄位都有值
+    const hasValues = Object.entries(items).some(([key, value]) => {
+      // 忽略 `id` 欄位
+      if (key === 'id') return false
+      // 若值為陣列，需檢查是否非空陣列
+      if (Array.isArray(value)) {
+        return value.some(subValue => subValue !== '' && subValue !== null && subValue !== undefined)
+      }
+      // 若值非陣列，檢查是否為非空值
+      return value !== '' && value !== null && value !== undefined
+    })
+    return hasValues
+  } else {
+    items.forEach(item => {
+      const hasNonEmptyFields = Object.entries(item).some(([key, value]) => {
+        if (key === 'id' || key === 'isEdit') return false
+        if (Array.isArray(value)) {
+          // 檢查 subTasks 中是否有有效值
+          return value.some(subTask =>
+            Object.entries(subTask).some(([subKey, subValue]) => {
+              if (subKey === 'id') return false // 忽略 id
+              return subValue !== '' && subValue !== null && subValue !== undefined
+            })
+          )
+        }
+        return value !== '' && value !== null && value !== undefined
+      })
+
+      if (hasNonEmptyFields) {
+        nonEmptyItems.push(item)
+      } else {
+        emptyItems.push(item)
+      }
+    })
+    return { emptyItems, nonEmptyItems }
+  }
 }
 
 // 在對話框關閉時，重置刪除狀態
@@ -654,6 +726,7 @@ const newTask = (row, formType) => {
     row.subTasks.push({
       id: newId,
       subTaskName: '',
+      detail: '',
       startDate: '',
       endDate: ''
     })
@@ -669,20 +742,43 @@ const newTask = (row, formType) => {
       subTasks: [{ 
         id: 1,
         subTaskName: '',
+        detail: '',
         startDate: '',
         endDate: ''
       }]
     })
+    console.log('newTask新增taskList.value', taskList.value)
   }
 }
 
-// 刪除細項
+// 刪除細項任務
 const deleteSubRow = async (parentRow, selectedRow) => {
+  const hasValues = deleteFilter(selectedRow, 'subRow') // 判斷是否有值
+
+  // 共用的前端刪除邏輯
+  const removeSubTask = () => {
+    parentRow.subTasks = parentRow.subTasks
+      .filter(subTask => subTask.id !== selectedRow.id)
+      .map((item, index) => ({
+        ...item,
+        id: index + 1
+      }))
+  }
+
+  if (!hasValues) {
+    removeSubTask()
+    console.log('僅前端刪除細項任務')
+    return
+  }
+
   try {
-    const res = await deleteSubTask(parentRow.id, selectedRow.id) // 傳入任務 ID 和細項 ID
+    // 呼叫 API 刪除
+    const res = await deleteSubTask(parentRow.id, selectedRow.id)
     if (res.status === 'success' && res.code === 200) {
-      console.log('刪除任務細項成功')
-      await getTaskDetail()
+      removeSubTask()
+      console.log('刪除細項任務成功')
+      // 若需同步資料，可重新撈取
+      // getTaskDetail()
     }
   } catch (error) {
     console.error('刪除細項失敗:', error)
@@ -694,23 +790,44 @@ const deleteRow = async(row) => {
   try {
     const res = await deleteTask(row.id)
     if (res.status === 'success' && res.code === 200) {
+      taskList.value = taskList.value
+        .filter((item) => item.id !== row.id)
+        .map((item, index) => ({
+          ...item,
+          id: index + 1,
+        }))
       console.log('任務刪除成功')
-      await getTaskDetail()
+      // 若需同步資料，可重新撈取
+      // getTaskDetail()
     }
   } catch (error) {
     console.error(error)
   }
 }
 
+watch(taskList, (task) => {
+  console.log('監聽taskList.value', task)
+})
+
 // 刪除選中資料
-const deleteSelectedRows = async() => {
+const deleteSelectedRows = async(ids) => {
   try {
     const selectedIds = selectedRows.value.map((row) => row.id)
-    const res = await deleteSelectedTasks(selectedIds)
+    console.log('selectedIds', selectedIds)
+    const res = await deleteSelectedTasks(ids)
     if (res.status === 'success' && res.code === 200) {
-      selectedRows.value = [] // 清空選中的資料
+      console.log('刪除前taskList', taskList.value)
+      taskList.value = taskList.value
+        .filter((item) => !selectedIds.includes(item.id))
+        .map((item, index) => ({
+          ...item,
+          id: index + 1,
+        }))
+      console.log('刪除後taskList', taskList.value)
+      selectedRows.value = [] // 清空taskList', 選中的資料
       console.log('選定任務刪除成功')
-      await getTaskDetail()
+      // 若需同步資料，可重新撈取
+      // getTaskDetail()
     }
   } catch (error) {
     console.error(error)
