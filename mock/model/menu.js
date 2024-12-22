@@ -127,6 +127,19 @@ export const menuList = [
         },
         component: '',
       },
+      {
+        id: '40002',
+        parentId: '40000',
+        name: 'dataChart',
+        path: '/vue-practice/dataChart/index',
+        meta: {
+          title: 'eCharts及day.js使用',
+          icon: 'Guide',
+          type: 'menu',
+          description: '圖表功能應用，使用 eCharts 及 day.js 以及 watchEffect 監聽日期變化',
+        },
+        component: '',
+      }
     ]
   },
   {

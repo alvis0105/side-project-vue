@@ -46,7 +46,7 @@ import Schema from "async-validator"
 // 當前步驟索引
 const currentStep = ref(0)
 // 錯誤訊息
-const errorMsg = ref([]) 
+const errorMsg = ref([])
 
 
 // 表單數據
@@ -70,7 +70,6 @@ const isLastStep = computed(() => currentStep.value === stepForm.length - 1)
 // 更新表單數據
 const updateForm = ({ fieldName, value }) => {
   form[fieldName] = value
-  console.log('form[fieldName]',form[fieldName])
 }
 
 const validateCurrentStep = async () => {
@@ -127,7 +126,6 @@ const handleSubmit = async () => {
   if (!isLastStep.value) {
     currentStep.value++
   } else {
-    console.log("表單完成：", form)
     alert("表單已提交！")
   }
 }
