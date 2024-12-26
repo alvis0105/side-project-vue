@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col flex-1 mt-5 rounded-xl">
     <div class="w-[500px] p-5 border">
-      <span class="mb-5 text-font32">{{ currentConfig.title }}</span>
+      <span class="mb-5 text-font32">{{ $t(currentConfig.title) }}</span>
       <form
         class="flex flex-col flex-1 w-full mt-5"
         @submit.prevent="handleSubmit"
@@ -20,7 +20,7 @@
             type="button"
             @click="prevStep"
           >
-            上一步
+            {{ $t('common.prevStep') }}
           </button>
           <!-- 下一步/提交按鈕 -->
           <div class="ml-auto">
@@ -28,7 +28,7 @@
               type="submit"
               class="px-3 py-1 border rounded-lg hover:bg-active hover:opacity-100 hover:text-white"
             >
-              {{ isLastStep ? "提交" : "下一步" }}
+              {{ isLastStep ? $t('common.submit') : $t('common.nextStep') }}
             </button>
           </div>
         </div>
@@ -39,25 +39,23 @@
 
 <script setup>
 import { reactive, computed, ref } from "vue"
-import Step from "./components/step.vue"
+import { useI18n } from "vue-i18n"
 import { stepForm } from "../../../config/stepForm"
+import Step from "./components/step.vue"
 import Schema from "async-validator"
+
+const { t } = useI18n()
 
 // 當前步驟索引
 const currentStep = ref(0)
 // 錯誤訊息
 const errorMsg = ref([])
 
-
 // 表單數據
 const form = reactive({})
 stepForm.forEach((step) => {
   step.fields.forEach((field) => {
-    if (field.type === "checkbox") {
-      form[field.name] = false // checkbox 預設為 false
-    } else {
-      form[field.name] = "" // 其他類型預設為空字串
-    }
+    form[field.name] = field.type === "checkbox" ? false : ""
   })
 })
 
@@ -78,21 +76,10 @@ const validateCurrentStep = async () => {
   const values = {}
 
   currentFields.forEach((field) => {
-    // 初始化 rules 為外部配置的規則副本，避免重複添加
-    rules[field.name] = [...(field.rules || [])]
-    // 如果是 checkbox 類型，確認是否已添加 validator
-    if (
-      field.type === "checkbox" &&
-      !rules[field.name].some((rule) => rule.validator)
-    ) {
-      rules[field.name].push({
-        validator: (rule, value) =>
-          value === true
-            ? Promise.resolve()
-            : Promise.reject(new Error(rule.message || "請同意條款")),
-      })
-    }
-    // 提取欄位值
+    rules[field.name] = [...(field.rules || [])].map((rule) => ({
+      ...rule,
+      message: t(rule.message),
+    }))
     values[field.name] = form[field.name]
   })
 
@@ -100,22 +87,18 @@ const validateCurrentStep = async () => {
 
   try {
     await validator.validate(values)
-    // 驗證成功時清空錯誤訊息
     errorMsg.value = []
     return true
   } catch (validationErrors) {
-    // 清空錯誤訊息，重新收集
     errorMsg.value = []
     const errors = Array.isArray(validationErrors.errors)
       ? validationErrors.errors
       : [validationErrors]
     errorMsg.value = errors.map((err) => err.message)
-    // 彈出錯誤訊息
     alert(`驗證失敗：${errorMsg.value.join(", ")}`)
     return false
   }
 }
-
 
 // 提交表單
 const handleSubmit = async () => {
@@ -126,7 +109,7 @@ const handleSubmit = async () => {
   if (!isLastStep.value) {
     currentStep.value++
   } else {
-    alert("表單已提交！")
+    alert(t("common.formSubmitted"))
   }
 }
 
@@ -137,4 +120,3 @@ const prevStep = () => {
   }
 }
 </script>
-

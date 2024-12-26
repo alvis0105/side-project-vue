@@ -41,17 +41,10 @@ const initChart = () => {
 const updateChart = (data) => {
   if (!chartInstance) return
   const option = {
-    title: { text: '雷達圖', left: 'center' },
-    tooltip: { trigger: 'item' },
-    radar: {
-      indicator: data.map(item => ({ name: item.date, max: 100 })),
-    },
-    series: [
-      {
-        type: 'radar',
-        data: [{ value: data.map(item => item.value), name: '日期數據' }],
-      },
-    ],
+    tooltip: {},
+    xAxis: { type: 'category', data: data.map(item => item.date) },
+    yAxis: { type: 'value' },
+    series: [{ data: data.map(item => item.value), type: 'bar' }],
   }
   chartInstance.setOption(option)
 }

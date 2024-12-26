@@ -24,7 +24,6 @@ const props = defineProps({
 const chartRef = ref(null)
 let chartInstance = null
 
-// 生成圖表數據
 const generateData = () => {
   const days = dayjs(props.endDate).diff(dayjs(props.startDate), 'day') + 1
   return Array.from({ length: days }, (_, index) => ({
@@ -33,41 +32,40 @@ const generateData = () => {
   }))
 }
 
-// 初始化圖表
 const initChart = () => {
   if (chartRef.value) {
     chartInstance = echarts.init(chartRef.value)
   }
 }
 
-// 更新圖表
 const updateChart = (data) => {
   if (!chartInstance) return
   const option = {
-    title: { text: '折線圖', left: 'center' },
-    tooltip: { trigger: 'axis' },
-    xAxis: { type: 'category', data: data.map(item => item.date) },
-    yAxis: { type: 'value' },
-    series: [{ data: data.map(item => item.value), type: 'line', smooth: true }],
+    tooltip: { trigger: 'item' },
+    series: [
+      {
+        type: 'pie',
+        radius: '50%',
+        data: data.map(item => ({ name: item.date, value: item.value })),
+      },
+    ],
   }
   chartInstance.setOption(option)
 }
 
-// 使用 watchEffect 自動監測響應式數據變化
+// 使用 watchEffect 監測 props 的變化並更新圖表
 watchEffect(() => {
-  if (props.startDate && props.endDate) {
-    const data = generateData()
-    updateChart(data)
-  }
+  if (!props.startDate || !props.endDate) return // 防止空值情況
+  const data = generateData()
+  updateChart(data)
 })
 
-// 在掛載時初始化圖表
 onMounted(() => {
   initChart()
-  updateChart(generateData()) // 初始化圖表時加載數據
+  const initialData = generateData()
+  updateChart(initialData)
 })
 
-// 在卸載時清理圖表實例
 onUnmounted(() => {
   if (chartInstance) {
     chartInstance.dispose()

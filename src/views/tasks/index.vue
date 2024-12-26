@@ -2,7 +2,7 @@
   <div>
     <el-row class="mb-4">
       <el-button type="primary" icon="Plus" @click="newTask(taskList, 'task')">
-        新增
+        {{ $t('common.add') }}
       </el-button>
       <el-button
         :type="selectedRows.length ? 'danger' : ''"
@@ -11,7 +11,7 @@
         icon="Delete"
         @click="openModal('deleteSelectedRows', selectedRows)"
       >
-        刪除
+        {{ $t('common.delete') }}
       </el-button>
     </el-row>
     <el-table
@@ -23,7 +23,7 @@
       @selection-change="onSelectionChange"
     >
       <el-table-column type="selection" width="35" />
-      <el-table-column prop="id" label="No." width="80">
+      <el-table-column prop="id" width="80">
         <template #header>
           <div class="flex items-center justify-center">
             <div class="text-center">
@@ -53,11 +53,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="taskName" label="任務名稱" min-width="80">
+      <el-table-column prop="taskName" min-width="100">
         <template #header>
           <div class="flex items-center">
             <div class="text-center">
-              任務名稱
+              {{ $t('menu.tasks.taskList.taskName') }}
             </div>
             <div class="flex flex-col ps-1">
               <el-icon
@@ -83,6 +83,7 @@
               v-model="scope.row.taskName"
               size="small"
               ref="editableInput"
+              :placeholder="$t('menu.tasks.taskList.taskName')"
               @blur="confirmEditing"
               @keyup.enter="confirmEditing"
             />
@@ -96,7 +97,7 @@
               <EditPen />
             </el-icon>
             <span :class="!scope.row.taskName ? 'ps-1 text-black text-opacity-30' : ''">
-              {{ scope.row.taskName || '點擊輸入' }}
+              {{ scope.row.taskName || $t('common.clickPlaceholder') }}
             </span>
           </div>
         </template>
@@ -112,7 +113,7 @@
                 size="small"
                 @click="newTask(scope.row, 'subTask')"
               >
-                新增細項
+                {{ $t('common.add') }}
               </el-button>
             </div>
             <el-table
@@ -121,7 +122,7 @@
               row-key="id"
               size="small"
             >
-              <el-table-column prop="id" label="No." width="70">
+              <el-table-column prop="id" width="80">
                 <template #header>
                   <div class="text-center">
                     No.
@@ -133,7 +134,30 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="subTaskName" label="細項名稱" min-width="50">
+              <el-table-column prop="subTaskName" min-width="80">
+                <template #header>
+                  <div class="flex items-center">
+                    <div class="text-center">
+                      {{ $t('menu.tasks.taskList.subTaskName') }}
+                    </div>
+                    <div class="flex flex-col ps-1">
+                      <el-icon
+                        class="pt-2 cursor-pointer hover:text-blue-500"
+                        :class="sortOrder === 'asc' ? 'text-blue-500' : 'text-gray-400'"
+                        @click="activateSort('asc', 'subTaskName')"
+                      >
+                        <CaretTop />
+                      </el-icon>
+                      <el-icon
+                        class="pb-1 cursor-pointer hover:text-blue-500"
+                        :class="sortOrder === 'desc' ? 'text-blue-500' : 'text-gray-400'"
+                        @click="activateSort('desc', 'subTaskName')"
+                      >
+                        <CaretBottom />
+                      </el-icon>
+                    </div>
+                  </div>
+                </template>
                 <template #default="subScope">
                   <div v-if="isEditing(scope.row, subScope.row, 'subTaskName')">
                     <el-input
@@ -153,12 +177,35 @@
                       <EditPen />
                     </el-icon>
                     <span :class="!subScope.row.subTaskName ? 'ps-1 text-black text-opacity-30' : ''">
-                      {{ subScope.row.subTaskName || '點擊輸入' }}
+                      {{ subScope.row.subTaskName || $t('common.clickPlaceholder') }}
                     </span>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="detail" label="細項內容" min-width="150">
+              <el-table-column prop="detail" min-width="170">
+                <template #header>
+                  <div class="flex items-center">
+                    <div class="text-center">
+                      {{ $t('menu.tasks.taskList.detail') }}
+                    </div>
+                    <div class="flex flex-col ps-1">
+                      <el-icon
+                        class="pt-2 cursor-pointer hover:text-blue-500"
+                        :class="sortOrder === 'asc' ? 'text-blue-500' : 'text-gray-400'"
+                        @click="activateSort('asc', 'detail')"
+                      >
+                        <CaretTop />
+                      </el-icon>
+                      <el-icon
+                        class="pb-1 cursor-pointer hover:text-blue-500"
+                        :class="sortOrder === 'desc' ? 'text-blue-500' : 'text-gray-400'"
+                        @click="activateSort('desc', 'detail')"
+                      >
+                        <CaretBottom />
+                      </el-icon>
+                    </div>
+                  </div>
+                </template>
                 <template #default="subScope">
                   <div v-if="isEditing(scope.row, subScope.row, 'detail')">
                     <el-input
@@ -179,12 +226,35 @@
                       <EditPen />
                     </el-icon>
                     <span :class="!subScope.row.detail ? 'ps-1 text-black text-opacity-30' : ''">
-                      {{ subScope.row.detail || '點擊輸入' }}
+                      {{ subScope.row.detail || $t('common.clickPlaceholder') }}
                     </span>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="startDate" label="開始時間" min-width="50">
+              <el-table-column prop="startDate" min-width="80">
+                <template #header>
+                  <div class="flex items-center">
+                    <div class="text-center">
+                      {{ $t('menu.tasks.taskList.startDate') }}
+                    </div>
+                    <div class="flex flex-col ps-1">
+                      <el-icon
+                        class="pt-2 cursor-pointer hover:text-blue-500"
+                        :class="sortOrder === 'asc' ? 'text-blue-500' : 'text-gray-400'"
+                        @click="activateSort('asc', 'startDate')"
+                      >
+                        <CaretTop />
+                      </el-icon>
+                      <el-icon
+                        class="pb-1 cursor-pointer hover:text-blue-500"
+                        :class="sortOrder === 'desc' ? 'text-blue-500' : 'text-gray-400'"
+                        @click="activateSort('desc', 'startDate')"
+                      >
+                        <CaretBottom />
+                      </el-icon>
+                    </div>
+                  </div>
+                </template>
                 <template #default="subScope">
                   <div v-if="isEditing(scope.row, subScope.row, 'startDate')">
                     <el-input
@@ -204,12 +274,35 @@
                       <EditPen />
                     </el-icon>
                     <span :class="!subScope.row.startDate ? 'ps-1 text-black text-opacity-30' : ''">
-                      {{ subScope.row.startDate || '點擊輸入' }}
+                      {{ subScope.row.startDate || $t('common.clickPlaceholder') }}
                     </span>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="endDate" label="截止時間" min-width="50">
+              <el-table-column prop="endDate" min-width="80">
+                <template #header>
+                  <div class="flex items-center">
+                    <div class="text-center">
+                      {{ $t('menu.tasks.taskList.endDate') }}
+                    </div>
+                    <div class="flex flex-col ps-1">
+                      <el-icon
+                        class="pt-2 cursor-pointer hover:text-blue-500"
+                        :class="sortOrder === 'asc' ? 'text-blue-500' : 'text-gray-400'"
+                        @click="activateSort('asc', 'endDate')"
+                      >
+                        <CaretTop />
+                      </el-icon>
+                      <el-icon
+                        class="pb-1 cursor-pointer hover:text-blue-500"
+                        :class="sortOrder === 'desc' ? 'text-blue-500' : 'text-gray-400'"
+                        @click="activateSort('desc', 'endDate')"
+                      >
+                        <CaretBottom />
+                      </el-icon>
+                    </div>
+                  </div>
+                </template>
                 <template #default="subScope">
                   <div v-if="isEditing(scope.row, subScope.row, 'endDate')">
                     <el-input
@@ -229,7 +322,7 @@
                       <EditPen />
                     </el-icon>
                     <span :class="!subScope.row.endDate ? 'ps-1 text-black text-opacity-30' : ''">
-                      {{ subScope.row.endDate || '點擊輸入' }}
+                      {{ subScope.row.endDate || $t('common.clickPlaceholder') }}
                     </span>
                   </div>
                 </template>
@@ -252,11 +345,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="taskType" label="任務類型" min-width="270">
+      <el-table-column prop="taskType" min-width="170">
         <template #header>
           <div class="flex items-center">
             <div class="text-center">
-              任務類型
+              {{ $t('menu.tasks.taskList.taskType') }}
             </div>
             <div class="flex flex-col ps-1">
               <el-icon
@@ -282,9 +375,9 @@
               v-model="scope.row.taskType"
               class="w-full"
               size="small"
-              placeholder="選擇任務類型"
-              @focus="startEditing(scope.row, null, 'taskType')"
-              @change="confirmEditing"
+              :placeholder="$t('menu.tasks.taskList.taskType')"
+              @mousedown="() => startEditing(scope.row, null, 'taskType')"
+              @change="() => confirmEditing()"
             >
               <el-option
                 v-for="option in taskTypeOptions"
@@ -296,10 +389,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="startDate" label="開始時間" min-width="100">
+      <el-table-column prop="startDate" min-width="100">
         <template #header>
           <div class="flex items-center gap-1">
-            <span>開始時間</span>
+            <div class="text-center">
+              {{ $t('menu.tasks.taskList.startDate') }}
+            </div>
             <div class="flex flex-col">
               <el-icon
                 class="pt-2 cursor-pointer hover:text-blue-500"
@@ -337,15 +432,17 @@
               <EditPen />
             </el-icon>
             <span :class="!scope.row.startDate ? 'ps-1 text-black text-opacity-30' : ''">
-              {{ scope.row.startDate || '點擊輸入' }}
+              {{ scope.row.startDate || $t('common.clickPlaceholder') }}
             </span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="endDate" label="截止時間" min-width="70">
+      <el-table-column prop="endDate" min-width="70">
         <template #header>
           <div class="flex items-center gap-1">
-            <span>截止時間</span>
+            <div class="text-center">
+              {{ $t('menu.tasks.taskList.endDate') }}
+            </div>
             <div class="flex flex-col">
               <el-icon
                 class="pt-2 cursor-pointer hover:text-blue-500"
@@ -383,7 +480,7 @@
               <EditPen />
             </el-icon>
             <span :class="!scope.row.endDate ? 'ps-1 text-black text-opacity-30' : ''">
-              {{ scope.row.endDate || '點擊輸入' }}
+              {{ scope.row.endDate || $t('common.clickPlaceholder') }}
             </span>
           </div>
         </template>
@@ -418,7 +515,7 @@
     >
       <div>{{ dialogMessage }}</div>
       <template #footer>
-        <el-button type="primary" @click="closeModal">確認</el-button>
+        <el-button type="primary" @click="closeModal">{{ $t('common.confirm') }}</el-button>
       </template>
     </el-dialog>
   </div>
@@ -427,6 +524,9 @@
 <script setup>
 import { ref, computed, nextTick, onMounted, watch } from 'vue'
 import { getTaskList, addTask, updateTask, deleteTask, deleteSubTask, deleteSelectedTasks } from '@/api'
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
 
 // 任務清單
 const taskList = ref([])
@@ -493,6 +593,12 @@ const sortedList = computed(() => {
       case 'taskType':
         compareResult = a.taskType.localeCompare(b.taskType)
         break
+      case 'subTaskName':
+        compareResult = a.subTaskName.localeCompare(b.subTaskName)
+        break
+      case 'detail':
+        compareResult = a.detail.localeCompare(b.detail)
+        break
       default:
         compareResult = 0
     }
@@ -504,31 +610,50 @@ const sortedList = computed(() => {
 
 // 方法
 const startEditing = async (parentRow, row, field) => {
+  console.log('parentRow', parentRow)
   editingStatus.value = {
     parentRow: parentRow,
     row: row,
-    field: field
+    field: field,
   }
-  originalRow.value = JSON.parse(JSON.stringify(row))
-  originalParentRow.value = JSON.parse(JSON.stringify(parentRow))
-  await nextTick()
-  editableInput.value?.focus()
+
+  // 設置原始值
+  originalRow.value = row ? JSON.parse(JSON.stringify(row)) : null
+  originalParentRow.value = parentRow ? JSON.parse(JSON.stringify(parentRow)) : null
+
+  if (field !== 'taskType') {
+    await nextTick()
+    editableInput.value?.focus()
+  }
 }
 
 const confirmEditing = async () => {
   const parentRow = editingStatus.value.parentRow
   const row = editingStatus.value.row
 
-  // 檢查原始值是否有變更
-  const rowChanged = JSON.stringify(originalRow.value) !== JSON.stringify(row)
+  if (!parentRow) {
+    console.log('未設置 parentRow，無法完成編輯')
+    return
+  }
+
+  const rowChanged = row && JSON.stringify(originalRow.value) !== JSON.stringify(row)
   const parentRowChanged = JSON.stringify(originalParentRow.value) !== JSON.stringify(parentRow)
+
+  console.log('rowChanged:', rowChanged)
+  console.log('parentRowChanged:', parentRowChanged)
+
   if (rowChanged || parentRowChanged) {
-    if (!parentRow.isEdit) {
-      await handleAdd(parentRow, row)
-    } else {
-      await handleUpdate(parentRow, row)
+    try {
+      if (!parentRow.isEdit) {
+        await handleAdd(parentRow, row)
+      } else {
+        await handleUpdate(parentRow, row)
+      }
+    } catch (error) {
+      console.error('編輯操作失敗:', error)
     }
   }
+
   editingStatus.value = { row: null, field: '' }
 }
 
@@ -597,9 +722,12 @@ const toggleExpand = (row) => {
   row.expanded = !row.expanded
 }
 
-const onTaskTypeChange = async(parentRow, row, field) => {
-  // 在這裡處理當下拉選單值改變時的邏輯
-  await startEditing(parentRow, row, field)
+const onTaskTypeChange = async (newValue, parentRow) => {
+  // 更新 parentRow 的 taskType
+  parentRow.taskType = newValue
+
+  // 儲存變更
+  await startEditing(parentRow, null, 'taskType')
   await confirmEditing()
 }
 
@@ -682,26 +810,26 @@ const deleteFilter = (items, type) => {
     for (const item of items) {
       // 判斷是否有非空欄位
       const hasNonEmptyFields = Object.entries(item).some(([key, value]) => {
-        if (key === 'id' || key === 'isEdit') return false;
+        if (key === 'id' || key === 'isEdit') return false
 
         if (Array.isArray(value)) {
           // 檢查 subTasks 中是否有有效值
           return value.some(subTask =>
             Object.entries(subTask).some(([subKey, subValue]) => {
-              if (subKey === 'id') return false; // 忽略 id
-              return subValue !== '' && subValue !== null && subValue !== undefined;
+              if (subKey === 'id') return false // 忽略 id
+              return subValue !== '' && subValue !== null && subValue !== undefined
             })
-          );
+          )
         }
 
-        return value !== '' && value !== null && value !== undefined;
-      });
+        return value !== '' && value !== null && value !== undefined
+      })
 
       // 分類為有值或無值
       if (hasNonEmptyFields) {
-        nonEmptyItems.push(item);
+        nonEmptyItems.push(item)
       } else {
-        emptyItems.push(item);
+        emptyItems.push(item)
       }
     }
     return { emptyItems, nonEmptyItems }

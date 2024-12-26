@@ -41,7 +41,6 @@ const initChart = () => {
 const updateChart = (data) => {
   if (!chartInstance) return
   const option = {
-    title: { text: '散點圖', left: 'center' },
     tooltip: { trigger: 'item' },
     xAxis: { type: 'category', data: data.map(item => item.date) },
     yAxis: { type: 'value' },

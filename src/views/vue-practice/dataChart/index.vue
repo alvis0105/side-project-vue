@@ -19,19 +19,19 @@
         />
       </label>
     </div>
+
     <!-- 錯誤訊息 -->
     <FormAlert v-if="errorMessage" :message="errorMessage" />
 
     <!-- 圖表區域 -->
-    <div class="grid grid-cols-2 gap-5">
-      <div v-for="(chart, index) in charts" :key="index">
-        <span class="font-bold">{{ chart.label }}</span>
-        <component
-          :is="chart.component"
-          :startDate="startDate"
-          :endDate="endDate"
-        />
-      </div>
+    <div class="grid grid-cols-2 gap-5 pt-5">
+      <Chart
+        v-for="(chart, index) in charts"
+        :key="index"
+        :chartType="chart.type"
+        :startDate="startDate"
+        :endDate="endDate"
+      />
     </div>
   </div>
 </template>
@@ -40,13 +40,7 @@
 import { ref, watchEffect } from 'vue'
 import dayjs from 'dayjs'
 import FormAlert from '@/components/BaseFormAlert.vue'
-
-// 匯入各圖表組件
-import LineChart from './components/lineChart.vue'
-import BarChart from './components/barChart.vue'
-import PieChart from './components/pieChart.vue'
-import RadarChart from './components/radarChart.vue'
-import ScatterChart from './components/scatterChart.vue'
+import Chart from './components/chart.vue'
 
 // 日期範圍
 const startDate = ref(dayjs().subtract(7, 'day').format('YYYY-MM-DD'))
@@ -57,13 +51,13 @@ const errorMessage = ref('')
 const previousStartDate = ref(startDate.value)
 const previousEndDate = ref(endDate.value)
 
-// 定義圖表資料
+// 定義圖表類型
 const charts = [
-  { label: '折線圖', component: LineChart },
-  { label: '柱狀圖', component: BarChart },
-  { label: '圓餅圖', component: PieChart },
-  { label: '雷達圖', component: RadarChart },
-  { label: '散點圖', component: ScatterChart },
+  { label: '折線圖', type: 'line' },
+  { label: '柱狀圖', type: 'bar' },
+  { label: '圓餅圖', type: 'pie' },
+  { label: '雷達圖', type: 'radar' },
+  { label: '散點圖', type: 'scatter' },
 ]
 
 // 監控日期範圍

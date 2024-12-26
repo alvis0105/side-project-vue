@@ -1,20 +1,36 @@
 <template>
-  <div class="flex w-full h-full bg-white">
+  <div class="relative flex w-full h-full bg-white">
+    <!-- 左側背景圖片 -->
     <div class="w-3/4 h-full p-5 overflow-hidden">
-      <!-- <img src="@/assets/image/login.png" alt="Login_background" class="object-cover w-full h-full p-3 rounded-4xl"> -->
       <img
         src="@/assets/image/login.png"
         alt="Login_background"
-        class="object-cover w-full h-full p-3 rounded-4xl"
+        class="object-cover w-full h-full p-3 rounded-3xl"
         draggable="false"
-      >
+      />
     </div>
-    <div class="flex items-center justify-center w-1/2 h-full p-5">
-      <ul class="w-1/2 space-y-4 h-full-5 me-4">
+
+    <!-- 語言切換按鈕 -->
+    <div class="absolute flex space-x-2 top-8 right-6">
+      <button
+        class="font-bold text-blue-500 hover:text-blue-300"
+        @click="switchLanguage('zh')"
+      >
+        中文
+      </button>
+      <button
+        class="font-bold text-red-500 hover:text-red-300"
+        @click="switchLanguage('en')"
+      >
+        EN
+      </button>
+    </div>
+
+    <!-- 右側登入表單 -->
+    <div class="flex flex-col items-center justify-center w-1/2 h-full p-5">
+      <ul class="w-1/2 space-y-4">
         <li class="flex items-center justify-start w-full font-bold text-font32">
-          <span class="py-5">
-            帳號登入
-          </span>
+          <span class="py-5">{{ $t('message.login') }}</span>
         </li>
         <li>
           <div class="relative w-full">
@@ -26,19 +42,19 @@
                 <Message />
               </el-icon>
             </span>
-            <!-- <div>帳號</div> -->
             <input
               v-model="userInfo.account"
               type="text"
-              placeholder="account"
+              :placeholder="$t('message.accountPlaceholder')"
               class="w-full px-12 py-2 border rounded-3xl"
               :class="isLoading ? 'bg-blue-500 bg-opacity-10' : ''"
               :disabled="isLoading"
               @blur="blurHandler()"
-            >
+            />
           </div>
           <FormAlert
             v-if="!firstEntry && !userInfo.account"
+            :message="$t('common.requiredField')"
             class="mt-2 ms-2"
           />
         </li>
@@ -52,16 +68,15 @@
                 <Lock />
               </el-icon>
             </span>
-            <!-- <div>密碼</div> -->
             <input
               v-model="userInfo.password"
-              placeholder="password"
+              :placeholder="$t('message.passwordPlaceholder')"
               class="w-full px-12 py-2 pr-10 border rounded-3xl"
               :class="isLoading ? 'bg-blue-500 bg-opacity-10' : ''"
               :type="isVisible ? 'text' : 'password'"
               :disabled="isLoading"
               @blur="blurHandler()"
-            >
+            />
             <span
               class="absolute cursor-pointer right-4 top-1/4"
               @click="visibleHandler"
@@ -73,6 +88,7 @@
           </div>
           <FormAlert
             v-if="!firstEntry && !userInfo.password"
+            :message="$t('common.requiredField')"
             class="mt-2 ms-2"
           />
         </li>
@@ -91,41 +107,29 @@
               class="flex items-center font-bold text-font20"
               :class="isLoading ? 'ps-3' : ''"
             >
-              {{ isLoading ? '登入中' : '登入' }}
+              {{ isLoading ? $t('message.loading') : $t('message.login') }}
             </div>
           </button>
         </li>
-        <!-- <li class="relative flex justify-center mt-5">
-          <div
-            :class="isLoading ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-90 invisible'"
-            class="absolute flex items-center justify-center w-full pt-3 transition-opacity duration-300"
-          >
-            <Spinner :type="spinnerType" />
-            <div class="flex items-center font-bold ps-3 text-font20">
-              登入中
-            </div>
-          </div>
-        </li> -->
       </ul>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/modules/user'
+import { switchLanguage } from '@/plugins/i18n.js'
 import Spinner from '@/components/BaseSpinner.vue'
 import FormAlert from '@/components/BaseFormAlert.vue'
-import httpReq from '@/utils/request'
-import { getUsers } from '@/api'
-
-// 使用 route 的 meta 設置頁面的標題
-// document.title = route.meta.title
 
 const router = useRouter()
-const userStore = useUserStore() // 獲取 userStore 實例
+const { locale } = useI18n()
+const userStore = useUserStore()
 
+// 狀態管理
 const spinnerType = ref('white')
 const isLoading = ref(false)
 const isVisible = ref(false)
@@ -140,60 +144,53 @@ const delay = () => {
   return new Promise((resolve) => setTimeout(resolve, 1000))
 }
 
+// 登入方法
 const login = () => {
   isLoading.value = true
   userStore
     .login(userInfo.value)
     .then(async () => {
-      // 讓登入的spinner能顯示一秒
+      // 模擬延遲以顯示 Spinner
       await delay()
-      router.push("/home")
+      router.push('/home')
       isLoading.value = false
+
     })
     .catch((error) => {
-      console.error("登入失敗：", error.message || error)
-      alert(error.message || "登入失敗，請檢查帳號密碼")
+      console.error('登入失敗：', error.message || error)
+      alert(error.message || '登入失敗，請檢查帳號密碼')
     })
     .finally(() => {
       isLoading.value = false
     })
 }
 
+// 顯示密碼切換
 const visibleHandler = () => {
   isVisible.value = !isVisible.value
 }
 
+// 輸入框失去焦點
 const blurHandler = () => {
   firstEntry.value = false
 }
 
-// 隨機產生10筆帳戶資料
-// const loadUsers = async() => {
-//   try {
-//     const res = await getUsers()
-//     if (res.status === 'success' && res.code === 200) {
-//       userInfo.value.name = res.responseData[0].name
-//       userInfo.value.account = res.responseData[0].email
-//       userInfo.value.password = 'abcde123456'
-//     }
-//     console.log('取得隨機用戶資料:', res.responseData)
-//   } catch (error) {
-//     console.error('獲取用戶數據失敗:', error)
-//   }
+// 切換語言並保存到 localStorage
+// const switchLanguage = (lang) => {
+//   locale.value = lang;
+//   localStorage.setItem('language', lang) // 保存語言設置
 // }
 
+// 初始化語言設置
+const initializeLanguage = () => {
+  const savedLanguage = localStorage.getItem('language')
+  if (savedLanguage) {
+    locale.value = savedLanguage
+  }
+}
+
 onMounted(() => {
-  // loadUsers()
+  initializeLanguage()
 })
 
 </script>
-
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>

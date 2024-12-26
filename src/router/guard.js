@@ -5,6 +5,7 @@ import { menuList } from '../../mock/model/menu'
 // 使用 import.meta.glob 批量導入所有視圖組件
 export const addDynamicRoutes = (router, list) => {
   const modules = import.meta.glob('/src/views/**/*') // 加載所有視圖組件
+  console.log('modules', Object.keys(modules))
 
   list.forEach((menu) => {
     if (menu.children && menu.children.length > 0) {

@@ -5,12 +5,13 @@ export const menuList = [
     name: 'home',
     path: '/home',
     meta: {
-      title: '首頁',
+      title: 'menu.home',
+      i18nTitle: 'menu.home',
       icon: 'House',
       type: 'menu',
       description: '',
     },
-    component: '',
+    // component: '',
   },
   {
     id: '20000',
@@ -18,11 +19,12 @@ export const menuList = [
     name: 'tasks',
     path: '/tasks',
     meta: {
-      title: '任務管理',
+      title: 'menu.tasks.title',
+      i18nTitle: 'menu.tasks.title',
       icon: 'Collection',
       type: 'menu',
     },
-    component: '',
+    // component: '',
     children: [
       {
         id: '20001',
@@ -30,50 +32,17 @@ export const menuList = [
         name: 'taskList',
         path: '/tasks/taskList',
         meta: {
-          title: '任務列表',
+          title: 'menu.tasks.taskList.title',
+          i18nTitle: 'menu.tasks.taskList.title',
           icon: 'Menu',
           type: 'menu',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
           description: '搭配 element-plus, 使用 vue-directive(含 v-if、v-bind、v-on), 結合 localStorage 模擬資料庫與 vite-plugin-fake-server 處理模擬 API, 支援資料持久化與即時更新, 雙擊進入編輯模式, 透過 nextTick 確保 DOM 渲染後自動聚焦, 按 Enter 或失焦自動保存變更。',
         },
-        component: '',
+        // component: '',
       },
-      // {
-      //   id: '20002',
-      //   parentId: '20000',
-      //   name: 'taskDetail',
-      //   path: '/tasks/taskDetail/:id',
-      //   meta: {
-      //     title: '任務詳細',
-      //     icon: 'Document',
-      //     type: 'menu',
-      //   },
-      //   component: '',
-      // },
-      // {
-      //   id: '20003',
-      //   parentId: '20000',
-      //   name: 'taskAdd',
-      //   path: '/tasks/taskAdd',
-      //   meta: {
-      //     title: '新增任務',
-      //     icon: 'Plus',
-      //     type: 'button',
-      //   },
-      //   component: '',
-      // },
-      // {
-      //   id: '20004',
-      //   parentId: '20000',
-      //   name: 'taskEdit',
-      //   path: '/tasks/taskEdit/:id',
-      //   meta: {
-      //     title: '編輯任務',
-      //     icon: 'Edit',
-      //     type: 'button',
-      //   },
-      //   component: '',
-      // },
-    ]
+    ],
   },
   {
     id: '30000',
@@ -81,26 +50,30 @@ export const menuList = [
     name: 'dashboard',
     path: '/dashboard',
     meta: {
-      title: '儀表板',
+      title: 'menu.dashboard.title',
+      i18nTitle: 'menu.dashboard.title',
       icon: 'DataAnalysis',
       type: 'menu',
     },
-    component: '',
+    // component: '',
     children: [
       {
         id: '30001',
         parentId: '30000',
         name: 'chart',
-        path: '/dashboard',
+        path: '/dashboard/dataChart/index',
         meta: {
-          title: '圖表功能',
+          title: 'menu.dashboard.chart.title',
+          i18nTitle: 'menu.dashboard.chart.title',
           icon: 'PieChart',
           type: 'menu',
-          description: '圖表功能描述待補',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
+          description: '圖表功能應用，使用 eCharts 及 day.js 以及 watchEffect 監聽日期變化',
         },
-        component: '',
+        // component: '',
       },
-    ]
+    ],
   },
   {
     id: '40000',
@@ -108,11 +81,12 @@ export const menuList = [
     name: 'vue-practice',
     path: '/vue-practice',
     meta: {
-      title: 'vue練習',
+      title: 'menu.vuePractice.title',
+      i18nTitle: 'menu.vuePractice.title',
       icon: 'Reading',
       type: 'menu',
     },
-    component: '',
+    // component: '',
     children: [
       {
         id: '40001',
@@ -120,27 +94,17 @@ export const menuList = [
         name: 'stepForm',
         path: '/vue-practice/stepForm/index',
         meta: {
-          title: '分步驟表單',
+          title: 'menu.vuePractice.stepForm',
+          i18nTitle: 'menu.vuePractice.stepForm',
           icon: 'Guide',
           type: 'menu',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
           description: '使用 vue-directive(含v-if, v-else, v-for), Vue Emits, Props, Vue Composition API(reactive, ref), v-slot(alert提示) 以及 async-validator 執行檢核',
         },
-        component: '',
+        // component: '',
       },
-      {
-        id: '40002',
-        parentId: '40000',
-        name: 'dataChart',
-        path: '/vue-practice/dataChart/index',
-        meta: {
-          title: 'eCharts及day.js使用',
-          icon: 'Guide',
-          type: 'menu',
-          description: '圖表功能應用，使用 eCharts 及 day.js 以及 watchEffect 監聽日期變化',
-        },
-        component: '',
-      }
-    ]
+    ],
   },
   {
     id: '50000',
@@ -148,26 +112,30 @@ export const menuList = [
     name: 'js-practice',
     path: '/js-practice',
     meta: {
-      title: 'javascript練習',
+      title: 'menu.jsPractice.title',
+      i18nTitle: 'menu.jsPractice.title',
       icon: 'Reading',
       type: 'menu',
     },
-    component: '',
+    // component: '',
     children: [
       {
         id: '50001',
         parentId: '50000',
-        name: 'javascriptPractice',
-        path: '/javascriptPractice',
+        name: 'javascript-Practice',
+        path: '/js-practice/index',
         meta: {
-          title: 'javascript練習1',
+          title: 'menu.jsPractice.practice1',
+          i18nTitle: 'menu.jsPractice.practice1',
           icon: 'Guide',
           type: 'menu',
-          description: 'javascript練習1的功能描述待補',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
+          description: 'javascript練習1的description.title待補',
         },
-        component: '',
+        // component: '',
       },
-    ]
+    ],
   },
   {
     id: '60000',
@@ -175,7 +143,8 @@ export const menuList = [
     name: 'system',
     path: '/system',
     meta: {
-      title: '系統設定',
+      title: 'menu.system.title',
+      i18nTitle: 'menu.system.title',
       icon: 'Setting',
       type: 'menu',
     },
@@ -186,11 +155,15 @@ export const menuList = [
         name: 'user',
         path: '/user',
         meta: {
-          title: '帳號設定',
+          title: 'menu.system.user.title',
+          i18nTitle: 'menu.system.user.title',
           icon: 'UserFilled',
           type: 'menu',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
+          description: '帳號設定description.title待補',
         },
-        component: '',
+        // component: '',
       },
       {
         id: '60002',
@@ -198,12 +171,16 @@ export const menuList = [
         name: 'TaskManage',
         path: '/TaskManage',
         meta: {
-          title: '任務設定',
+          title: 'menu.system.taskManage.title',
+          i18nTitle: 'menu.system.taskManage.title',
           icon: 'Tools',
           type: 'menu',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
+          description: '任務設定description.title待補',
         },
-        component: '',
-      }
-    ]
-  }
+        // component: '',
+      },
+    ],
+  },
 ]

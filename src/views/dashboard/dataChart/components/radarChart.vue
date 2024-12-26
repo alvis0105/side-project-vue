@@ -41,13 +41,14 @@ const initChart = () => {
 const updateChart = (data) => {
   if (!chartInstance) return
   const option = {
-    title: { text: '圓餅圖', left: 'center' },
     tooltip: { trigger: 'item' },
+    radar: {
+      indicator: data.map(item => ({ name: item.date, max: 100 })),
+    },
     series: [
       {
-        type: 'pie',
-        radius: '50%',
-        data: data.map(item => ({ name: item.date, value: item.value })),
+        type: 'radar',
+        data: [{ value: data.map(item => item.value), name: '日期數據' }],
       },
     ],
   }
