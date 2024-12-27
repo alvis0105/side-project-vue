@@ -256,27 +256,15 @@
                   </div>
                 </template>
                 <template #default="subScope">
-                  <div v-if="isEditing(scope.row, subScope.row, 'startDate')">
-                    <el-input
-                      ref="editableInput"
-                      v-model="subScope.row.startDate"
-                      size="small"
-                      @blur="confirmEditing"
-                      @keyup.enter="confirmEditing"
-                    />
-                  </div>
-                  <div
-                    v-else
-                    class="cursor-pointer"
-                    @dblclick="startEditing(scope.row, subScope.row, 'startDate')"
-                  >
-                    <el-icon v-if="!subScope.row.startDate" class="!icon-pen">
-                      <EditPen />
-                    </el-icon>
-                    <span :class="!subScope.row.startDate ? 'ps-1 text-black text-opacity-30' : ''">
-                      {{ subScope.row.startDate || $t('common.clickPlaceholder') }}
-                    </span>
-                  </div>
+                  <el-date-picker
+                    v-model="subScope.row.startDate"
+                    type="date"
+                    value-format="YYYY-MM-DD"
+                    placeholder="選擇日期"
+                    size="small"
+                    @focus="startEditing(scope.row, subScope.row, 'startDate')"
+                    @change="confirmEditing"
+                  />
                 </template>
               </el-table-column>
               <el-table-column prop="endDate" min-width="80">
@@ -304,27 +292,15 @@
                   </div>
                 </template>
                 <template #default="subScope">
-                  <div v-if="isEditing(scope.row, subScope.row, 'endDate')">
-                    <el-input
-                      v-model="subScope.row.endDate"
-                      size="small"
-                      ref="editableInput"
-                      @blur="confirmEditing"
-                      @keyup.enter="confirmEditing"
-                    />
-                  </div>
-                  <div
-                    v-else
-                    class="cursor-pointer"
-                    @dblclick="startEditing(scope.row, subScope.row, 'endDate')"
-                  >
-                    <el-icon v-if="!subScope.row.endDate" class="!icon-pen">
-                      <EditPen />
-                    </el-icon>
-                    <span :class="!subScope.row.endDate ? 'ps-1 text-black text-opacity-30' : ''">
-                      {{ subScope.row.endDate || $t('common.clickPlaceholder') }}
-                    </span>
-                  </div>
+                  <el-date-picker
+                    v-model="subScope.row.endDate"
+                    type="date"
+                    value-format="YYYY-MM-DD"
+                    placeholder="選擇日期"
+                    size="small"
+                    @focus="startEditing(scope.row, subScope.row, 'endDate')"
+                    @change="confirmEditing"
+                  />
                 </template>
               </el-table-column>
               <el-table-column width="50">
@@ -345,7 +321,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="taskType" min-width="170">
+      <el-table-column prop="taskType" min-width="100">
         <template #header>
           <div class="flex items-center">
             <div class="text-center">
@@ -414,30 +390,18 @@
           </div>
         </template>
         <template #default="scope">
-          <div v-if="isEditing(scope.row, null, 'startDate')">
-            <el-input
-              v-model="scope.row.startDate"
-              size="small"
-              ref="editableInput"
-              @blur="confirmEditing"
-              @keyup.enter="confirmEditing"
-            />
-          </div>
-          <div
-            v-else
-            class="cursor-pointer"
-            @dblclick="startEditing(scope.row, null, 'startDate')"
-          >
-            <el-icon v-if="!scope.row.startDate" class="!icon-pen">
-              <EditPen />
-            </el-icon>
-            <span :class="!scope.row.startDate ? 'ps-1 text-black text-opacity-30' : ''">
-              {{ scope.row.startDate || $t('common.clickPlaceholder') }}
-            </span>
-          </div>
+          <el-date-picker
+            v-model="scope.row.startDate"
+            type="date"
+            value-format="YYYY-MM-DD"
+            placeholder="選擇日期"
+            size="small"
+            @focus="startEditing(scope.row, null, 'startDate')"
+            @change="confirmEditing"
+          />
         </template>
       </el-table-column>
-      <el-table-column prop="endDate" min-width="70">
+      <el-table-column prop="endDate" min-width="100">
         <template #header>
           <div class="flex items-center gap-1">
             <div class="text-center">
@@ -462,27 +426,15 @@
           </div>
         </template>
         <template #default="scope">
-          <div v-if="isEditing(scope.row, null, 'endDate')">
-            <el-input
-              v-model="scope.row.endDate"
-              size="small"
-              ref="editableInput"
-              @blur="confirmEditing"
-              @keyup.enter="confirmEditing"
-            />
-          </div>
-          <div
-            v-else
-            class="cursor-pointer"
-            @dblclick="startEditing(scope.row, null, 'endDate')"
-          >
-            <el-icon v-if="!scope.row.endDate" class="!icon-pen">
-              <EditPen />
-            </el-icon>
-            <span :class="!scope.row.endDate ? 'ps-1 text-black text-opacity-30' : ''">
-              {{ scope.row.endDate || $t('common.clickPlaceholder') }}
-            </span>
-          </div>
+          <el-date-picker
+            v-model="scope.row.endDate"
+            type="date"
+            value-format="YYYY-MM-DD"
+            placeholder="選擇日期"
+            size="small"
+            @focus="startEditing(scope.row, null, 'endDate')"
+            @change="confirmEditing"
+          />
         </template>
       </el-table-column>
       <el-table-column width="150">

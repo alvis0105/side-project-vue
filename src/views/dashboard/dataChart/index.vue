@@ -1,8 +1,8 @@
 <template>
   <el-config-provider :locale="currentLocale">
-    <div>
+    <div class="p-6 mx-auto border border-gray-300 rounded-lg bg-gray-50">
       <!-- 日期選擇區域 -->
-      <div class="flex gap-5 px-3 mt-5 mb-5">
+      <div class="flex gap-5 mb-6">
         <label class="flex items-center gap-2">
           <span class="font-semibold">{{ t('menu.dashboard.chart.startDate') }}：</span>
           <el-date-picker
@@ -26,17 +26,27 @@
           />
         </label>
       </div>
+
       <!-- 錯誤訊息 -->
       <FormAlert v-if="errorMessage" :message="errorMessage" />
 
       <!-- 圖表區域 -->
-      <div class="grid grid-cols-2 gap-5 pt-5">
-        <div v-for="(chart, index) in charts" :key="index">
-          <div class="text-xl font-bold text-center">{{ t(chart.label) }}</div>
-          <component
-            :is="chart.component"
+      <div class="grid grid-cols-2 gap-8 pt-5">
+        <div
+          v-for="(chart, index) in charts"
+          :key="index"
+          class="flex flex-col items-center gap-4"
+        >
+          <!-- 圖表類型標籤 -->
+          <span class="flex justify-center text-lg font-semibold text-gray-700">
+            {{ chart.label }}
+          </span>
+          <!-- 圖表 -->
+          <Chart
+            :chartType="chart.type"
             :startDate="startDate"
             :endDate="endDate"
+            class="w-full h-96"
           />
         </div>
       </div>
@@ -47,21 +57,15 @@
 <script setup>
 import { ref, watchEffect, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { getCurrentElementPlusLocale } from '@/plugins/i18n.js'
 import dayjs from 'dayjs'
 import FormAlert from '@/components/BaseFormAlert.vue'
-import { getCurrentElementPlusLocale } from '@/plugins/i18n.js'
+import Chart from './components/chart.vue'
 
-// Element Plus 當前語言
+// 動態追蹤當前 Element Plus 語言
 const currentLocale = computed(() => getCurrentElementPlusLocale())
 
-// 匯入各圖表組件
-import LineChart from './components/lineChart.vue'
-import BarChart from './components/barChart.vue'
-import PieChart from './components/pieChart.vue'
-import RadarChart from './components/radarChart.vue'
-import ScatterChart from './components/scatterChart.vue'
-
-const { t } = useI18n() // 使用 i18n
+const { t } = useI18n()
 
 // 日期範圍
 const startDate = ref(dayjs().subtract(7, 'day').format('YYYY-MM-DD'))
@@ -72,26 +76,24 @@ const errorMessage = ref('')
 const previousStartDate = ref(startDate.value)
 const previousEndDate = ref(endDate.value)
 
-// 定義圖表資料
-const charts = [
-  { label: 'menu.dashboard.chart.line', component: LineChart },
-  { label: 'menu.dashboard.chart.bar', component: BarChart },
-  { label: 'menu.dashboard.chart.pie', component: PieChart },
-  { label: 'menu.dashboard.chart.radar', component: RadarChart },
-  { label: 'menu.dashboard.chart.scatter', component: ScatterChart },
-]
+// 定義圖表類型
+const charts = ref([
+  { label: t('menu.dashboard.chart.line'), type: 'line' },
+  { label: t('menu.dashboard.chart.bar'), type: 'bar' },
+  { label: t('menu.dashboard.chart.pie'), type: 'pie' },
+  { label: t('menu.dashboard.chart.radar'), type: 'radar' },
+  { label: t('menu.dashboard.chart.scatter'), type: 'scatter' },
+])
 
 // 監控日期範圍
 watchEffect(() => {
-  // 確保日期範圍有效
   if (!startDate.value || !endDate.value) {
-    errorMessage.value = t('menu.dashboard.chart.errorDateMessage')
+    errorMessage.value = t('menu.dashboard.chart.errorMsg')
     return
   }
 
-  // 確保開始日期不晚於結束日期
   if (dayjs(startDate.value).isAfter(dayjs(endDate.value))) {
-    errorMessage.value = t('menu.dashboard.chart.errorDateMessage')
+    errorMessage.value = t('menu.dashboard.chart.errorMsg')
     startDate.value = previousStartDate.value
     endDate.value = previousEndDate.value
   } else {
@@ -99,5 +101,16 @@ watchEffect(() => {
     previousStartDate.value = startDate.value
     previousEndDate.value = endDate.value
   }
+})
+
+// 監控語言切換，動態更新圖表標籤
+watchEffect(() => {
+  charts.value = [
+    { label: t('menu.dashboard.chart.line'), type: 'line' },
+    { label: t('menu.dashboard.chart.bar'), type: 'bar' },
+    { label: t('menu.dashboard.chart.pie'), type: 'pie' },
+    { label: t('menu.dashboard.chart.radar'), type: 'radar' },
+    { label: t('menu.dashboard.chart.scatter'), type: 'scatter' },
+  ]
 })
 </script>

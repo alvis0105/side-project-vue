@@ -11,7 +11,6 @@ export const menuList = [
       type: 'menu',
       description: '',
     },
-    // component: '',
   },
   {
     id: '20000',
@@ -24,7 +23,6 @@ export const menuList = [
       icon: 'Collection',
       type: 'menu',
     },
-    // component: '',
     children: [
       {
         id: '20001',
@@ -40,7 +38,6 @@ export const menuList = [
           i18nDescriptionTitle: 'description.title',
           description: '搭配 element-plus, 使用 vue-directive(含 v-if、v-bind、v-on), 結合 localStorage 模擬資料庫與 vite-plugin-fake-server 處理模擬 API, 支援資料持久化與即時更新, 雙擊進入編輯模式, 透過 nextTick 確保 DOM 渲染後自動聚焦, 按 Enter 或失焦自動保存變更。',
         },
-        // component: '',
       },
     ],
   },
@@ -55,7 +52,6 @@ export const menuList = [
       icon: 'DataAnalysis',
       type: 'menu',
     },
-    // component: '',
     children: [
       {
         id: '30001',
@@ -71,7 +67,6 @@ export const menuList = [
           i18nDescriptionTitle: 'description.title',
           description: '圖表功能應用，使用 eCharts 及 day.js 以及 watchEffect 監聽日期變化',
         },
-        // component: '',
       },
     ],
   },
@@ -86,7 +81,6 @@ export const menuList = [
       icon: 'Reading',
       type: 'menu',
     },
-    // component: '',
     children: [
       {
         id: '40001',
@@ -102,7 +96,21 @@ export const menuList = [
           i18nDescriptionTitle: 'description.title',
           description: '使用 vue-directive(含v-if, v-else, v-for), Vue Emits, Props, Vue Composition API(reactive, ref), v-slot(alert提示) 以及 async-validator 執行檢核',
         },
-        // component: '',
+      },
+      {
+        id: '40002',
+        parentId: '40000',
+        name: 'watchEffect',
+        path: '/vue-practice/watchEffect/index',
+        meta: {
+          title: 'menu.vuePractice.watchEffect',
+          i18nTitle: 'menu.vuePractice.watchEffect',
+          icon: 'Guide',
+          type: 'menu',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
+          description: '實作商品價格篩選及統計功能，使用 watchEffect 監控價格範圍，篩選符合條件的商品並更新統計數據',
+        },
       },
     ],
   },
@@ -117,7 +125,6 @@ export const menuList = [
       icon: 'Reading',
       type: 'menu',
     },
-    // component: '',
     children: [
       {
         id: '50001',
@@ -133,7 +140,6 @@ export const menuList = [
           i18nDescriptionTitle: 'description.title',
           description: 'javascript練習1的description.title待補',
         },
-        // component: '',
       },
     ],
   },
@@ -163,7 +169,6 @@ export const menuList = [
           i18nDescriptionTitle: 'description.title',
           description: '帳號設定description.title待補',
         },
-        // component: '',
       },
       {
         id: '60002',
@@ -179,7 +184,6 @@ export const menuList = [
           i18nDescriptionTitle: 'description.title',
           description: '任務設定description.title待補',
         },
-        // component: '',
       },
     ],
   },

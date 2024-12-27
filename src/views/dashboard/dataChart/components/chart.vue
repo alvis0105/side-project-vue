@@ -3,7 +3,8 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import * as echarts from 'echarts'
 import dayjs from 'dayjs'
 
@@ -26,6 +27,9 @@ const props = defineProps({
 // 引用 DOM 和 ECharts 實例
 const chartRef = ref(null)
 const chartInstance = ref(null)
+const chartData = ref([]) // 用於緩存數據
+
+const { t, locale } = useI18n()
 
 // 生成數據
 const generateData = () => {
@@ -40,22 +44,15 @@ const generateData = () => {
 const initChart = () => {
   if (chartRef.value) {
     chartInstance.value = echarts.init(chartRef.value)
-
-    // 設置 passive 事件監聽器
-    chartInstance.value.getZr().handler.setMouseEventListener = function (
-      type,
-      handler
-    ) {
-      this.dom.addEventListener(type, handler, { passive: true })
-    }
   }
 }
 
 // 更新圖表配置
-const updateChart = (data) => {
-  if (!chartInstance.value) return
+const updateChart = () => {
+  if (!chartInstance.value || chartData.value.length === 0) return
+
+  const data = chartData.value
   const baseOption = {
-    title: { text: '', left: 'center' },
     tooltip: { trigger: 'axis' },
     xAxis: { type: 'category', data: data.map(item => item.date) },
     yAxis: { type: 'value' },
@@ -65,16 +62,13 @@ const updateChart = (data) => {
   // 根據圖表類型設置配置
   switch (props.chartType) {
     case 'bar':
-      baseOption.title.text = '柱狀圖'
       baseOption.series[0].type = 'bar'
       break
     case 'line':
-      baseOption.title.text = '折線圖'
       baseOption.series[0].type = 'line'
       baseOption.series[0].smooth = true
       break
     case 'pie':
-      baseOption.title.text = '圓餅圖'
       baseOption.tooltip.trigger = 'item'
       baseOption.series = [
         {
@@ -85,7 +79,6 @@ const updateChart = (data) => {
       ]
       break
     case 'radar':
-      baseOption.title.text = '雷達圖'
       baseOption.tooltip.trigger = 'item'
       baseOption.radar = {
         indicator: data.map(item => ({ name: item.date, max: 100 })),
@@ -98,7 +91,6 @@ const updateChart = (data) => {
       ]
       break
     case 'scatter':
-      baseOption.title.text = '散點圖'
       baseOption.series[0].type = 'scatter'
       break
     default:
@@ -109,20 +101,33 @@ const updateChart = (data) => {
   chartInstance.value.setOption(baseOption)
 }
 
-// 自動監測數據變化並更新圖表
-watchEffect(() => {
-  if (!props.startDate || !props.endDate) return
-  const data = generateData()
-  updateChart(data)
-})
+// 監控 props 的變化並更新數據
+watch(
+  () => [props.startDate, props.endDate],
+  ([newStart, newEnd]) => {
+    if (newStart && newEnd) {
+      chartData.value = generateData() // 更新數據
+      updateChart() // 更新圖表
+    }
+  },
+  { immediate: true }
+)
 
-// 在掛載時初始化圖表
+// 監控語言變更並更新圖表
+watch(
+  () => locale.value,
+  () => {
+    updateChart() // 語言變更時重新更新圖表
+  }
+)
+
+// 初始化與清理邏輯
 onMounted(() => {
   initChart()
-  updateChart(generateData())
+  chartData.value = generateData()
+  updateChart()
 })
 
-// 卸載時清理圖表
 onUnmounted(() => {
   if (chartInstance.value) {
     chartInstance.value.dispose()

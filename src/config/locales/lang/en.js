@@ -41,11 +41,13 @@ export default {
         radar: 'Radar-Chart',
         scatter: 'Scatter-Chart',
         line: 'Line-Chart',
+        errorMsg: 'Start-date cannot be later than the End-date!',
       },
     },
     vuePractice: {
       title: 'Vue-Practice',
       stepForm: 'Step-Form',
+      watchEffect: 'WatchEffect',
     },
     jsPractice: {
       title: 'JavaScript-Practice',
@@ -103,6 +105,16 @@ export default {
         },
       },
     },
+  },
+  watchEffect: {
+    item: 'Item',
+    filter: 'Filter',
+    minimum: 'Minimum-Price',
+    maximum: 'Maximum-Price',
+    total: 'Filtered Results',
+    count: 'Total Quantity',
+    amount: 'Total Amount',
+    errorMsg: 'Minimum-Price cannot be higher than Maximum-Price!'
   },
   common: {
     prevStep: 'Previous Step',

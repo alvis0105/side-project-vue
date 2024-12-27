@@ -41,11 +41,13 @@ export default {
         radar: '雷達圖',
         scatter: '散點圖',
         line: '折線圖',
+        errorMsg: '起始日期不可大於結束日期!',
       },
     },
     vuePractice: {
       title: 'Vue 練習',
       stepForm: '分步驟表單',
+      watchEffect: 'WatchEffect練習',
     },
     jsPractice: {
       title: 'JavaScript 練習',
@@ -103,6 +105,16 @@ export default {
         },
       },
     },
+  },
+  watchEffect: {
+    item: '商品',
+    filter: '篩選',
+    minimum: '最低價格',
+    maximum: '最高價格',
+    total: '篩選後統計',
+    count: '總數量',
+    amount: '總金額',
+    errorMsg: '最低價格不能高於最高價格！'
   },
   common: {
     prevStep: '上一步',

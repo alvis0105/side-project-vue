@@ -1,11 +1,9 @@
-// guard.js
 import { useUserStore } from '@/stores/modules/user'
 import { menuList } from '../../mock/model/menu'
 
 // 使用 import.meta.glob 批量導入所有視圖組件
 export const addDynamicRoutes = (router, list) => {
   const modules = import.meta.glob('/src/views/**/*') // 加載所有視圖組件
-  console.log('modules', Object.keys(modules))
 
   list.forEach((menu) => {
     if (menu.children && menu.children.length > 0) {
@@ -72,7 +70,7 @@ const resolveComponentPath = (menuPath, modules) => {
   )
 
   // 針對index.vue做處理: 找不到對應檔名時退回上一層確認目錄是否找得到index.vue
-  while (!matchingKey && lowerCasePath.includes('/')) {
+  if (!matchingKey && lowerCasePath.includes('/')) {
     lowerCasePath = lowerCasePath.substring(0, lowerCasePath.lastIndexOf('/'))
     const indexPath = `${lowerCasePath}/index`
     matchingKey = Object.keys(lowerCaseModules).find((key) =>
