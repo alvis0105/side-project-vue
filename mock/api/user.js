@@ -116,7 +116,7 @@ export default [
     method: 'put',
     response: (request) => {
       const { id } = request.params
-      const { name, createdAt } = request.body
+      const { name, account, createdAt } = request.body
       if (id) {
         return {
           code: 200,

@@ -1,9 +1,12 @@
 <template>
-  <div ref="chartRef" class="w-full h-96"></div>
+  <div
+    ref="chartRef"
+    class="w-full h-96"
+  />
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import * as echarts from 'echarts'
 import dayjs from 'dayjs'
@@ -29,7 +32,7 @@ const chartRef = ref(null)
 const chartInstance = ref(null)
 const chartData = ref([]) // 用於緩存數據
 
-const { t, locale } = useI18n()
+const { locale } = useI18n()
 
 // 生成數據
 const generateData = () => {

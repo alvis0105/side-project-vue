@@ -34,6 +34,25 @@
         </div>
       </form>
     </div>
+    <!-- 顯示通知模態框 -->
+    <BaseModal
+      v-model="isModalOpen"
+      :title="modalTitle"
+      :detail="modalDetail"
+      :cancel-text="cancelText"
+      :confirm-text="confirmText"
+      :have-cancel-btn="true"
+      @close-modal="closeModal"
+    >
+      <template #confirmButton>
+        <button
+          class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
+          @click="closeModal"
+        >
+          確認
+        </button>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
@@ -46,6 +65,12 @@ import Schema from "async-validator"
 
 const { t } = useI18n()
 
+// 彈窗相關
+const isModalOpen = ref(false)
+const modalTitle = ref('提示')
+const modalDetail = ref('')
+const cancelText = ref('取消')
+const confirmText = ref('確認')
 // 當前步驟索引
 const currentStep = ref(0)
 // 錯誤訊息
@@ -88,6 +113,15 @@ const validateCurrentStep = async () => {
   try {
     await validator.validate(values)
     errorMsg.value = []
+
+    // 只有在最後一步檢查是否勾選了同意條款
+    if (isLastStep.value && !form['terms']) {
+      modalTitle.value = '錯誤'
+      modalDetail.value = '請勾選同意條款'
+      openModal(currentStep.value)
+      return false
+    }
+
     return true
   } catch (validationErrors) {
     errorMsg.value = []
@@ -95,7 +129,9 @@ const validateCurrentStep = async () => {
       ? validationErrors.errors
       : [validationErrors]
     errorMsg.value = errors.map((err) => err.message)
-    alert(`驗證失敗：${errorMsg.value.join(", ")}`)
+    modalTitle.value = '驗證錯誤'
+    modalDetail.value = `驗證失敗：${errorMsg.value.join(", ")}`
+    openModal(currentStep.value)
     return false
   }
 }
@@ -106,10 +142,13 @@ const handleSubmit = async () => {
     return
   }
 
-  if (!isLastStep.value) {
-    currentStep.value++
+  // 提交成功時
+  if (isLastStep.value) {
+    modalTitle.value = '提交成功'
+    modalDetail.value = '表單已成功提交！'
+    openModal(isLastStep.value)
   } else {
-    alert(t("common.formSubmitted"))
+    currentStep.value++
   }
 }
 
@@ -118,5 +157,16 @@ const prevStep = () => {
   if (currentStep.value > 0) {
     currentStep.value--
   }
+}
+
+const openModal = (action) => {
+  isModalOpen.value = true
+}
+
+// 關閉並重置狀態
+const closeModal = () => {
+  isModalOpen.value = false
+  modalTitle.value = ''
+  modalDetail.value = ''
 }
 </script>

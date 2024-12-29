@@ -1,5 +1,8 @@
 <template>
-  <div v-show="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+  <div
+    v-show="isOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30"
+  >
     <div class="bg-white rounded-lg shadow-lg p-6 min-w-[400px]">
       <!-- 標題區域 -->
       <h3 class="mb-4 text-lg font-semibold">
@@ -22,7 +25,9 @@
           class="px-4 py-2 text-gray-500 border border-gray-300 rounded hover:bg-gray-100"
           @click="closeModal"
         >
-          <slot name="cancelButtonText">{{ props.cancelText }}</slot>
+          <slot name="cancelButtonText">
+            {{ props.cancelText }}
+          </slot>
         </button>
         <slot name="confirmButton">
           <button
@@ -38,7 +43,7 @@
 </template>
 
 <script setup>
-import { ref, toRef, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -70,7 +75,7 @@ const props = defineProps({
 
 const isOpen = ref(false)
 
-watch(() => props.modelValue, (newVal) => { 
+watch(() => props.modelValue, (newVal) => {
   isOpen.value = newVal
 })
 

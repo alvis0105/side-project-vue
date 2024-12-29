@@ -1,18 +1,22 @@
 <template>
   <div class="p-2">
     <el-row class="mb-4">
-      <el-button type="primary" icon="Plus" @click="newTaskType">
+      <el-button
+        type="primary"
+        icon="Plus"
+        @click="newTaskType"
+      >
         {{ $t('common.add') }}
       </el-button>
-      <el-button
-        :type="selectedRows.length > 0 ? 'danger' : ''"
-        :class="selectedRows.length > 0 ? '' : 'opacity-50 cursor-not-allowed'"
+      <!-- <el-button
+        :type="selectedRows.length ? 'danger' : ''"
+        :class="selectedRows.length ? '' : 'opacity-50 cursor-not-allowed'"
         :disabled="selectedRows.length === 0"
         icon="Delete"
         @click="openModal('deleteSelectedRows', selectedRows)"
       >
         {{ $t('common.delete') }}
-      </el-button>
+      </el-button> -->
     </el-row>
     <el-table
       :data="sortedList"
@@ -21,8 +25,14 @@
       :resizable="false"
       @selection-change="onSelectionChange"
     >
-      <el-table-column type="selection" width="35" />
-      <el-table-column prop="id" width="80">
+      <el-table-column
+        type="selection"
+        width="35"
+      />
+      <el-table-column
+        prop="id"
+        width="80"
+      >
         <template #header>
           <div class="flex items-center justify-center">
             <div class="text-center">
@@ -52,7 +62,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="name" min-width="80">
+      <el-table-column
+        prop="name"
+        min-width="80"
+      >
         <template #header>
           <div class="flex items-center">
             <div class="text-center">
@@ -77,11 +90,11 @@
           </div>
         </template>
         <template #default="scope">
-          <div v-if="isEditing(scope.row,  'name')">
+          <div v-if="isEditing(scope.row, 'name')">
             <el-input
+              ref="editableInput"
               v-model="scope.row.name"
               size="small"
-              ref="editableInput"
               :placeholder="$t('menu.tasks.taskList.taskName')"
               @blur="confirmEditing"
               @keyup.enter="confirmEditing"
@@ -90,9 +103,12 @@
           <div
             v-else
             class="cursor-pointer"
-            @dblclick="startEditing(scope.row,  'name')"
+            @dblclick="startEditing(scope.row, 'name')"
           >
-            <el-icon v-if="!scope.row.name" class="!icon-pen">
+            <el-icon
+              v-if="!scope.row.name"
+              class="!icon-pen"
+            >
               <EditPen />
             </el-icon>
             <span :class="!scope.row.name ? 'ps-1 text-black text-opacity-30' : ''">
@@ -101,7 +117,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="createdAt" min-width="100">
+      <el-table-column
+        prop="createdAt"
+        min-width="100"
+      >
         <template #header>
           <div class="flex items-center gap-1">
             <div class="text-center">
@@ -125,31 +144,8 @@
             </div>
           </div>
         </template>
-        <!-- <template #default="scope">
-          <div v-if="isEditing(scope.row, 'createdAt')">
-            <el-input
-              v-model="scope.row.createdAt"
-              size="small"
-              ref="editableInput"
-              @blur="confirmEditing"
-              @keyup.enter="confirmEditing"
-            />
-          </div>
-          <div
-            v-else
-            class="cursor-pointer"
-            @dblclick="startEditing(scope.row, 'createdAt')"
-          >
-            <el-icon v-if="!scope.row.createdAt" class="!icon-pen">
-              <EditPen />
-            </el-icon>
-            <span :class="!scope.row.createdAt ? 'ps-1 text-black text-opacity-30' : ''">
-              {{ scope.row.createdAt || $t('common.clickPlaceholder') }}
-            </span>
-          </div>
-        </template> -->
       </el-table-column>
-      <el-table-column width="250">
+      <!-- <el-table-column width="250">
         <template #default="scope">
           <div class="flex justify-end">
             <el-button
@@ -166,7 +162,7 @@
             />
           </div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <!-- 顯示通知模態框 -->
@@ -195,11 +191,8 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { getTaskType, addTaskType, updateTaskType, deleteTaskType } from '@/api'
-import { useI18n } from "vue-i18n"
 import { getCurrentDate } from '@/utils/date'
 import BaseModal from '@/components/BaseModal.vue'
-
-const { t } = useI18n()
 
 // 已選中的資料
 const selectedRows = ref([])
@@ -269,7 +262,7 @@ const activateSort = (order, type) => {
 }
 
 const startEditing = async (row, field) => {
-  editingStatus.value = { 
+  editingStatus.value = {
     row: row,
     field: field
   }
@@ -300,10 +293,6 @@ const newTaskType = () => {
     name: '',
     createdAt: getCurrentDate()
   })
-}
-
-const toggleExpand = (row) => {
-  row.expanded = !row.expanded
 }
 
 // 新增按鈕事件
@@ -341,7 +330,7 @@ const handleUpdate = async(row) => {
 }
 
 // 編輯按鈕事件
-const onEdit = (row) => {
+const onEdit = () => {
   isModalOpen.value = true
 }
 

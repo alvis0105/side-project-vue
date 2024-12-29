@@ -15,8 +15,10 @@
     "dayjs": "^1.11.13",
     "echarts": "^5.5.1",
     "element-plus": "^2.8.7",
+    "lodash": "^4.17.21",
     "pinia": "^2.2.4",
     "tailwind-scrollbar": "^3.1.0",
+    "video.js": "^8.21.0",
     "vue": "^3.5.12",
     "vue-i18n": "^9.14.2",
     "vue-router": "^4.4.5"

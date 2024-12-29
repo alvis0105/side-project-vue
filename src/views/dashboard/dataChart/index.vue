@@ -4,7 +4,7 @@
       <!-- 日期選擇區域 -->
       <div class="flex gap-5 mb-6">
         <label class="flex items-center gap-2">
-          <span class="font-semibold">{{ t('menu.dashboard.chart.startDate') }}：</span>
+          <span class="font-semibold">{{ t('menu.dashboard.chart.startDate') }}:</span>
           <el-date-picker
             v-model="startDate"
             type="date"
@@ -15,7 +15,7 @@
           />
         </label>
         <label class="flex items-center gap-2">
-          <span class="font-semibold">{{ t('menu.dashboard.chart.endDate') }}：</span>
+          <span class="font-semibold">{{ t('menu.dashboard.chart.endDate') }}:</span>
           <el-date-picker
             v-model="endDate"
             type="date"
@@ -28,7 +28,10 @@
       </div>
 
       <!-- 錯誤訊息 -->
-      <FormAlert v-if="errorMessage" :message="errorMessage" />
+      <FormAlert
+        v-if="errorMessage"
+        :message="errorMessage"
+      />
 
       <!-- 圖表區域 -->
       <div class="grid grid-cols-2 gap-8 pt-5">
@@ -43,9 +46,9 @@
           </span>
           <!-- 圖表 -->
           <Chart
-            :chartType="chart.type"
-            :startDate="startDate"
-            :endDate="endDate"
+            :chart-type="chart.type"
+            :start-date="startDate"
+            :end-date="endDate"
             class="w-full h-96"
           />
         </div>
@@ -61,9 +64,6 @@ import { getCurrentElementPlusLocale } from '@/plugins/i18n.js'
 import dayjs from 'dayjs'
 import FormAlert from '@/components/BaseFormAlert.vue'
 import Chart from './components/chart.vue'
-
-// 動態追蹤當前 Element Plus 語言
-const currentLocale = computed(() => getCurrentElementPlusLocale())
 
 const { t } = useI18n()
 
@@ -84,6 +84,9 @@ const charts = ref([
   { label: t('menu.dashboard.chart.radar'), type: 'radar' },
   { label: t('menu.dashboard.chart.scatter'), type: 'scatter' },
 ])
+
+// 動態追蹤當前 Element Plus 語言
+const currentLocale = computed(() => getCurrentElementPlusLocale())
 
 // 監控日期範圍
 watchEffect(() => {

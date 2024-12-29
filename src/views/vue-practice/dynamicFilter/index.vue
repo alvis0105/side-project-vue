@@ -1,32 +1,44 @@
 <template>
-  <div class="max-w-3xl p-6 mx-auto border border-gray-300 rounded-lg bg-gray-50">
+  <div class="max-w-3xl p-6 border border-gray-300 rounded-lg bg-gray-50">
     <!-- 商品篩選區 -->
-    <h2 class="mb-4 text-xl font-semibold text-gray-800">{{ t('watchEffect.item') }}{{ t('watchEffect.filter') }}</h2>
+    <h2 class="mb-4 text-xl font-semibold text-gray-800">
+      {{ t('dynamicFilter.item') }}{{ t('dynamicFilter.filter') }}
+    </h2>
     <div class="flex flex-col gap-2 mb-6">
       <!-- 提示框 -->
       <BaseAlert
         v-if="showAlert"
-        :message="t('watchEffect.errorMsg')"
+        :message="t('dynamicFilter.errorMsg')"
       />
 
       <!-- 篩選區 -->
       <div class="flex items-center gap-4">
-        <label for="minPrice" class="text-gray-600">{{ t('watchEffect.minimum') }}：</label>
+        <label
+          for="minPrice"
+          class="text-gray-600"
+        >
+          {{ t('dynamicFilter.minimum') }}:
+        </label>
         <input
           id="minPrice"
-          type="number"
           v-model="minPrice"
+          type="number"
           class="w-32 px-3 py-2 border border-gray-300 rounded"
-          :placeholder="t('watchEffect.minimum')"
-        />
-        <label for="maxPrice" class="text-gray-600">{{ t('watchEffect.maximum') }}：</label>
+          :placeholder="t('dynamicFilter.minimum')"
+        >
+        <label
+          for="maxPrice"
+          class="text-gray-600"
+        >
+          {{ t('dynamicFilter.maximum') }}:
+        </label>
         <input
           id="maxPrice"
-          type="number"
           v-model="maxPrice"
+          type="number"
           class="w-32 px-3 py-2 border border-gray-300 rounded"
-          :placeholder="t('watchEffect.maximum')"
-        />
+          :placeholder="t('dynamicFilter.maximum')"
+        >
       </div>
     </div>
 
@@ -43,12 +55,12 @@
 
     <!-- 商品統計 -->
     <div class="mt-4">
-      <h3 class="text-lg font-semibold text-gray-700">{{ t('watchEffect.total') }}</h3>
+      <h3 class="text-lg font-semibold text-gray-700">{{ t('dynamicFilter.total') }}</h3>
       <p class="mt-2">
-        <span class="font-semibold">{{ t('watchEffect.count') }}：</span>{{ totalCount }}
+        <span class="font-semibold">{{ t('dynamicFilter.count') }}:</span>{{ totalCount }}
       </p>
       <p>
-        <span class="font-semibold">{{ t('watchEffect.amount') }}：</span>${{ totalAmount }}
+        <span class="font-semibold">{{ t('dynamicFilter.amount') }}:</span>${{ totalAmount }}
       </p>
     </div>
   </div>
@@ -76,7 +88,7 @@ const baseProducts = ref([
 const localizedProducts = computed(() =>
   baseProducts.value.map((product) => ({
     ...product,
-    name: `${t('watchEffect.item')}${product.key}`,
+    name: `${t('dynamicFilter.item')}${product.key}`,
   }))
 )
 

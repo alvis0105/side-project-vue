@@ -2,7 +2,9 @@
   <div class="flex flex-col h-screen">
     <!-- Header -->
     <header class="z-10 flex items-center justify-between w-full p-5 bg-white shadow">
-      <h1 class="text-font24">{{ title }}</h1>
+      <h1 class="text-font24">
+        {{ title }}
+      </h1>
       <!-- 語言切換按鈕 -->
       <div class="flex space-x-2">
         <button
@@ -30,7 +32,10 @@
           <NavMenu :nav-menus="translatedMenuList" />
         </el-menu>
         <!-- 登出按鈕 -->
-        <div class="flex items-center justify-center border-t el-menu-item" @click="logout">
+        <div
+          class="flex items-center justify-center border-t el-menu-item"
+          @click="logout"
+        >
           <el-icon><SwitchButton /></el-icon>
           <button>
             {{ $t('message.logout') }}
@@ -52,9 +57,9 @@
 
 <script setup>
 import { SwitchButton } from '@element-plus/icons-vue'
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { menuList } from '/mock/model/menu'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/modules/user'
 import { useI18n } from 'vue-i18n'
 import { switchLanguage } from '@/plugins/i18n.js'
@@ -65,7 +70,6 @@ import config from '@/config'
 // 初始化 store 和路由
 const userStore = useUserStore()
 const router = useRouter()
-const route = useRoute()
 
 // 使用 i18n
 const { locale, t } = useI18n()
@@ -103,11 +107,6 @@ const logout = () => {
   userStore.logout()
   router.push('/login')
 }
-
-// 切換語言並保存到 localStorage
-// const changeLanguage = (lang) => {
-//   $switchLanguage(lang)
-// }
 
 // 初始化語言設置
 const initializeLanguage = () => {

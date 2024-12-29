@@ -7,7 +7,7 @@
         alt="Login_background"
         class="object-cover w-full h-full p-3 rounded-3xl"
         draggable="false"
-      />
+      >
     </div>
 
     <!-- 語言切換按鈕 -->
@@ -50,7 +50,7 @@
               :class="isLoading ? 'bg-blue-500 bg-opacity-10' : ''"
               :disabled="isLoading"
               @blur="blurHandler()"
-            />
+            >
           </div>
           <FormAlert
             v-if="!firstEntry && !userInfo.account"
@@ -76,7 +76,7 @@
               :type="isVisible ? 'text' : 'password'"
               :disabled="isLoading"
               @blur="blurHandler()"
-            />
+            >
             <span
               class="absolute cursor-pointer right-4 top-1/4"
               @click="visibleHandler"
@@ -126,8 +126,8 @@ import Spinner from '@/components/BaseSpinner.vue'
 import FormAlert from '@/components/BaseFormAlert.vue'
 
 const router = useRouter()
-const { locale } = useI18n()
 const userStore = useUserStore()
+const { locale } = useI18n()
 
 // 狀態管理
 const spinnerType = ref('white')
@@ -136,7 +136,7 @@ const isVisible = ref(false)
 const firstEntry = ref(true)
 const userInfo = ref({
   account: 'testUser@gmail.com',
-  password: 'abcd1234'
+  password: 'abcd1234',
 })
 
 // 延遲一秒
@@ -174,12 +174,6 @@ const visibleHandler = () => {
 const blurHandler = () => {
   firstEntry.value = false
 }
-
-// 切換語言並保存到 localStorage
-// const switchLanguage = (lang) => {
-//   locale.value = lang;
-//   localStorage.setItem('language', lang) // 保存語言設置
-// }
 
 // 初始化語言設置
 const initializeLanguage = () => {

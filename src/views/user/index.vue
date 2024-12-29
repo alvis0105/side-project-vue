@@ -1,18 +1,22 @@
 <template>
   <div class="p-2">
     <el-row class="mb-4">
-      <el-button type="primary" icon="Plus" @click="newUser">
+      <el-button
+        type="primary"
+        icon="Plus"
+        @click="newUser"
+      >
         {{ $t('common.add') }}
       </el-button>
-      <el-button
-        :type="selectedRows.length > 0 ? 'danger' : ''"
-        :class="selectedRows.length > 0 ? '' : 'opacity-50 cursor-not-allowed'"
+      <!-- <el-button
+        :type="selectedRows.length ? 'danger' : ''"
+        :class="selectedRows.length ? '' : 'opacity-50 cursor-not-allowed'"
         :disabled="selectedRows.length === 0"
         icon="Delete"
         @click="openModal('deleteSelectedRows', selectedRows)"
       >
         {{ $t('common.delete') }}
-      </el-button>
+      </el-button> -->
     </el-row>
     <el-table
       :data="sortedList"
@@ -21,8 +25,15 @@
       :resizable="false"
       @selection-change="onSelectionChange"
     >
-      <el-table-column type="selection" width="35" />
-      <el-table-column prop="id" label="No." width="80">
+      <el-table-column
+        type="selection"
+        width="35"
+      />
+      <el-table-column
+        prop="id"
+        label="No."
+        width="80"
+      >
         <template #header>
           <div class="flex items-center justify-center">
             <div class="text-center">
@@ -52,7 +63,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="name" min-width="150">
+      <el-table-column
+        prop="name"
+        min-width="150"
+      >
         <template #header>
           <div class="flex items-center">
             <div class="text-center">
@@ -79,9 +93,9 @@
         <template #default="scope">
           <div v-if="isEditing(scope.row, 'name')">
             <el-input
+              ref="editableInput"
               v-model="scope.row.name"
               size="small"
-              ref="editableInput"
               :placeholder="$t('menu.system.user.userName')"
               @blur="confirmEditing"
               @keyup.enter="confirmEditing"
@@ -92,7 +106,10 @@
             class="cursor-pointer"
             @dblclick="startEditing(scope.row, 'name')"
           >
-            <el-icon v-if="!scope.row.name" class="!icon-pen">
+            <el-icon
+              v-if="!scope.row.name"
+              class="!icon-pen"
+            >
               <EditPen />
             </el-icon>
             <span :class="!scope.row.name ? 'ps-1 text-black text-opacity-30' : ''">
@@ -101,7 +118,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="account" min-width="180">
+      <el-table-column
+        prop="account"
+        min-width="180"
+      >
         <template #header>
           <div class="flex items-center">
             <div class="text-center">
@@ -128,9 +148,9 @@
         <template #default="scope">
           <div v-if="isEditing(scope.row, 'account')">
             <el-input
+              ref="editableInput"
               v-model="scope.row.account"
               size="small"
-              ref="editableInput"
               :placeholder="$t('menu.system.user.account')"
               @blur="confirmEditing"
               @keyup.enter="confirmEditing"
@@ -141,7 +161,10 @@
             class="cursor-pointer"
             @dblclick="startEditing(scope.row, 'account')"
           >
-            <el-icon v-if="!scope.row.account" class="!icon-pen">
+            <el-icon
+              v-if="!scope.row.account"
+              class="!icon-pen"
+            >
               <EditPen />
             </el-icon>
             <span :class="!scope.row.account ? 'ps-1 text-black text-opacity-30' : ''">
@@ -150,7 +173,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="createdAt" min-width="100">
+      <el-table-column
+        prop="createdAt"
+        min-width="100"
+      >
         <template #header>
           <div class="flex items-center gap-1">
             <div class="text-center">
@@ -174,27 +200,8 @@
             </div>
           </div>
         </template>
-        <!-- <template #default="scope">
-          {{ scope.row.createdAt }}
-          <div v-if="isEditing(scope.row, 'createdAt')">
-            <el-input
-              v-model="scope.row.createdAt"
-              size="small"
-              ref="editableInput"
-              @blur="confirmEditing"
-              @keyup.enter="confirmEditing"
-            />
-          </div>
-          <div
-            v-else
-            class="cursor-pointer"
-          >
-            <span>
-            </span>
-          </div>
-        </template> -->
       </el-table-column>
-      <el-table-column width="250">
+      <!-- <el-table-column width="250">
         <template #default="scope">
           <div class="flex justify-end">
             <el-button
@@ -211,7 +218,7 @@
             />
           </div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <!-- 顯示通知模態框 -->
     <BaseModal
@@ -313,7 +320,7 @@ const activateSort = (order, type) => {
 }
 
 const startEditing = async (row, field) => {
-  editingStatus.value = { 
+  editingStatus.value = {
     row: row,
     field: field
   }
@@ -347,10 +354,6 @@ const newUser = () => {
   })
 }
 
-const toggleExpand = (row) => {
-  row.expanded = !row.expanded
-}
-
 // 新增
 const handleAdd = async(row) => {
   try {
@@ -363,6 +366,7 @@ const handleAdd = async(row) => {
     }
     const res = await addUser(params)
     if (res.status === 'success' && res.code === 200) {
+      console.log('成功新增使用者')
       isFirstAdd.value = false
     }
   } catch (error) {
@@ -388,11 +392,6 @@ const handleUpdate = async(row) => {
   }
 }
 
-// 編輯按鈕事件
-const onEdit = (row) => {
-  isModalOpen.value = true
-}
-
 // 刪除選中資料
 const deleteSelectedRows = async() => {
   try {
@@ -407,6 +406,7 @@ const deleteSelectedRows = async() => {
           id: index + 1, // 重新分配 id 從 1 開始
         }))
       selectedRows.value = [] // 清空選中的資料
+      console.log('成功刪除選定使用者')
     }
   } catch (error) {
     console.error(error)
@@ -425,6 +425,7 @@ const deleteRow = async (row) => {
           id: index + 1, // 重新分配 id 從 1 開始
         }))
       }
+      console.log('成功刪除單行使用者')
   } catch (error) {
     console.error(error)
   }

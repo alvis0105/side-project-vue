@@ -1,7 +1,11 @@
 <template>
   <div>
     <el-row class="mb-4">
-      <el-button type="primary" icon="Plus" @click="newTask(taskList, 'task')">
+      <el-button
+        type="primary"
+        icon="Plus"
+        @click="newTask(taskList, 'task')"
+      >
         {{ $t('common.add') }}
       </el-button>
       <el-button
@@ -22,8 +26,14 @@
       row-key="id"
       @selection-change="onSelectionChange"
     >
-      <el-table-column type="selection" width="35" />
-      <el-table-column prop="id" width="80">
+      <el-table-column
+        type="selection"
+        width="35"
+      />
+      <el-table-column
+        prop="id"
+        width="80"
+      >
         <template #header>
           <div class="flex items-center justify-center">
             <div class="text-center">
@@ -53,7 +63,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="taskName" min-width="100">
+      <el-table-column
+        prop="taskName"
+        min-width="100"
+      >
         <template #header>
           <div class="flex items-center">
             <div class="text-center">
@@ -80,9 +93,9 @@
         <template #default="scope">
           <div v-if="isEditing(scope.row, null, 'taskName')">
             <el-input
+              ref="editableInput"
               v-model="scope.row.taskName"
               size="small"
-              ref="editableInput"
               :placeholder="$t('menu.tasks.taskList.taskName')"
               @blur="confirmEditing"
               @keyup.enter="confirmEditing"
@@ -93,7 +106,10 @@
             class="cursor-pointer"
             @dblclick="startEditing(scope.row, null, 'taskName')"
           >
-            <el-icon v-if="!scope.row.taskName" class="!icon-pen">
+            <el-icon
+              v-if="!scope.row.taskName"
+              class="!icon-pen"
+            >
               <EditPen />
             </el-icon>
             <span :class="!scope.row.taskName ? 'ps-1 text-black text-opacity-30' : ''">
@@ -102,7 +118,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column type="expand" min-width="50">
+      <el-table-column
+        type="expand"
+        min-width="50"
+      >
         <template #default="scope">
           <!-- 摺疊內容 -->
           <div class="flex flex-col gap-2 p-4 border bg-opacity-70 bg-surface-5">
@@ -122,7 +141,10 @@
               row-key="id"
               size="small"
             >
-              <el-table-column prop="id" width="80">
+              <el-table-column
+                prop="id"
+                width="80"
+              >
                 <template #header>
                   <div class="text-center">
                     No.
@@ -134,7 +156,10 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="subTaskName" min-width="80">
+              <el-table-column
+                prop="subTaskName"
+                min-width="80"
+              >
                 <template #header>
                   <div class="flex items-center">
                     <div class="text-center">
@@ -173,7 +198,10 @@
                     class="cursor-pointer"
                     @dblclick="startEditing(scope.row, subScope.row, 'subTaskName')"
                   >
-                    <el-icon v-if="!subScope.row.subTaskName" class="!icon-pen">
+                    <el-icon
+                      v-if="!subScope.row.subTaskName"
+                      class="!icon-pen"
+                    >
                       <EditPen />
                     </el-icon>
                     <span :class="!subScope.row.subTaskName ? 'ps-1 text-black text-opacity-30' : ''">
@@ -182,7 +210,10 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="detail" min-width="170">
+              <el-table-column
+                prop="detail"
+                min-width="170"
+              >
                 <template #header>
                   <div class="flex items-center">
                     <div class="text-center">
@@ -212,7 +243,7 @@
                       ref="editableInput"
                       v-model="subScope.row.detail"
                       size="small"
-                      placeholder="新增細項內容"
+                      :placeholder="t('menu.tasks.taskList.detail')"
                       @blur="confirmEditing"
                       @keyup.enter="confirmEditing"
                     />
@@ -222,7 +253,10 @@
                     class="cursor-pointer"
                     @dblclick="startEditing(scope.row, subScope.row, 'detail')"
                   >
-                    <el-icon v-if="!subScope.row.detail" class="!icon-pen">
+                    <el-icon
+                      v-if="!subScope.row.detail"
+                      class="!icon-pen"
+                    >
                       <EditPen />
                     </el-icon>
                     <span :class="!subScope.row.detail ? 'ps-1 text-black text-opacity-30' : ''">
@@ -231,7 +265,10 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="startDate" min-width="80">
+              <el-table-column
+                prop="startDate"
+                min-width="80"
+              >
                 <template #header>
                   <div class="flex items-center">
                     <div class="text-center">
@@ -260,14 +297,17 @@
                     v-model="subScope.row.startDate"
                     type="date"
                     value-format="YYYY-MM-DD"
-                    placeholder="選擇日期"
+                    :placeholder="t('common.selectPlaceholder') + t('menu.tasks.taskList.startDate')"
                     size="small"
                     @focus="startEditing(scope.row, subScope.row, 'startDate')"
                     @change="confirmEditing"
                   />
                 </template>
               </el-table-column>
-              <el-table-column prop="endDate" min-width="80">
+              <el-table-column
+                prop="endDate"
+                min-width="80"
+              >
                 <template #header>
                   <div class="flex items-center">
                     <div class="text-center">
@@ -296,7 +336,7 @@
                     v-model="subScope.row.endDate"
                     type="date"
                     value-format="YYYY-MM-DD"
-                    placeholder="選擇日期"
+                    :placeholder="t('common.selectPlaceholder') + t('menu.tasks.taskList.endDate')"
                     size="small"
                     @focus="startEditing(scope.row, subScope.row, 'endDate')"
                     @change="confirmEditing"
@@ -321,7 +361,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="taskType" min-width="100">
+      <el-table-column
+        prop="taskType"
+        min-width="100"
+      >
         <template #header>
           <div class="flex items-center">
             <div class="text-center">
@@ -365,7 +408,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="startDate" min-width="100">
+      <el-table-column
+        prop="startDate"
+        min-width="100"
+      >
         <template #header>
           <div class="flex items-center gap-1">
             <div class="text-center">
@@ -394,14 +440,17 @@
             v-model="scope.row.startDate"
             type="date"
             value-format="YYYY-MM-DD"
-            placeholder="選擇日期"
+            :placeholder="t('common.selectPlaceholder') + t('menu.tasks.taskList.startDate')"
             size="small"
             @focus="startEditing(scope.row, null, 'startDate')"
             @change="confirmEditing"
           />
         </template>
       </el-table-column>
-      <el-table-column prop="endDate" min-width="100">
+      <el-table-column
+        prop="endDate"
+        min-width="100"
+      >
         <template #header>
           <div class="flex items-center gap-1">
             <div class="text-center">
@@ -430,7 +479,7 @@
             v-model="scope.row.endDate"
             type="date"
             value-format="YYYY-MM-DD"
-            placeholder="選擇日期"
+            :placeholder="t('common.selectPlaceholder') + t('menu.tasks.taskList.endDate')"
             size="small"
             @focus="startEditing(scope.row, null, 'endDate')"
             @change="confirmEditing"
@@ -460,21 +509,26 @@
     <!-- 顯示通知模態框 -->
     <el-dialog
       v-model="isDialogVisible"
-      title="提示"
+      :title="t('common.notification')"
       width="30%"
       :show-close="false"
       @closed="handleBeforeClose"
     >
       <div>{{ dialogMessage }}</div>
       <template #footer>
-        <el-button type="primary" @click="closeModal">{{ $t('common.confirm') }}</el-button>
+        <el-button
+          type="primary"
+          @click="closeModal"
+        >
+          {{ $t('common.confirm') }}
+        </el-button>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted, watch } from 'vue'
+import { ref, computed, nextTick, onMounted } from 'vue'
 import { getTaskList, addTask, updateTask, deleteTask, deleteSubTask, deleteSelectedTasks } from '@/api'
 import { useI18n } from "vue-i18n"
 
@@ -508,14 +562,8 @@ const currentAction = ref()
 const currentItem = ref()
 
 // 彈窗相關
-const isModalOpen = ref(false)
 const modalTitle = ref('')
 const modalDetail = ref('')
-const cancelText = ref('取消')
-const confirmText = ref('確認')
-
-// 是否為初次新增
-const isFirstAdd = ref(false)
 
 // 計算屬性
 const isEditing = computed(() => {
@@ -562,7 +610,6 @@ const sortedList = computed(() => {
 
 // 方法
 const startEditing = async (parentRow, row, field) => {
-  console.log('parentRow', parentRow)
   editingStatus.value = {
     parentRow: parentRow,
     row: row,
@@ -584,15 +631,12 @@ const confirmEditing = async () => {
   const row = editingStatus.value.row
 
   if (!parentRow) {
-    console.log('未設置 parentRow，無法完成編輯')
+    console.log('未設置 parentRow, 無法完成編輯')
     return
   }
 
   const rowChanged = row && JSON.stringify(originalRow.value) !== JSON.stringify(row)
   const parentRowChanged = JSON.stringify(originalParentRow.value) !== JSON.stringify(parentRow)
-
-  console.log('rowChanged:', rowChanged)
-  console.log('parentRowChanged:', parentRowChanged)
 
   if (rowChanged || parentRowChanged) {
     try {
@@ -630,7 +674,7 @@ const handleAdd = async(parentRow, row) => {
         },
       ],
     }
-    
+
     const res = await addTask({ newTask: params })
     if (res.status === 'success' && res.code === 200) {
       console.log('任務新增成功')
@@ -668,19 +712,6 @@ const handleUpdate = async(parentRow, row) => {
   } catch (error) {
     console.log(error)
   }
-}
-
-const toggleExpand = (row) => {
-  row.expanded = !row.expanded
-}
-
-const onTaskTypeChange = async (newValue, parentRow) => {
-  // 更新 parentRow 的 taskType
-  parentRow.taskType = newValue
-
-  // 儲存變更
-  await startEditing(parentRow, null, 'taskType')
-  await confirmEditing()
 }
 
 // 排序
@@ -812,7 +843,7 @@ const newTask = (row, formType) => {
       taskType: '',
       startDate: '',
       endDate: '',
-      subTasks: [{ 
+      subTasks: [{
         id: 1,
         subTaskName: '',
         detail: '',
@@ -820,7 +851,6 @@ const newTask = (row, formType) => {
         endDate: ''
       }]
     })
-    console.log('newTask新增taskList.value', taskList.value)
   }
 }
 
@@ -878,25 +908,18 @@ const deleteRow = async(row) => {
   }
 }
 
-watch(taskList, (task) => {
-  console.log('監聽taskList.value', task)
-})
-
 // 刪除選中資料
 const deleteSelectedRows = async(ids) => {
   try {
     const selectedIds = selectedRows.value.map((row) => row.id)
-    console.log('selectedIds', selectedIds)
     const res = await deleteSelectedTasks(ids)
     if (res.status === 'success' && res.code === 200) {
-      console.log('刪除前taskList', taskList.value)
       taskList.value = taskList.value
         .filter((item) => !selectedIds.includes(item.id))
         .map((item, index) => ({
           ...item,
           id: index + 1,
         }))
-      console.log('刪除後taskList', taskList.value)
       selectedRows.value = [] // 清空taskList', 選中的資料
       console.log('選定任務刪除成功')
       // 若需同步資料，可重新撈取

@@ -20,7 +20,7 @@
           class="w-full px-2 py-1 mt-2 border rounded-lg"
           @input="updateField(field.name, $event.target.value)"
           @blur="validateField(field.name)"
-        />
+        >
         <input
           v-else
           :id="field.id"
@@ -28,7 +28,7 @@
           type="checkbox"
           @change="updateCheckbox(field.name, $event.target.checked)"
           @blur="validateField(field.name)"
-        />
+        >
       </div>
       <FormAlert
         v-if="errors[field.name]"
@@ -94,6 +94,7 @@ const validateField = (fieldName) => {
   const form = localForm[fieldName]
   if (!form) {
     errors[fieldName] = t("common.requiredField")
+    console.log('錯誤')
   } else {
     errors[fieldName] = ""
   }
