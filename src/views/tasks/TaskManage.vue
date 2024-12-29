@@ -330,9 +330,9 @@ const handleUpdate = async(row) => {
 }
 
 // 編輯按鈕事件
-const onEdit = () => {
-  isModalOpen.value = true
-}
+// const onEdit = () => {
+//   isModalOpen.value = true
+// }
 
 // 刪除選中資料按鈕事件
 const deleteSelectedRows = async() => {
@@ -376,26 +376,26 @@ const onSelectionChange = (rows) => {
   selectedRows.value = rows
 }
 
-const openModal = (action, item) => {
-  isModalOpen.value = true
-  currentAction.value = action
-  currentItem.value = item
+// const openModal = (action, item) => {
+//   isModalOpen.value = true
+//   currentAction.value = action
+//   currentItem.value = item
 
-  switch (action) {
-    case 'deleteSelectedRows':
-      modalTitle.value = '刪除檔案'
-      modalDetail.value = `請確認是否刪除選中的 "${item.length}筆" 資料?`
-      break
-    case 'deleteRow':
-      modalTitle.value = '刪除檔案'
-      modalDetail.value = `請確認是否刪除 "${item.name}" ?`
-      break
-    default:
-      modalTitle.value = '提示'
-      modalDetail.value = '請確認是否執行?'
-      break
-  }
-}
+//   switch (action) {
+//     case 'deleteSelectedRows':
+//       modalTitle.value = '刪除檔案'
+//       modalDetail.value = `請確認是否刪除選中的 "${item.length}筆" 資料?`
+//       break
+//     case 'deleteRow':
+//       modalTitle.value = '刪除檔案'
+//       modalDetail.value = `請確認是否刪除 "${item.name}" ?`
+//       break
+//     default:
+//       modalTitle.value = '提示'
+//       modalDetail.value = '請確認是否執行?'
+//       break
+//   }
+// }
 
 // 確認按鈕依照判斷式執行相應動作
 const handleConfirm = async() => {
