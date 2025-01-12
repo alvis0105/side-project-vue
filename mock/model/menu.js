@@ -28,7 +28,7 @@ export const menuList = [
         id: '20001',
         parentId: '20000',
         name: 'taskList',
-        path: '/tasks/taskList',
+        path: '/tasks/index',
         meta: {
           title: 'menu.tasks.taskList.title',
           i18nTitle: 'menu.tasks.taskList.title',
