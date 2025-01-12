@@ -1,4 +1,5 @@
-// .eslintrc.cjs
+const autoImportGlobals = require('./.eslintrc-auto-import.json')
+
 module.exports = {
     root: true,
     env: {
@@ -17,6 +18,9 @@ module.exports = {
     plugins: [
       'vue', // Vue 套件
     ],
+    globals: {
+      ...autoImportGlobals.globals, // 合併自動生成的全域變數
+    },
     rules: {
       // 根據需求調整或自定義規則
       'no-unused-vars': 'warn',

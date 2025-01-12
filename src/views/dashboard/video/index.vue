@@ -40,7 +40,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
 import 'video.js/dist/video-js.css'
 import videoJs from 'video.js'
 

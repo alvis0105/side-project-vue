@@ -58,7 +58,6 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getCurrentElementPlusLocale } from '@/plugins/i18n.js'
 import dayjs from 'dayjs'

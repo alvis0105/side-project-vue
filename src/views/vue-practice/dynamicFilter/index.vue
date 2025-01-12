@@ -67,7 +67,6 @@
 </template>
 
 <script setup>
-import { ref, computed, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseAlert from '@/components/BaseFormAlert.vue'
 

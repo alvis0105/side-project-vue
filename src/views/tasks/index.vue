@@ -528,7 +528,6 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted } from 'vue'
 import { getTaskList, addTask, updateTask, deleteTask, deleteSubTask, deleteSelectedTasks } from '@/api'
 import { useI18n } from "vue-i18n"
 

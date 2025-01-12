@@ -189,7 +189,6 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
 import { getTaskType, addTaskType, updateTaskType, deleteTaskType } from '@/api'
 import { getCurrentDate } from '@/utils/date'
 import BaseModal from '@/components/BaseModal.vue'
