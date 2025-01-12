@@ -86,6 +86,7 @@ const routes = [
   //     },
   //   ],
   // },
+
   //動態路徑
   {
     path: '/',
@@ -100,14 +101,6 @@ const routes = [
     component: () => import('../views/login/index.vue'),
     meta: {
       title: '登入',
-    },
-  },
-  {
-    name: 'sign',
-    path: '/sign',
-    component: () => import('../views/sign/index.vue'),
-    meta: {
-      title: '註冊',
     },
   },
 ]

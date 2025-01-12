@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      v-for="field in props.fields"
+      v-for="field in fields"
       :key="field.id"
       class="mb-4"
     >
@@ -10,7 +10,7 @@
           class="w-full"
           :for="field.id"
         >
-          {{ field.label }}
+          {{ $t(field.label) }}
         </span>
         <input
           v-if="field.type !== 'checkbox'"
@@ -45,17 +45,20 @@
 
 <script setup>
 import { reactive, watch } from "vue"
-import FormAlert from '@/components/BaseFormAlert.vue'
+import { useI18n } from "vue-i18n"
+import FormAlert from "@/components/BaseFormAlert.vue"
+
+const { t } = useI18n()
 
 const props = defineProps({
   fields: {
     type: Array,
-    required: true
+    required: true,
   },
   form: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const emit = defineEmits(["updateField"])
@@ -67,9 +70,12 @@ const localForm = reactive({ ...props.form })
 const errors = reactive({})
 
 // 監控 props.form 的變化，同步到 localForm
-watch(() => props.form, (newForm) => {
+watch(
+  () => props.form,
+  (newForm) => {
     Object.assign(localForm, newForm)
-  },{ deep: true }
+  },
+  { deep: true }
 )
 
 const updateField = (fieldName, value) => {
@@ -81,15 +87,16 @@ const updateField = (fieldName, value) => {
 const updateCheckbox = (fieldName, isChecked) => {
   localForm[fieldName] = isChecked
   emit("updateField", { fieldName, value: isChecked })
-  validateField(fieldName) // 即時更新錯誤訊息
+  validateField(fieldName)
 }
 
 const validateField = (fieldName) => {
   const form = localForm[fieldName]
   if (!form) {
-    errors[fieldName] = "此欄位為必填項" // 設定錯誤訊息
+    errors[fieldName] = t("common.requiredField")
+    console.log('錯誤')
   } else {
-    errors[fieldName] = "" // 清除錯誤訊息
+    errors[fieldName] = ""
   }
 }
 </script>

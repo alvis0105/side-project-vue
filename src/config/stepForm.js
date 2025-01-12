@@ -1,58 +1,58 @@
 export const stepForm = [
   {
     step: 1,
-    title: "基本資訊",
+    title: "stepForm.step1.title",
     fields: [
       {
         id: '1',
         name: "username",
         type: "text",
-        label: "用戶名",
-        rules: [{ required: true, message: "用戶名不可為空" }],
+        label: "stepForm.step1.fields.username.label",
+        rules: [{ required: true, message: "stepForm.step1.fields.username.message" }],
       },
       {
         id: '2',
         name: "email",
         type: "email",
-        label: "電子郵件",
+        label: "stepForm.step1.fields.email.label",
         rules: [
-          { required: true, message: "電子郵件不可為空" },
-          { type: "email", message: "電子郵件格式不正確" },
+          { required: true, message: "stepForm.step1.fields.email.required" },
+          { type: "email", message: "stepForm.step1.fields.email.invalid" },
         ],
       },
     ],
   },
   {
     step: 2,
-    title: "地址資訊",
+    title: "stepForm.step2.title",
     fields: [
       {
         id: '1',
         name: "address",
         type: "text",
-        label: "地址",
-        rules: [{ required: true, message: "地址不可為空" }],
+        label: "stepForm.step2.fields.address.label",
+        rules: [{ required: true, message: "stepForm.step2.fields.address.message" }],
       },
       {
         id: '2',
         name: "city",
         type: "text",
-        label: "城市",
-        rules: [{ required: true, message: "城市不可為空" }],
+        label: "stepForm.step2.fields.city.label",
+        rules: [{ required: true, message: "stepForm.step2.fields.city.message" }],
       },
     ],
   },
   {
     step: 3,
-    title: "同意條款",
+    title: "stepForm.step3.title",
     fields: [
       {
         id: '1',
         name: "terms",
         type: "checkbox",
-        label: "我同意條款",
-        rules: [{ required: true, message: "請同意條款" }],
+        label: "stepForm.step3.fields.terms.label",
+        rules: [{ required: true, message: "stepForm.step3.fields.terms.message" }],
       },
     ],
   },
-]
+];

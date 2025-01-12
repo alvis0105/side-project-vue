@@ -5,12 +5,12 @@ export const menuList = [
     name: 'home',
     path: '/home',
     meta: {
-      title: '首頁',
+      title: 'menu.home',
+      i18nTitle: 'menu.home',
       icon: 'House',
       type: 'menu',
-      description: '',
+      description: '整合多功能模組: 實作使用者管理、任務類型操作、商品篩選、數據圖表展示等, 使用 Vue 3 組合式 API、Element-Plus 組件、Lodash、eCharts、Video.js, 並結合本地存儲與模擬 API 處理, 支援即時更新與表單驗證。',
     },
-    component: '',
   },
   {
     id: '20000',
@@ -18,11 +18,11 @@ export const menuList = [
     name: 'tasks',
     path: '/tasks',
     meta: {
-      title: '任務管理',
+      title: 'menu.tasks.title',
+      i18nTitle: 'menu.tasks.title',
       icon: 'Collection',
       type: 'menu',
     },
-    component: '',
     children: [
       {
         id: '20001',
@@ -30,50 +30,16 @@ export const menuList = [
         name: 'taskList',
         path: '/tasks/taskList',
         meta: {
-          title: '任務列表',
+          title: 'menu.tasks.taskList.title',
+          i18nTitle: 'menu.tasks.taskList.title',
           icon: 'Menu',
           type: 'menu',
-          description: '搭配 element-plus, 使用 vue-directive(含 v-if、v-bind、v-on), 結合 localStorage 模擬資料庫與 vite-plugin-fake-server 處理模擬 API, 支援資料持久化與即時更新, 雙擊進入編輯模式, 透過 nextTick 確保 DOM 渲染後自動聚焦, 按 Enter 或失焦自動保存變更。',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
+          description: '搭配 element-plus, 使用 vue-directive(含 v-if、v-bind、v-on), 結合 localStorage 模擬資料庫與 vite-plugin-fake-server 處理模擬 API, 支援資料持久化與即時更新, 雙擊進入編輯模式, 透過 nextTick 確保 DOM 渲染後自動聚焦, 按 Enter 或失焦自動保存變更, 有輸入值時才觸發新增或修改的API。',
         },
-        component: '',
       },
-      // {
-      //   id: '20002',
-      //   parentId: '20000',
-      //   name: 'taskDetail',
-      //   path: '/tasks/taskDetail/:id',
-      //   meta: {
-      //     title: '任務詳細',
-      //     icon: 'Document',
-      //     type: 'menu',
-      //   },
-      //   component: '',
-      // },
-      // {
-      //   id: '20003',
-      //   parentId: '20000',
-      //   name: 'taskAdd',
-      //   path: '/tasks/taskAdd',
-      //   meta: {
-      //     title: '新增任務',
-      //     icon: 'Plus',
-      //     type: 'button',
-      //   },
-      //   component: '',
-      // },
-      // {
-      //   id: '20004',
-      //   parentId: '20000',
-      //   name: 'taskEdit',
-      //   path: '/tasks/taskEdit/:id',
-      //   meta: {
-      //     title: '編輯任務',
-      //     icon: 'Edit',
-      //     type: 'button',
-      //   },
-      //   component: '',
-      // },
-    ]
+    ],
   },
   {
     id: '30000',
@@ -81,26 +47,43 @@ export const menuList = [
     name: 'dashboard',
     path: '/dashboard',
     meta: {
-      title: '儀表板',
+      title: 'menu.dashboard.title',
+      i18nTitle: 'menu.dashboard.title',
       icon: 'DataAnalysis',
       type: 'menu',
     },
-    component: '',
     children: [
       {
         id: '30001',
         parentId: '30000',
         name: 'chart',
-        path: '/dashboard',
+        path: '/dashboard/dataChart/index',
         meta: {
-          title: '圖表功能',
+          title: 'menu.dashboard.chart.title',
+          i18nTitle: 'menu.dashboard.chart.title',
           icon: 'PieChart',
           type: 'menu',
-          description: '圖表功能描述待補',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
+          description: '圖表功能應用,使用 eCharts 及 day.js 以及 watchEffect 監聽日期變化',
         },
-        component: '',
       },
-    ]
+      {
+        id: '30002',
+        parentId: '30000',
+        name: 'video',
+        path: '/dashboard/video/index',
+        meta: {
+          title: 'menu.dashboard.video.title',
+          i18nTitle: 'menu.dashboard.video.title',
+          icon: 'Film',
+          type: 'menu',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
+          description: 'video.js 應用',
+        },
+      },
+    ],
   },
   {
     id: '40000',
@@ -108,11 +91,11 @@ export const menuList = [
     name: 'vue-practice',
     path: '/vue-practice',
     meta: {
-      title: 'vue練習',
+      title: 'menu.vuePractice.title',
+      i18nTitle: 'menu.vuePractice.title',
       icon: 'Reading',
       type: 'menu',
     },
-    component: '',
     children: [
       {
         id: '40001',
@@ -120,14 +103,31 @@ export const menuList = [
         name: 'stepForm',
         path: '/vue-practice/stepForm/index',
         meta: {
-          title: '分步驟表單',
+          title: 'menu.vuePractice.stepForm',
+          i18nTitle: 'menu.vuePractice.stepForm',
           icon: 'Guide',
           type: 'menu',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
           description: '使用 vue-directive(含v-if, v-else, v-for), Vue Emits, Props, Vue Composition API(reactive, ref), v-slot(alert提示) 以及 async-validator 執行檢核',
         },
-        component: '',
       },
-    ]
+      {
+        id: '40002',
+        parentId: '40000',
+        name: 'dynamicFilter',
+        path: '/vue-practice/dynamicFilter/index',
+        meta: {
+          title: 'menu.vuePractice.dynamicFilter',
+          i18nTitle: 'menu.vuePractice.dynamicFilter',
+          icon: 'Guide',
+          type: 'menu',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
+          description: '實作商品價格篩選及統計功能, 使用 watchEffect 監控價格範圍, 動態篩選符合條件的商品並更新統計數據; 利用 computed 動態篩選商品, 並顯示篩選後的商品數量與總金額, watchEffect 用來監控價格範圍, 當篩選條件不正確時顯示提示訊息。',
+        },
+      },
+    ],
   },
   {
     id: '50000',
@@ -135,26 +135,28 @@ export const menuList = [
     name: 'js-practice',
     path: '/js-practice',
     meta: {
-      title: 'javascript練習',
+      title: 'menu.jsPractice.title',
+      i18nTitle: 'menu.jsPractice.title',
       icon: 'Reading',
       type: 'menu',
     },
-    component: '',
     children: [
       {
         id: '50001',
         parentId: '50000',
-        name: 'javascriptPractice',
-        path: '/javascriptPractice',
+        name: 'javascript-Practice',
+        path: '/js-practice/index',
         meta: {
-          title: 'javascript練習1',
+          title: 'menu.jsPractice.practice1',
+          i18nTitle: 'menu.jsPractice.practice1',
           icon: 'Guide',
           type: 'menu',
-          description: 'javascript練習1的功能描述待補',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
+          description: '使用 Lodash 搭配 Javascript 應用實作',
         },
-        component: '',
       },
-    ]
+    ],
   },
   {
     id: '60000',
@@ -162,7 +164,8 @@ export const menuList = [
     name: 'system',
     path: '/system',
     meta: {
-      title: '系統設定',
+      title: 'menu.system.title',
+      i18nTitle: 'menu.system.title',
       icon: 'Setting',
       type: 'menu',
     },
@@ -173,11 +176,14 @@ export const menuList = [
         name: 'user',
         path: '/user',
         meta: {
-          title: '帳號設定',
+          title: 'menu.system.user.title',
+          i18nTitle: 'menu.system.user.title',
           icon: 'UserFilled',
           type: 'menu',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
+          description: '實作使用者的新增、編輯、刪除功能, 並透過 BaseModal 組件處理確認操作, 使用 Vue 3 組合式 API、El-Table 顯示數據, 並利用 computed 和 ref 管理狀態, nextTick 確保 DOM 更新後進行操作, 同時進行表單的數據綁定與錯誤處理。',
         },
-        component: '',
       },
       {
         id: '60002',
@@ -185,12 +191,15 @@ export const menuList = [
         name: 'TaskManage',
         path: '/TaskManage',
         meta: {
-          title: '任務設定',
+          title: 'menu.system.taskManage.title',
+          i18nTitle: 'menu.system.taskManage.title',
           icon: 'Tools',
           type: 'menu',
+          descriptionTitle: 'description.title',
+          i18nDescriptionTitle: 'description.title',
+          description: '實作任務類型的新增、編輯、刪除功能, 並透過 BaseModal 組件處理確認操作, 使用 Vue 3 組合式 API、El-Table 顯示數據, 並利用 computed 和 ref 管理狀態, nextTick 確保 DOM 更新後進行操作, 同時進行表單的數據綁定與錯誤處理。',
         },
-        component: '',
-      }
-    ]
-  }
+      },
+    ],
+  },
 ]

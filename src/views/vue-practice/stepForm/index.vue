@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col flex-1 mt-5 rounded-xl">
     <div class="w-[500px] p-5 border">
-      <span class="mb-5 text-font32">{{ currentConfig.title }}</span>
+      <span class="mb-5 text-font32">{{ $t(currentConfig.title) }}</span>
       <form
         class="flex flex-col flex-1 w-full mt-5"
         @submit.prevent="handleSubmit"
@@ -20,7 +20,7 @@
             type="button"
             @click="prevStep"
           >
-            上一步
+            {{ $t('common.prevStep') }}
           </button>
           <!-- 下一步/提交按鈕 -->
           <div class="ml-auto">
@@ -28,36 +28,59 @@
               type="submit"
               class="px-3 py-1 border rounded-lg hover:bg-active hover:opacity-100 hover:text-white"
             >
-              {{ isLastStep ? "提交" : "下一步" }}
+              {{ isLastStep ? $t('common.submit') : $t('common.nextStep') }}
             </button>
           </div>
         </div>
       </form>
     </div>
+    <!-- 顯示通知模態框 -->
+    <BaseModal
+      v-model="isModalOpen"
+      :title="modalTitle"
+      :detail="modalDetail"
+      :cancel-text="cancelText"
+      :confirm-text="confirmText"
+      :have-cancel-btn="true"
+      @close-modal="closeModal"
+    >
+      <template #confirmButton>
+        <button
+          class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
+          @click="closeModal"
+        >
+          確認
+        </button>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
 <script setup>
 import { reactive, computed, ref } from "vue"
-import Step from "./components/step.vue"
+import { useI18n } from "vue-i18n"
 import { stepForm } from "../../../config/stepForm"
+import Step from "./components/step.vue"
 import Schema from "async-validator"
 
+const { t } = useI18n()
+
+// 彈窗相關
+const isModalOpen = ref(false)
+const modalTitle = ref('提示')
+const modalDetail = ref('')
+const cancelText = ref('取消')
+const confirmText = ref('確認')
 // 當前步驟索引
 const currentStep = ref(0)
 // 錯誤訊息
-const errorMsg = ref([]) 
-
+const errorMsg = ref([])
 
 // 表單數據
 const form = reactive({})
 stepForm.forEach((step) => {
   step.fields.forEach((field) => {
-    if (field.type === "checkbox") {
-      form[field.name] = false // checkbox 預設為 false
-    } else {
-      form[field.name] = "" // 其他類型預設為空字串
-    }
+    form[field.name] = field.type === "checkbox" ? false : ""
   })
 })
 
@@ -70,7 +93,6 @@ const isLastStep = computed(() => currentStep.value === stepForm.length - 1)
 // 更新表單數據
 const updateForm = ({ fieldName, value }) => {
   form[fieldName] = value
-  console.log('form[fieldName]',form[fieldName])
 }
 
 const validateCurrentStep = async () => {
@@ -79,21 +101,10 @@ const validateCurrentStep = async () => {
   const values = {}
 
   currentFields.forEach((field) => {
-    // 初始化 rules 為外部配置的規則副本，避免重複添加
-    rules[field.name] = [...(field.rules || [])]
-    // 如果是 checkbox 類型，確認是否已添加 validator
-    if (
-      field.type === "checkbox" &&
-      !rules[field.name].some((rule) => rule.validator)
-    ) {
-      rules[field.name].push({
-        validator: (rule, value) =>
-          value === true
-            ? Promise.resolve()
-            : Promise.reject(new Error(rule.message || "請同意條款")),
-      })
-    }
-    // 提取欄位值
+    rules[field.name] = [...(field.rules || [])].map((rule) => ({
+      ...rule,
+      message: t(rule.message),
+    }))
     values[field.name] = form[field.name]
   })
 
@@ -101,22 +112,29 @@ const validateCurrentStep = async () => {
 
   try {
     await validator.validate(values)
-    // 驗證成功時清空錯誤訊息
     errorMsg.value = []
+
+    // 只有在最後一步檢查是否勾選了同意條款
+    if (isLastStep.value && !form['terms']) {
+      modalTitle.value = '錯誤'
+      modalDetail.value = '請勾選同意條款'
+      openModal(currentStep.value)
+      return false
+    }
+
     return true
   } catch (validationErrors) {
-    // 清空錯誤訊息，重新收集
     errorMsg.value = []
     const errors = Array.isArray(validationErrors.errors)
       ? validationErrors.errors
       : [validationErrors]
     errorMsg.value = errors.map((err) => err.message)
-    // 彈出錯誤訊息
-    alert(`驗證失敗：${errorMsg.value.join(", ")}`)
+    modalTitle.value = '驗證錯誤'
+    modalDetail.value = `驗證失敗：${errorMsg.value.join(", ")}`
+    openModal(currentStep.value)
     return false
   }
 }
-
 
 // 提交表單
 const handleSubmit = async () => {
@@ -124,11 +142,13 @@ const handleSubmit = async () => {
     return
   }
 
-  if (!isLastStep.value) {
-    currentStep.value++
+  // 提交成功時
+  if (isLastStep.value) {
+    modalTitle.value = '提交成功'
+    modalDetail.value = '表單已成功提交！'
+    openModal(isLastStep.value)
   } else {
-    console.log("表單完成：", form)
-    alert("表單已提交！")
+    currentStep.value++
   }
 }
 
@@ -138,5 +158,15 @@ const prevStep = () => {
     currentStep.value--
   }
 }
-</script>
 
+const openModal = (action) => {
+  isModalOpen.value = true
+}
+
+// 關閉並重置狀態
+const closeModal = () => {
+  isModalOpen.value = false
+  modalTitle.value = ''
+  modalDetail.value = ''
+}
+</script>

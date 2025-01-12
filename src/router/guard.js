@@ -1,4 +1,3 @@
-// guard.js
 import { useUserStore } from '@/stores/modules/user'
 import { menuList } from '../../mock/model/menu'
 
@@ -71,7 +70,7 @@ const resolveComponentPath = (menuPath, modules) => {
   )
 
   // 針對index.vue做處理: 找不到對應檔名時退回上一層確認目錄是否找得到index.vue
-  while (!matchingKey && lowerCasePath.includes('/')) {
+  if (!matchingKey && lowerCasePath.includes('/')) {
     lowerCasePath = lowerCasePath.substring(0, lowerCasePath.lastIndexOf('/'))
     const indexPath = `${lowerCasePath}/index`
     matchingKey = Object.keys(lowerCaseModules).find((key) =>

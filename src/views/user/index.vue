@@ -1,18 +1,22 @@
 <template>
   <div class="p-2">
     <el-row class="mb-4">
-      <el-button type="primary" icon="Plus" @click="newUser">
-        新增
-      </el-button>
       <el-button
-        :type="selectedRows.length > 0 ? 'danger' : ''"
-        :class="selectedRows.length > 0 ? '' : 'opacity-50 cursor-not-allowed'"
+        type="primary"
+        icon="Plus"
+        @click="newUser"
+      >
+        {{ $t('common.add') }}
+      </el-button>
+      <!-- <el-button
+        :type="selectedRows.length ? 'danger' : ''"
+        :class="selectedRows.length ? '' : 'opacity-50 cursor-not-allowed'"
         :disabled="selectedRows.length === 0"
         icon="Delete"
         @click="openModal('deleteSelectedRows', selectedRows)"
       >
-        刪除
-      </el-button>
+        {{ $t('common.delete') }}
+      </el-button> -->
     </el-row>
     <el-table
       :data="sortedList"
@@ -21,8 +25,15 @@
       :resizable="false"
       @selection-change="onSelectionChange"
     >
-      <el-table-column type="selection" width="35" />
-      <el-table-column prop="id" label="No." width="80">
+      <el-table-column
+        type="selection"
+        width="35"
+      />
+      <el-table-column
+        prop="id"
+        label="No."
+        width="80"
+      >
         <template #header>
           <div class="flex items-center justify-center">
             <div class="text-center">
@@ -52,11 +63,14 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="使用者名稱" min-width="80">
+      <el-table-column
+        prop="name"
+        min-width="150"
+      >
         <template #header>
           <div class="flex items-center">
             <div class="text-center">
-              使用者名稱
+              {{ $t('menu.system.user.userName') }}
             </div>
             <div class="flex flex-col ps-1">
               <el-icon
@@ -79,9 +93,10 @@
         <template #default="scope">
           <div v-if="isEditing(scope.row, 'name')">
             <el-input
+              ref="editableInput"
               v-model="scope.row.name"
               size="small"
-              ref="editableInput"
+              :placeholder="$t('menu.system.user.userName')"
               @blur="confirmEditing"
               @keyup.enter="confirmEditing"
             />
@@ -91,20 +106,26 @@
             class="cursor-pointer"
             @dblclick="startEditing(scope.row, 'name')"
           >
-            <el-icon v-if="!scope.row.name" class="!icon-pen">
+            <el-icon
+              v-if="!scope.row.name"
+              class="!icon-pen"
+            >
               <EditPen />
             </el-icon>
             <span :class="!scope.row.name ? 'ps-1 text-black text-opacity-30' : ''">
-              {{ scope.row.name || '點擊輸入' }}
+              {{ scope.row.name || $t('common.clickPlaceholder') }}
             </span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="account" label="帳號名稱" min-width="80">
+      <el-table-column
+        prop="account"
+        min-width="180"
+      >
         <template #header>
           <div class="flex items-center">
             <div class="text-center">
-              帳號名稱
+              {{ $t('menu.system.user.account') }}
             </div>
             <div class="flex flex-col ps-1">
               <el-icon
@@ -127,9 +148,10 @@
         <template #default="scope">
           <div v-if="isEditing(scope.row, 'account')">
             <el-input
+              ref="editableInput"
               v-model="scope.row.account"
               size="small"
-              ref="editableInput"
+              :placeholder="$t('menu.system.user.account')"
               @blur="confirmEditing"
               @keyup.enter="confirmEditing"
             />
@@ -139,19 +161,27 @@
             class="cursor-pointer"
             @dblclick="startEditing(scope.row, 'account')"
           >
-            <el-icon v-if="!scope.row.account" class="!icon-pen">
+            <el-icon
+              v-if="!scope.row.account"
+              class="!icon-pen"
+            >
               <EditPen />
             </el-icon>
             <span :class="!scope.row.account ? 'ps-1 text-black text-opacity-30' : ''">
-              {{ scope.row.account || '點擊輸入' }}
+              {{ scope.row.account || $t('common.clickPlaceholder') }}
             </span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="createdAt" label="建立時間" min-width="100">
+      <el-table-column
+        prop="createdAt"
+        min-width="100"
+      >
         <template #header>
           <div class="flex items-center gap-1">
-            <span>開始時間</span>
+            <div class="text-center">
+              {{ $t('menu.system.user.createdAt') }}
+            </div>
             <div class="flex flex-col">
               <el-icon
                 class="pt-2 cursor-pointer hover:text-blue-500"
@@ -170,31 +200,8 @@
             </div>
           </div>
         </template>
-        <template #default="scope">
-          <div v-if="isEditing(scope.row, 'createdAt')">
-            <el-input
-              v-model="scope.row.createdAt"
-              size="small"
-              ref="editableInput"
-              @blur="confirmEditing"
-              @keyup.enter="confirmEditing"
-            />
-          </div>
-          <div
-            v-else
-            class="cursor-pointer"
-            @dblclick="startEditing(scope.row, 'createdAt')"
-          >
-            <el-icon v-if="!scope.row.createdAt" class="!icon-pen">
-              <EditPen />
-            </el-icon>
-            <span :class="!scope.row.createdAt ? 'ps-1 text-black text-opacity-30' : ''">
-              {{ scope.row.createdAt || '點擊輸入' }}
-            </span>
-          </div>
-        </template>
       </el-table-column>
-      <el-table-column width="250">
+      <!-- <el-table-column width="250">
         <template #default="scope">
           <div class="flex justify-end">
             <el-button
@@ -211,9 +218,8 @@
             />
           </div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
-
     <!-- 顯示通知模態框 -->
     <BaseModal
       v-model="isModalOpen"
@@ -225,15 +231,6 @@
       @close-modal="closeModal"
       @confirm="handleConfirm"
     >
-      <!-- 動態自定義標題 -->
-      <!-- <template #title>
-        <span class="text-red-500">test</span>
-      </template> -->
-      <!-- 動態自定義內容 -->
-      <!-- <template #detail>
-        <span>test</span>
-      </template> -->
-      <!-- 自定義確認按鈕 -->
       <template #confirmButton>
         <button
           class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
@@ -249,6 +246,7 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { getUsers, addUser, updateUser, deleteUser } from '@/api'
+import { getCurrentDate } from '@/utils/date'
 import BaseModal from '@/components/BaseModal.vue'
 
 // 已選中的資料
@@ -322,7 +320,7 @@ const activateSort = (order, type) => {
 }
 
 const startEditing = async (row, field) => {
-  editingStatus.value = { 
+  editingStatus.value = {
     row: row,
     field: field
   }
@@ -352,12 +350,8 @@ const newUser = () => {
     id: newId,
     name: '',
     account: '',
-    createdAt: ''
+    createdAt: getCurrentDate()
   })
-}
-
-const toggleExpand = (row) => {
-  row.expanded = !row.expanded
 }
 
 // 新增
@@ -372,6 +366,7 @@ const handleAdd = async(row) => {
     }
     const res = await addUser(params)
     if (res.status === 'success' && res.code === 200) {
+      console.log('成功新增使用者')
       isFirstAdd.value = false
     }
   } catch (error) {
@@ -397,11 +392,6 @@ const handleUpdate = async(row) => {
   }
 }
 
-// 編輯按鈕事件
-const onEdit = (row) => {
-  isModalOpen.value = true
-}
-
 // 刪除選中資料
 const deleteSelectedRows = async() => {
   try {
@@ -416,6 +406,7 @@ const deleteSelectedRows = async() => {
           id: index + 1, // 重新分配 id 從 1 開始
         }))
       selectedRows.value = [] // 清空選中的資料
+      console.log('成功刪除選定使用者')
     }
   } catch (error) {
     console.error(error)
@@ -434,6 +425,7 @@ const deleteRow = async (row) => {
           id: index + 1, // 重新分配 id 從 1 開始
         }))
       }
+      console.log('成功刪除單行使用者')
   } catch (error) {
     console.error(error)
   }
@@ -444,26 +436,26 @@ const onSelectionChange = (rows) => {
   selectedRows.value = rows
 }
 
-const openModal = (action, item) => {
-  isModalOpen.value = true
-  currentAction.value = action
-  currentItem.value = item
+// const openModal = (action, item) => {
+//   isModalOpen.value = true
+//   currentAction.value = action
+//   currentItem.value = item
 
-  switch (action) {
-    case 'deleteSelectedRows':
-      modalTitle.value = '刪除檔案'
-      modalDetail.value = `請確認是否刪除選中的 "${item.length}筆" 資料?`
-      break
-    case 'deleteRow':
-      modalTitle.value = '刪除檔案'
-      modalDetail.value = `請確認是否刪除 "${item.name}" ?`
-      break
-    default:
-      modalTitle.value = '提示'
-      modalDetail.value = '請確認是否執行?'
-      break
-  }
-}
+//   switch (action) {
+//     case 'deleteSelectedRows':
+//       modalTitle.value = '刪除檔案'
+//       modalDetail.value = `請確認是否刪除選中的 "${item.length}筆" 資料?`
+//       break
+//     case 'deleteRow':
+//       modalTitle.value = '刪除檔案'
+//       modalDetail.value = `請確認是否刪除 "${item.name}" ?`
+//       break
+//     default:
+//       modalTitle.value = '提示'
+//       modalDetail.value = '請確認是否執行?'
+//       break
+//   }
+// }
 
 // 確認按鈕依照判斷式執行相應動作
 const handleConfirm = async() => {
