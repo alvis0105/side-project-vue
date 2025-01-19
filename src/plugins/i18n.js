@@ -1,6 +1,6 @@
 import { createI18n } from 'vue-i18n'
-import en from '@/config/locales/lang/en.js'
-import zh from '@/config/locales/lang/zh.js'
+import en from '../../locales/en.json'
+import zh from '../../locales/zh.json'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import 'dayjs/locale/en'
@@ -9,8 +9,14 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import enUs from 'element-plus/es/locale/lang/en'
 
 const messages = {
-  en, // 英文語言包
-  zh, // 中文語言包
+  en: {
+    ...en,
+    el: enUs
+  },
+  zh: {
+    ...zh,
+    el: zhCn
+  }
 }
 
 const i18n = createI18n({

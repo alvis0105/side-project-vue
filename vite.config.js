@@ -5,7 +5,6 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers' // Eleme
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite' // 自動引入插件
 import Components from 'unplugin-vue-components/vite' // 按需引入插件
-import tailwindScrollbar from 'tailwind-scrollbar'
 import sass from 'sass'
 
 export default defineConfig({
@@ -33,7 +32,6 @@ export default defineConfig({
       ],
       dts: false, // 禁用類型聲明檔案
     }),
-    tailwindScrollbar(),
   ],
   resolve: {
     alias: {
