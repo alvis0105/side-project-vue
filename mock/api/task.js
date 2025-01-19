@@ -3,47 +3,20 @@ import {
   taskList as initialTaskList,
 } from '../model/task'
 
-// 模擬 localStorage 的行為
-const fakeLocalStorage = (() => {
-  let store = {}
-  return {
-    getItem: (key) => (store[key] || null),
-    setItem: (key, value) => { store[key] = value.toString() },
-    removeItem: (key) => { delete store[key] },
-    clear: () => { store = {} },
-  }
-})()
+// 初始化
+let taskList = [...initialTaskList]
+let taskType = [...initialTaskType]
 
-// 判斷是否使用瀏覽器的 localStorage 或模擬版本
-const storage = typeof window !== 'undefined' && localStorage
-  ? localStorage
-  : fakeLocalStorage
 
-// 通用 JSON 處理方法
-const stringifyData = (value) => JSON.stringify(value)
-const parseData = (value) => {
-  try {
-    return JSON.parse(value) || []
-  } catch {
-    return []
-  }
+const getTaskList = () => taskList
+const setTaskList = (tasks) => {
+  taskList = [...tasks]
 }
 
-// 初始化資料
-if (!storage.getItem('taskList')) {
-  storage.setItem('taskList', stringifyData(initialTaskList))
+const getTaskType = () => taskType
+const setTaskType = (types) => {
+  taskType = [...types]
 }
-
-if (!storage.getItem('taskType')) {
-  storage.setItem('taskType', stringifyData(initialTaskType))
-}
-
-// 公用函式操作 LocalStorage
-const getTaskList = () => parseData(storage.getItem('taskList'))
-const setTaskList = (tasks) => storage.setItem('taskList', stringifyData(tasks))
-
-const getTaskType = () => parseData(storage.getItem('taskType'))
-const setTaskType = (types) => storage.setItem('taskType', stringifyData(types))
 
 export default [
   {
